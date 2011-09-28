@@ -1,0 +1,44 @@
+Package: gWidgets2RGtk2
+Type: Package
+Title: Implementation of gWidgets2 for RGtk2 package
+Version: 1.0
+Date: 2011-09-18
+Author: John Verzani
+Maintainer: jverzani@gmail.com
+Description: Implements gWidgets2 API for RGtk2
+License: GPL-3
+Depends:
+    methods,
+    memoise,
+    RGtk2,
+    gWidgets2
+LazyLoad: yes
+Collate:
+    'misc.R'
+    'gtk-misc.R'
+    'GComponent.R'
+    'GContainer.R'
+    'GWidget.R'
+    'gbutton.R'
+    'gwindow.R'
+    'ggroup.R'
+    'gframe.R'
+    'glabel.R'
+    'gtimer.R'
+    'gedit.R'
+    'gcheckbox.R'
+    'gcheckboxgroup.R'
+    'icons.R'
+    'gradio.R'
+    'gnotebook.R'
+    'gslider.R'
+    'gspinbutton.R'
+    'gexpandgroup.R'
+    'gstackwidget.R'
+    'glayout.R'
+    'gpanedgroup.R'
+    'gseparator.R'
+    'gtext.R'
+    'gcombobox.R'
+    'gaction.R'
+    'gcalendar.R'
