@@ -8,11 +8,11 @@ NULL
 .glabel.guiWidgetsToolkitRGtk2 <- function(toolkit, text="", markup=FALSE, editable=FALSE,
                                            handler=NULL, action=NULL, container=NULL,
                                            ...) {
-  Glabel$new(toolkit, text, markup, editable, handler, action, container, ...)
+  GLabel$new(toolkit, text, markup, editable, handler, action, container, ...)
 }
 
 ##' label class
-Glabel <- setRefClass("Glabel",
+GLabel <- setRefClass("GLabel",
                             contains="GWidget",
                             fields=list(
                               markup="ANY",
