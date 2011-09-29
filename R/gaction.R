@@ -24,11 +24,13 @@ GAction <- setRefClass("GAction",
                          initialize=function(toolkit=NULL,
                            label="", tooltip=NULL, icon = NULL, key.accel = NULL,
                            handler, action=NULL, parent, ...) {
+
+                           
                            
                            widget <<- gtkAction(name=make.names(label),
                                                 label=label,
                                                 tooltip=tooltip,
-                                                stock.id=icon)
+                                                stock.id=getStockIconByName(icon, toolkit=toolkit))
                            
                            initFields(block=widget,
                                       accel_key=key.accel)

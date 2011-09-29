@@ -59,6 +59,9 @@ GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
                                     selected = 1, # use 0 for blank
                                     coerce.with = NULL,
                                     handler, action, container, ...) {
+
+                                    if(ncol(items) >=2)
+                                      items$icons <- sapply(items$icons, getStockIconByName)
                                     
                                     store <- rGtkDataFrame(items)
                                     ## drop down list, not combo
@@ -190,7 +193,7 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                                      user.data.first = TRUE)
                                     },
                                     add_handler_keystroke=function(handler, action=NULL, ...) {
-                                      gSignalConnect(widget$getChild(), "keystroke", keystroke_handler,
+                                      gSignalConnect(widget$getChild(), "keystroke", .self$keystroke_handler,
                                                      data=list(obj=obj, action=action,...),
                                                user.data.first = TRUE)
                                     }

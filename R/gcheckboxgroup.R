@@ -36,35 +36,40 @@ GCheckboxGroup <- setRefClass("GCheckboxGroup",
                                 widgets <<- list()
                                 
                                 set_items(value=items)
-
+                                set_index(checked)
                                 add_to_parent(container, .self, ...)
 
                                 handler_id <<- add_handler_changed(handler, action)
 
                                 callSuper(toolkit)
                               },
-                              get_value=function(index=TRUE, drop=TRUE, ...) {
+                              get_value=function(drop=TRUE, ...) {
                                 items <- get_items()
                                 items[get_index()]
                               },
-                              set_value=function(value, index=TRUE, drop=TRUE, ...) {
+                              set_value=function(value, drop=TRUE, ...) {
                                 items <- get_items()
                                 ind <- pmatch(value, items)
                                 set_index(ind)
                               },
                               get_index = function(...) {
-                                sapply(widgets, function(i) i$getActive())
+                                "Return indices, not logical"
+                                which(sapply(widgets, function(i) i$getActive()))
                               },
                               set_index=function(value, ...) {
+                                if(is.logical(value))
+                                  value <- rep(value, length=get_length())
                                 if(is.numeric(value)) {
                                   tmp <- rep(FALSE, length=get_length())
                                   tmp[value] <- TRUE
                                   value <- tmp
                                 }
-                                mapply(gtkToggleButtonSetActive, widgets, value)
+                                mapply(gtkToggleButtonSetActive, object=widgets, is.active=value)
+                                invisible()
                               },
                               get_items = function(i, ...) {
-                                sapply(widgets, function(i) i[[1]]$getLabel())
+                                items <- sapply(widgets, function(i) i[[1]]$getLabel())[i]
+                                setNames(items, NULL) # drop names
                               },
                               set_items = function(value, i, ...) {
                                 ## make widgets

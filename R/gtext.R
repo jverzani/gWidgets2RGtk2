@@ -2,43 +2,8 @@
 NULL
 
 
-## font sizes
-fontSizes <- c(
-               "xx-large"= PANGO_SCALE_XX_LARGE,
-               "x-large" = PANGO_SCALE_X_LARGE,
-               "large"   = PANGO_SCALE_LARGE,
-                 "medium"  = PANGO_SCALE_MEDIUM,
-               "small"   = PANGO_SCALE_SMALL,
-               "x-small" = PANGO_SCALE_X_SMALL,
-               "xx-small" = PANGO_SCALE_XX_SMALL
-               )
-
 ## Make a tag table to be shared. We use memoise as we only need to make this once.
-make_tag_table <- memoise(function() {
-  ## font colors
-  fontColors <-  sapply(colors(), identity)
-  
-  ## list of fonts
-  font_list <- list(weight=PangoWeight,
-                    style=PangoStyle,
-                    family=sapply(c("sans", "helvetica", "times", "monospace"), identity),
-                    scale=fontSizes,      # not size!
-                    foreground=fontColors,
-                    background=fontColors)
-  
-  ## global tag table
-  tag_table <- gtkTextTagTableNew()
-  ## populate tag table from above
-  for(nm in names(font_list)) {
-    for(i in names(font_list[[nm]])) {
-      tt <- gtkTextTagNew(sprintf("%s-%s", nm, i)) # family-Monospace, say
-      tt[nm] <- font_list[[nm]][i]
-      tag_table$add(tt)
-    }
-  }
-  
-  tag_table
-})
+make_tag_table <- memoise(gtkTextTagTableNew)
 
 ##' toolkit implementation
 ##'
@@ -61,7 +26,8 @@ make_tag_table <- memoise(function() {
 GText <- setRefClass("GText",
                      contains="GWidget",
                      fields=list(
-                       buffer="ANY"
+                       buffer="ANY",
+                       tag_table="ANY"
                        ),
                      methods=list(
                        initialize=function(toolkit=NULL,
@@ -69,7 +35,8 @@ GText <- setRefClass("GText",
                          font.attr = NULL, wrap = TRUE,
                          handler=NULL, action=NULL, container=NULL, ...) {
 
-                         buffer <<- gtkTextBufferNew(make_tag_table())
+                         tag_table <<- make_tag_table()
+                         buffer <<- gtkTextBufferNew(tag_table)
                          widget <<- gtkTextViewNewWithBuffer(buffer)
                          widget$SetLeftMargin(10)
                          widget$SetRightMargin(10)
@@ -86,8 +53,8 @@ GText <- setRefClass("GText",
                          block$add(widget)
                          widget$show()
 
-                         set_font(font.attr) # buffer font
                          insert_text(text, where="beginning", font.attr=NULL, do.newline=FALSE)
+                         set_font(font.attr) # buffer font
                          
                          add_to_parent(container, .self, ...)
                          
@@ -128,6 +95,27 @@ GText <- setRefClass("GText",
                        set_items = function(value, i, j, ...) {
                          stop("Not defined")
                        },
+                       get_tag_name=function(name, value) {
+                         "Return tag table name for passing to function"
+
+                         value <- switch(name,
+                                         "weight" = PangoWeight[value],
+                                         "style"  = PangoStyle[value],
+                                         "size"   = as.integer(value),
+                                         "scale"  = PangoScale[value],
+                                         value)
+                         name <- switch(name,
+                                        "color"="foreground",
+                                        "size" = "size-points",
+                                        name)
+                         nm <- sprintf("%s-%s", name, value)
+                         if(is.null(tag_table$lookup(nm))) {
+                           tt <- gtkTextTagNew(nm) # family-Monospace, say
+                           tt[name] <- value
+                           tag_table$add(tt)
+                         }
+                         nm
+                       },
                        set_font = function(font.attr) {
                          "Set  font for selection or entire buffer if no selection"
 
@@ -135,7 +123,6 @@ GText <- setRefClass("GText",
                          if(length(font.attr) == 0)
                            return()
 
-                         tag_table <- buffer$getTagTable()
                          bounds <- buffer$GetSelectionBounds()
                          
                          if(bounds$retval == FALSE) {
@@ -150,10 +137,7 @@ GText <- setRefClass("GText",
                          }
 
                          for(i in names(font.attr)) {
-                           if(i == "size")
-                             tag_nm <- sprintf("%s-%s", "scale", tolower(font.attr[i]))
-                           else
-                             tag_nm <- sprintf("%s-%s", i, tolower(font.attr[i]))
+                           tag_nm <- get_tag_name(i, tolower(font.attr[i]))
                            buffer$ApplyTagByName(tag_nm, start, end)
                          }
                        },
@@ -172,10 +156,7 @@ GText <- setRefClass("GText",
 
                          if(!is.null(font.attr) && length(font.attr)) {
                            for(i in names(font.attr)) {
-                             if(i == "size")
-                               arg_list[[length(arg_list) + 1]] <- sprintf("%s-%s", "scale", tolower(font.attr[i]))
-                             else
-                               arg_list[[length(arg_list) + 1]] <- sprintf("%s-%s", i, tolower(font.attr[i]))
+                             arg_list[[length(arg_list) + 1]] <- get_tag_name(i, font.attr[[i]])
                            }
                          }
                          do.call("gtkTextBufferInsertWithTagsByName",arg_list)                           

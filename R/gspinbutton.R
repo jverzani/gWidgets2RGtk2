@@ -8,13 +8,13 @@ NULL
 .gspinbutton.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                  from = 0, to = 10, by = 1, value = from, digits = 0,
                                                  handler = NULL,action = NULL, container = NULL, ... ) {
-  GSpinbutton$new( toolkit, from , to , by, value, digits,
+  GSpinButton$new( toolkit, from , to , by, value, digits,
                   handler = handler, action = action, container = container, ...)
 }
 
 
 ## spingbutton class
-GSpinbutton <- setRefClass("GSpinbutton",
+GSpinButton <- setRefClass("GSpinButton",
                             contains="GWidget",
                             methods=list(
                               initialize=function(toolkit,

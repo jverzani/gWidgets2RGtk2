@@ -8,7 +8,7 @@ NULL
 .gedit.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                     text = "", width = 25, coerce.with = NULL, initial.msg=initial.msg,
                     handler = NULL,action = NULL, container = NULL, ... ) {
-  GEdit$new( toolkit, text = "", width = 25, coerce.with = coerce.with, initial.msg=initial.msg,
+  GEdit$new( toolkit, text = text, width = width, coerce.with = coerce.with, initial.msg=initial.msg,
                     handler = handler,action = action, container = container, ...)
 }
 
@@ -93,7 +93,7 @@ GEdit <- setRefClass("GEdit",
                                 nrows <- dim(store)[1]
                                 store[i , ]
                               },
-                              set_items=function(i, j, ..., value) {
+                              set_items=function(value, i, j, ...) {
                                 if(is.null(completion)) {
                                   completion <<- gtkEntryCompletionNew()
                                    model <- rGtkDataFrame(data.frame(character(1000),stringsAsFactors=FALSE))

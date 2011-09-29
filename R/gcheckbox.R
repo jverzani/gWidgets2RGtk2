@@ -46,7 +46,7 @@ GCheckbox <- setRefClass("GCheckbox",
                               get_items = function(i, j, ..., drop=TRUE) {
                                 widget[[1]]$getLabel()
                               },
-                              set_items = function(i, j, ..., value) {
+                              set_items = function(value, i, j, ...) {
                                 widget[[1]]$setLabel(value)
                               },
                               add_handler_changed=function(handler, action=NULL, ...) {

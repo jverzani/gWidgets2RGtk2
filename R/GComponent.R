@@ -56,10 +56,32 @@ GComponent <- setRefClass("GComponent",
                                  get_tooltip = function(...) widget$getTooltipText(),
                                  set_tooltip = function(value) widget$setTooltipText(paste(value, collapse="\n")),
                                  ## font
-                                 set_font = function(obj, value) {
-                                   ## pass off to widget
-                                   tmp <- getWidget(obj)
-                                   font(tmp) <- value
+                                 set_font = function(value) {
+                                   set_rgtk2_font(getWidget(widget), value)
+                                 },
+                                 set_rgtk2_font = function(obj, value) {
+                                   "Set font on a gtkWidget instance"
+                                   if(!is(obj, "GtkWidget"))
+                                     stop("Font setting called with object of class", class(obj))
+                                   
+                                   if(!is.list(value))
+                                     value <- sapply(value, identity, simplify=FALSE)
+                                   font_desc <- pangoFontDescriptionNew()
+                                   for(key in names(value)) {
+                                     val <- value[[key]]
+                                     switch(key,
+                                            "weight"= font_desc$setWeight(PangoWeight[val]),
+                                            "style" = font_desc$setStyle(PangoStyle[val]),
+                                            "size"  = font_desc$setSize(val * PANGO_SCALE),
+                                            "scale" = font_desc$setAbsoluteSize(10 * PangoScale[val] * PANGO_SCALE),
+                                            "family" = font_desc$setFamily(val),
+                                            "color" = obj$modifyFg(GtkStateType[1], val),
+                                            "foreground" = obj$modifyFg(GtkStateType[1], val),
+                                            "background" = obj$modifyBg(GtkStateType[1], val),
+                                            )
+                                   }
+                                   obj$modifyFont(font_desc)
+
                                  },
                                  ## tag
                                  get_attr = function(key) {
@@ -159,7 +181,7 @@ GComponent <- setRefClass("GComponent",
                                    "Keystroke handler. Defined for all, but only gedit, gtext"
                                    if(missing(handler) || is.null(handler))
                                      return()
-                                   add_event_handler("key-release-event", keystroke_handler, action, ...)
+                                   add_event_handler("key-release-event", .self$keystroke_handler, action, ...)
                                  },                                 
                                  ##
                                  emit_signal=function(signal, ..., detail=NULL) {

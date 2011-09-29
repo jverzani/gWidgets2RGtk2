@@ -60,14 +60,11 @@ GButton <- setRefClass("GButton",
                               get_value=function(index=TRUE, drop=TRUE, ...) {
                                 widget$getLabel()
                               },
-
-                              ## font is a real hack
-                              set_font = function(obj, value) {
-                                object <- getWidget(obj)[[1]] # label is first child or something
+                              set_font = function(value) {
+                                object <- getWidget(widget)[[1]] # label is first child or something
                                 if(is(object, "GtkAlignment"))
                                   object <- object[[1]][[2]] # a real hacke
-                                font(object) <- value
-                                
+                                set_rgtk2_font(object, value)
                               },
                               ## Handler: changed -> clicked
                               add_handler_changed=function(handler, action=NULL, ...) {
