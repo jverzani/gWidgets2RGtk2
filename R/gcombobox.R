@@ -89,7 +89,7 @@ GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
                                     initFields(block=widget,
                                                coerce_with=coerce.with,
                                                change_signal="changed",
-                                               ..blocked=0
+                                               ..blocked=0L
                                                )
                                     
                                     add_to_parent(container, .self, ...)

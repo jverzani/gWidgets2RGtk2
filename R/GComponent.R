@@ -130,7 +130,7 @@ GComponent <- setRefClass("GComponent",
                                    } else {
                                      width <- value; height <- -1
                                    }
-                                   getBlock()$SetSizeRequest(width,height)
+                                   getBlock(.self)$SetSizeRequest(width,height)
                                  },
 
                                  ## Work with containers
