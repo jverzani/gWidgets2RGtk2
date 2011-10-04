@@ -36,7 +36,9 @@ GEdit <- setRefClass("GEdit",
                                            init_msg=initial.msg,
                                            init_msg_flag=FALSE,
                                            completion=NULL,
-                                           validator=NULL)
+                                           validator=NULL,
+                                           change_signal="activate"
+                                           )
 
                                 ## init msg
                                 if(nchar(init_msg) > 0) {
@@ -133,20 +135,20 @@ GEdit <- setRefClass("GEdit",
                                 widget$setEditable(as.logical(value))
                               },
                               ## Handler: changed -> clicked
-                              add_handler_changed = function(handler, action=NULL, ...) {
-                                if(missing(handler) || is.null(handler))
-                                  return()
-                                f <- function(h, widget, event, ...) {
-                                  keyval <- event$GetKeyval()
-                                  if(keyval == GDK_Return) {
-                                    handler(h, widget, event, ...)
-                                    return(TRUE)
-                                  } else {
-                                    return(FALSE)
-                                  }
-                                }
-                                add_handler("activate", f, action=action, ...)
-                              },
+                              ## add_handler_changed = function(handler, action=NULL, ...) {
+                              ##   if(missing(handler) || is.null(handler))
+                              ##     return()
+                              ##   f <- function(h, widget, event, ...) {
+                              ##     keyval <- event$GetKeyval()
+                              ##     if(keyval == GDK_Return) {
+                              ##       handler(h, widget, event, ...)
+                              ##       return(TRUE)
+                              ##     } else {
+                              ##       return(FALSE)
+                              ##     }
+                              ##   }
+                              ##   add_handler("activate", f, action=action, ...)
+                              ## },
                              
 
                               ## Extra methods
@@ -176,6 +178,6 @@ GEdit <- setRefClass("GEdit",
 
 ## ##' exported Subclass for users to subclass
 ## ##'
-## ##' @exportClasses GEditRGtk2
+## ##' @exportClass GEditRGtk2
 ## GEditRGtk2 <- setRefClass("GEditRGtk2",
 ##                                contains="GEdit")

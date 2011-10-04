@@ -112,11 +112,9 @@ GNotebook <- setRefClass("GNotebook",
                                 else
                                   page_no <- widget$insertPage(getBlock(child), label_widget, position=index-1L)
                                 set_value(page_no + 1)
+
+                                child_bookkeeping(child)
                                 
-                                ## Internal bookkeeping, add to lists
-                                if(is(child, "GComponent"))
-                                  child$set_parent(.self)
-                                children <<- c(children, child)
                               },
                               remove_child = function(child) {
                                 ## remove from children

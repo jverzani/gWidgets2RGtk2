@@ -7,7 +7,11 @@
 \alias{.gcombobox.guiWidgetsToolkitRGtk2}
 \alias{.gedit.guiWidgetsToolkitRGtk2}
 \alias{.gexpandgroup.guiWidgetsToolkitRGtk2}
+\alias{.gfile.guiWidgetsToolkitRGtk2}
+\alias{.gfilebrowse.guiWidgetsToolkitRGtk2}
 \alias{.gframe.guiWidgetsToolkitRGtk2}
+\alias{.ggraphics.guiWidgetsToolkitRGtk2}
+\alias{.gimage.guiWidgetsToolkitRGtk2}
 \alias{.glabel.guiWidgetsToolkitRGtk2}
 \alias{.glayout.guiWidgetsToolkitRGtk2}
 \alias{.gnotebook.guiWidgetsToolkitRGtk2}
@@ -17,6 +21,7 @@
 \alias{.gslider.guiWidgetsToolkitRGtk2}
 \alias{.gspinbutton.guiWidgetsToolkitRGtk2}
 \alias{.gstackwidget.guiWidgetsToolkitRGtk2}
+\alias{.gstatusbar.guiWidgetsToolkitRGtk2}
 \alias{.gtext.guiWidgetsToolkitRGtk2}
 \alias{.gtimer.guiWidgetsToolkitRGtk2}
 \title{Toolkit button constructor}
@@ -93,6 +98,26 @@
   .gcalendar.guiWidgetsToolkitRGtk2(toolkit, text = "",
   format = "\%Y-\%m-\%d", handler = NULL, action = NULL,
   container = NULL, ...)
+
+  .gfile.guiWidgetsToolkitRGtk2(toolkit, text = "", type =
+  c("open", "save", "selectdir"), initial.filename = NULL,
+  filter = list(), multi = FALSE, ...)
+
+  .gfilebrowse.guiWidgetsToolkitRGtk2(toolkit, text = "",
+  type = c("open", "save", "selectdir"), initial.filename =
+  NULL, filter = list(), quote = TRUE, handler = NULL,
+  action = NULL, container = NULL, ...)
+
+  .gstatusbar.guiWidgetsToolkitRGtk2(toolkit, text = "",
+  container = NULL, ...)
+
+  .ggraphics.guiWidgetsToolkitRGtk2(toolkit, width = dpi *
+  6, height = dpi * 6, dpi = 75, ps = 12, handler = NULL,
+  action = NULL, container = NULL, ...)
+
+  .gimage.guiWidgetsToolkitRGtk2(toolkit, filename = "",
+  dirname = "", stock.id = NULL, size = "", handler = NULL,
+  action = NULL, container = NULL, ...)
 }
 \description{
   Toolkit button constructor
@@ -128,6 +153,16 @@
   Toolkit constructor
 
   toolkit implementation
+
+  Toolkit constructor
+
+  Toolkit constructor
+
+  Toolkit constructor
+
+  Toolkit implementation
+
+  Toolkit constructor
 
   Toolkit constructor
 

@@ -2,6 +2,6 @@
 \alias{GWidget}
 \title{Base class for widget objects}
 \description{
-  Base class for widget objects
+  This inherits observable interface
 }
 

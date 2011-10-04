@@ -34,7 +34,8 @@ GCalendar <- setRefClass("GCalendar",
                              widget$setText(text)
                              button <- gtkButton("Date...")
                              
-                             initFields(format=format)
+                             initFields(format=format,
+                                        change_signal="activate")
 
                              block$packStart(widget, expand=TRUE, fill=TRUE)
                              block$packStart(button)
@@ -80,20 +81,22 @@ GCalendar <- setRefClass("GCalendar",
                            },
                            set_value=function(value, ...) {
                              widget$setText(value)
-                           },
-                           add_handler_changed=function(handler, action=NULL, ...) {
-                             if(missing(handler) || is.null(handler))
-                               return()
-                             f <- function(h, widget, event, ...) {
-                               keyval <- event$GetKeyval()
-                               if(keyval == GDK_Return) {
-                                 handler(h, widget, event, ...)
-                                 return(TRUE)
-                               } else {
-                                 return(FALSE)
-                               }
-                             }
-                             add_handler("activate", f, action=action, ...) 
+                             invoke_change_handler()
                            }
+                           ## ,
+                           ## add_handler_changed=function(handler, action=NULL, ...) {
+                           ##   if(missing(handler) || is.null(handler))
+                           ##     return()
+                           ##   f <- function(h, widget, event, ...) {
+                           ##     keyval <- event$GetKeyval()
+                           ##     if(keyval == GDK_Return) {
+                           ##       handler(h, widget, event, ...)
+                           ##       return(TRUE)
+                           ##     } else {
+                           ##       return(FALSE)
+                           ##     }
+                           ##   }
+                           ##   add_handler(change_signal, f, action=action, ...) 
+                           ## }
                            ))
 

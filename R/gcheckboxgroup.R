@@ -19,7 +19,7 @@ NULL
 }
 
 
-##' Single line edit class
+## checkbox group class
 GCheckboxGroup <- setRefClass("GCheckboxGroup",
                             contains="GWidgetWithItems",
                             methods=list(
@@ -57,6 +57,7 @@ GCheckboxGroup <- setRefClass("GCheckboxGroup",
                                 which(sapply(widgets, function(i) i$getActive()))
                               },
                               set_index=function(value, ...) {
+                                block_observer()
                                 if(is.logical(value))
                                   value <- rep(value, length=get_length())
                                 if(is.numeric(value)) {
@@ -65,6 +66,8 @@ GCheckboxGroup <- setRefClass("GCheckboxGroup",
                                   value <- tmp
                                 }
                                 mapply(gtkToggleButtonSetActive, object=widgets, is.active=value)
+                                unblock_observer()
+                                notify_observers(signal="toggled")
                                 invisible()
                               },
                               get_items = function(i, ...) {
@@ -78,7 +81,7 @@ GCheckboxGroup <- setRefClass("GCheckboxGroup",
                                 sapply(block$getChildren(), gtkContainerRemove, object=block) # remove old
                                 sapply(widgets, gtkBoxPackStart, object=block, expand=FALSE, padding=1)
                                 ## connec widgets
-                                sapply(widgets, gSignalConnect, signal="toggled", f=function(self, ...) {
+                                sapply(widgets, gSignalConnect, signal="toggled", f=function(self, widget, event, ...) {
                                   self$notify_observers(signal="toggled", ...)
                                 }, data=.self, user.data.first=TRUE)
                                 invisible()
@@ -93,7 +96,7 @@ GCheckboxGroup <- setRefClass("GCheckboxGroup",
                               ))
 
 
-##' table with checkboxes
+## uses table for checkboxes
 GCheckboxGroupTable <-  setRefClass("GCheckboxGroupTable",
                             contains="GWidget",
                             methods=list(
@@ -134,7 +137,6 @@ GCheckboxGroupTable <-  setRefClass("GCheckboxGroupTable",
                                 widget$insertColumn(vc, 1)
 
                                 ## icons, tooltips???
-
 
                                 set_items(value=items)
                                 set_index(checked)
@@ -205,6 +207,7 @@ GCheckboxGroupTable <-  setRefClass("GCheckboxGroupTable",
                                 }
                                 store <- widget$getModel()
                                 store[,2] <- value
+                                ## how to get view of model to update? (toggle signal of cell renderer?)
                               },
                               get_items = function(i, ...) {
                                 store <- widget$getModel()
@@ -244,6 +247,6 @@ GCheckboxGroupTable <-  setRefClass("GCheckboxGroupTable",
 
 ## ##' exported Subclass for users to subclass
 ## ##'
-## ##' @exportClasses GCheckboxGroupRGtk2
+## ##' @exportClass GCheckboxGroupRGtk2
 ## GCheckboxGroupRGtk2 <- setRefClass("GCheckboxGroupRGtk2",
 ##                                contains="GCheckboxGroup")

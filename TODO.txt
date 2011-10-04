@@ -1,3 +1,9 @@
+## Question: use Observable as default? some benefits are there. ...
+* make signaling main properties by using observable as possible and
+  svalue invoke command
+* remove_observer (singular)
+* can block by signal -- or not? WE have block all, block by observer
+
 common.R
 dnd.R
 DONE gaction.R
@@ -13,14 +19,14 @@ gdfnotebook.R
 gdialogs.R
 DONE gedit.R
 DONE gexpandgroup.R
-gfile.R
+DONE gfile.R
 DONE gframe.R
 ggraphics.R
 ggraphicsnotebook.R
 DONE ggroup.R
 ghelp.R
 ghtml.R
-gimage.R
+CHECK gimage.R
 DONE glabel.R
 DONE glayout.R
 gmenu.R
@@ -30,7 +36,7 @@ DONE gradio.R
 DONE gseparator.R
 DONE gslider.R
 DONE gspinbutton.R
-gstatusbar.R
+DONE gstatusbar.R
 gtable.R 
 DONE gtext.R
 gtkStuff.R

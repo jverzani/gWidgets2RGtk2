@@ -60,6 +60,6 @@ GExpandGroup <- setRefClass("GExpandGroup",
                             
 ## ##' exported Subclass for users to subclass
 ## ##'
-## ##' @exportClasses GExpandGroupRGtk2
+## ##' @exportClass GExpandGroupRGtk2
 ## GExpandGroupRGtk2 <- setRefClass("GExpandGroupRGtk2",
 ##                                contains="GExpandGroup")

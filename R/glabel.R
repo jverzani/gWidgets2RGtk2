@@ -38,7 +38,8 @@ GLabel <- setRefClass("GLabel",
 
                                 initFields(
                                            markup=markup,
-                                           editable=editable
+                                           editable=editable,
+                                           change_signal="button-press-event"
                                            )
                                 add_to_parent(container, .self, ...)
 
@@ -47,7 +48,6 @@ GLabel <- setRefClass("GLabel",
                                 if(editable) {
                                   ## Set up widget to toggle between
                                   state <<- "label"
-                                  widget$setSelectable(FALSE)
                                   edit_widget <<- gtkEntryNew()
                                   gSignalConnect(edit_widget, "activate", function(e) {
                                     show_label_widget()
@@ -103,6 +103,7 @@ GLabel <- setRefClass("GLabel",
                                 add_handler_clicked(handler, action=action, ...)
                               },
                               add_handler_clicked=function(handler, action=NULL, ...) {
+                                widget$setSelectable(FALSE)
                                 add_event_handler("button-press-event", handler, action, ...)
                               },
 

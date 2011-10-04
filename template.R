@@ -8,7 +8,8 @@ NULL
 .XXX.guiWidgetsToolkitRGtk2 <-  function(toolkit,
 
                     handler = NULL,action = NULL, container = NULL, ... ) {
-  GXXX$new(
+  GXXX$new(toolkit,
+           
                     handler = handler,action = action, container = container, ...)
 }
 

@@ -42,7 +42,8 @@ GSlider <- setRefClass("GSlider",
                            })
                            set_value(value[1])
                            
-                           initFields(block=widget)
+                           initFields(block=widget,
+                                      change_signal="value-changed")
                            
                            add_to_parent(container, .self, ...)
 
@@ -74,9 +75,10 @@ GSlider <- setRefClass("GSlider",
                            widget$setIncrements(1L, 1L) # button 1, button 2
                            
                            set_value(cur)
-                         },
-                         add_handler_changed=function(handler, action=NULL, ...) {
-                           add_handler("value-changed", handler, action=action, ...)
                          }
+                         ## ,
+                         ## add_handler_changed=function(handler, action=NULL, ...) {
+                         ##   add_handler("value-changed", handler, action=action, ...)
+                         ## }
                          ))
 

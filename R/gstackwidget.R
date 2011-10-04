@@ -44,11 +44,8 @@ GStackWidget <- setRefClass("GStackWidget",
                                 else
                                   page_no <- widget$insertPage(getBlock(child), position=index-1L)
                                 set_value(page_no + 1L)
-                                
-                                ## Internal bookkeeping, add to lists
-                                if(is(child, "GComponent"))
-                                  child$set_parent(.self)
-                                children <<- c(children, child)
+
+                                child_bookkeeping(child)
                               }
                               ))
 

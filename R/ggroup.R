@@ -118,11 +118,7 @@ GGroup <- setRefClass("GGroup",
                           }
                           ## all done
                           widget$packStart(toolkit_child, expand=expand, fill=fill, padding=padding)
-                          
-                          ## Internal bookkeeping, add to lists
-                          if(is(child, "GComponent"))
-                            child$set_parent(.self)
-                          children <<- c(children, child)
+                          child_bookkeeping(child)
                         },
 
 

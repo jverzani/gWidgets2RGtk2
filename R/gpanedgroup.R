@@ -75,10 +75,8 @@ GPanedGroup <- setRefClass("GPanedGroup",
                                 } else if(n == 1) {
                                   widget$pack2(getBlock(child))
                                 }
-                                ## Internal bookkeeping, add to lists
-                                if(is(child, "GComponent"))
-                                  child$set_parent(.self)
-                                children <<- c(children, child)
+
+                                child_bookkeeping(child)
                               },
                               remove_child=function(child) {
                                 "remove child from paned container"

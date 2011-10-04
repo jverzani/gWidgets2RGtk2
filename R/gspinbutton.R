@@ -29,7 +29,9 @@ GSpinButton <- setRefClass("GSpinButton",
                                 widget <<- gtkSpinButtonNew(adjustment, (to-from)/by, digits=digits)
                                 set_value(value)
                                 
-                                initFields(block=widget)
+                                initFields(block=widget,
+                                           change_signal="value-changed"
+                                           )
 
                                 add_to_parent(container, .self, ...)
 
@@ -61,9 +63,6 @@ GSpinButton <- setRefClass("GSpinButton",
                                 widget$setRange(min(value), max(value))
                                 widget$setIncrements(inc, inc) # button 1, button 2
                                 set_value(cur)
-                              },
-                              add_handler_changed=function(handler, action=NULL, ...) {
-                                add_handler("value-changed", handler, action=action, ...)
                               }
                               ))
 

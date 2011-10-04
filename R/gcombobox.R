@@ -32,9 +32,10 @@ GComboBox <- setRefClass("GComboBox",
                              value <- min(max(-1, as.integer(value)), get_length())
                              widget$setActive(value - 1L)
                            },
-                           add_handler_changed=function(handler, action=NULL, ...) {
-                             add_handler_clicked(handler, action=NULL, ...)
-                           },
+                           ## ,
+                           ## add_handler_changed=function(handler, action=NULL, ...) {
+                           ##   add_handler_clicked(handler, action=NULL, ...)
+                           ## },
                            add_handler_clicked = function(handler, action=NULL, ...) {
                              add_handler("changed", handler, action=action, ...)
                            },
@@ -79,14 +80,16 @@ GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
                                         message("tooltips are not implemented")
                                       }
                                     }
-
+                                    
                                     widget$show()
                                     widget$setActive(selected - 1L)
                                     
-                                   check_windows(items)
+                                    check_windows(items)
                                     
                                     initFields(block=widget,
-                                               coerce_with=coerce.with
+                                               coerce_with=coerce.with,
+                                               change_signal="changed",
+                                               ..blocked=0
                                                )
                                     
                                     add_to_parent(container, .self, ...)
@@ -114,7 +117,6 @@ GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
                                   },
                                   set_items = function(value, i, j, ...) {
                                     "Set items. Indexing is ignored"
-                                    
                                     items <- gWidgets2:::.make_gcombobox_items(value)
                                     store <- rGtkDataFrame(items)
                                     if(ncol(store) != ncol(widget$getModel()))
@@ -155,7 +157,8 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                       check_windows(items)
 
                                       initFields(block=widget,
-                                                 coerce_with=coerce.with
+                                                 coerce_with=coerce.with,
+                                                 change_signal="changed"
                                                  )
                                       
                                       add_to_parent(container, .self, ...)
@@ -180,7 +183,9 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                       items <- value[,1, drop=TRUE]
                                       sapply(items, gtkComboBoxAppendText, object=widget)
                                       poss_items <<- items
+                                      block_handlers()
                                       set_value("")
+                                      unblock_handlers()
                                     },
                                     get_length = function(...) {
                                       widget$getModel()$iterNChildren(NULL)
@@ -193,9 +198,9 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                                      user.data.first = TRUE)
                                     },
                                     add_handler_keystroke=function(handler, action=NULL, ...) {
-                                      gSignalConnect(widget$getChild(), "keystroke", .self$keystroke_handler,
+                                      gSignalConnect(widget$getChild(), "keystroke", keyrelease_decorator(handler),
                                                      data=list(obj=obj, action=action,...),
-                                               user.data.first = TRUE)
+                                                     user.data.first = TRUE)
                                     }
                                     
                                     ))
@@ -203,6 +208,6 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
 
 ## ##' exported Subclass for users to subclass
 ## ##'
-## ##' @exportClasses GComboBoxRGtk2
+## ##' @exportClass GComboBoxRGtk2
 ## GComboBoxRGtk2 <- setRefClass("GComboBoxRGtk2",
 ##                                contains="GComboBox")

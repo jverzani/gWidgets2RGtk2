@@ -86,3 +86,31 @@ setXYalign <- function(child, childWidget, anchor) {
   
 }
 
+
+
+
+## mouse click processing
+
+##' Return TRUE if first mouse click
+##'
+##' To be called from key-press|release-event
+##' @param e event for mouse press
+##' @return TRUE or FALSE
+isFirstMouseClick <- function(e) {
+  if(!is(e, "GdkEvent"))
+    stop("Must pass in an event")
+  e$getButton() == 1
+}
+
+##' Return TRUE/FALSE if right mouse click
+##'
+##' To be called from key-press|release-event
+##' @param e event for mouse press
+##' @return TRUE or FALSE
+isRightMouseClick <- function(e) {
+  if(!is(e, "GdkEvent"))
+    stop("Must pass in an event")
+  
+  e$GetButton() == 3 ||
+  (e$GetState() == GdkModifierType['control-mask'] && e$GetButton() == 1) 
+}

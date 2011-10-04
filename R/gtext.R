@@ -173,6 +173,7 @@ GText <- setRefClass("GText",
                          
                        },
                        add_handler_changed=function(handler, action=NULL, ...) {
+                         
                          add_handler_keystroke(handler, action=action, ...)
                        }
                        ))

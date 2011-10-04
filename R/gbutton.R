@@ -24,7 +24,10 @@ GButton <- setRefClass("GButton",
 
 
                                 
-                                initFields(block=widget)
+                                initFields(block=widget,
+                                           change_signal="clicked"
+                                           )
+                                
                                 add_to_parent(container, .self, ...)
 
                                 if(is(action, "GAction")) {
@@ -49,6 +52,10 @@ GButton <- setRefClass("GButton",
                                 callSuper(toolkit)
                               },
                               set_value=function(value, index=TRUE, drop=TRUE, ...) {
+                                old_value <- get_value()
+                                if(!is_empty(old_value) && !is_empty(value) &&
+                                   value == old_value)
+                                  return()
                                 icon <- getStockIconByName(value, toolkit=toolkit)
                                 if(!is.null(icon)) {
                                   image <- gtkImageNew()
@@ -56,6 +63,7 @@ GButton <- setRefClass("GButton",
                                   widget$setImage(image)
                                 }
                                 widget$setLabel(value)
+                                invoke_change_handler()
                               },
                               get_value=function(index=TRUE, drop=TRUE, ...) {
                                 widget$getLabel()
@@ -67,8 +75,8 @@ GButton <- setRefClass("GButton",
                                 set_rgtk2_font(object, value)
                               },
                               ## Handler: changed -> clicked
-                              add_handler_changed=function(handler, action=NULL, ...) {
-                                add_handler_clicked(handler, action=action, ...)
+                              add_handler_clicked=function(handler, action=NULL, ...) {
+                                add_handler_changed(handler, action, ...)
                               },
                               remove_border=function() {
                                 "Remove border by setting relief to none"
@@ -79,6 +87,6 @@ GButton <- setRefClass("GButton",
 
 ## ##' exported Subclass of GComponent for users to subclass
 ## ##'
-## ##' @exportClasses GButtonRGtk2
+## ##' @exportClass GButtonRGtk2
 ## GButtonRGtk2 <- setRefClass("GButtonRGtk2",
 ##                                contains="GButton")

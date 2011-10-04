@@ -43,6 +43,7 @@ GAction <- setRefClass("GAction",
                            callSuper(toolkit)
                          },
                          add_key_accel=function(parent, handler) {
+                           "Hack to add in accelerator button binding"
                            ## accel buttons
                            if(!is.null(accel_key) && !is.null(parent)) {
                              toplevel <- getBlock(parent)$toplevel

@@ -17,7 +17,8 @@ GWindow <- setRefClass("GWindow",
                               toolbar_area="ANY",
                               infobar_area="ANY",
                               content_area="ANY",
-                              statusbar_area="ANY"
+                              statusbar_area="ANY",
+                              statusbar_widget="ANY"
                               ),
                             methods=list(
                               initialize=function(toolkit=NULL, title="",  visible=TRUE, name=NULL, width=NULL, height=NULL,
@@ -29,7 +30,8 @@ GWindow <- setRefClass("GWindow",
                                            menubar_area=gtkHBox(),
                                            toolbar_area=gtkHBox(),
                                            infobar_area=gtkInfoBar(show=FALSE),
-                                           content_area=gtkHBox()
+                                           content_area=gtkHBox(),
+                                           statusbar_area=gtkHBox()
                                            )
                                 init_infobar()
                                 
@@ -52,6 +54,8 @@ GWindow <- setRefClass("GWindow",
                                 tbl$Attach(toolbar_area, 0,1,1,2, yoptions = c("fill"))
                                 tbl$Attach(infobar_area, 0,1,2,3, xoptions=c("shrink", "fill"), yoptions = c("shrink"))
                                 tbl$AttachDefaults(content_area, 0,1,3,4)
+                                tbl$Attach(statusbar_area, 0,1,4,5, yoptions = c("fill"))
+                                
                                 ## size grip issue if no statusbar
                                 ##content_area['border-width'] <<- 13
                                 ## XXX status bar is too short for labels
@@ -91,9 +95,8 @@ GWindow <- setRefClass("GWindow",
                                 sapply(content_area$getChildren(), content_area$remove)
                                 ## add. Child can be RGtk2Object or GComponent
                                 content_area$packStart(getBlock(child), expand=TRUE, fill=TRUE)
-                                ## bookkeep if possible
-                                if(is(child, "GComponent"))
-                                  child$set_parent(.self)
+
+                                child_bookkeeping(child)
                               },
                               remove_child=function(child) {
                                 child$set_parent(NULL)
@@ -110,9 +113,8 @@ GWindow <- setRefClass("GWindow",
                                 toolbar_area$packStart(getBlock(child), expand=TRUE, fill=TRUE)
                               },
                               add_statusbar=function(child, ...) {
-                                tbl <- widget[[1]]
-                                statusbar_area <<- getWidget(child) # RGtk2 object
-                                tbl$Attach(getBlock(child), 0,1,5,6, yoptions = c("fill"))
+                                statusbar_widget <<- child # RGtk2 object
+                                statusbar_area$packStart(getBlock(child), expand=TRUE, fill=TRUE)
                               },
                               ## set infobar message
                               set_infobar=function(msg, ...) {
@@ -125,11 +127,13 @@ GWindow <- setRefClass("GWindow",
                               },
                               ## set statusbar message
                               set_statusbar=function(msg, ...) {
-                                statusbar_area$push(1L, msg)
+                                if(!is(statusbar_widget, "uninitializedField"))
+                                  statusbar_widget$set_value(msg)
                               },
                               ## clear statusbar message
-                              clear_statusbar=function(msg, ...) {
-                                statusbar_area$push(1L, "") # bypass stack
+                              clear_statusbar=function(...) {
+                                if(!is(statusbar_widget, "uninitializedField"))
+                                  statusbar_widget$set_value("")
                               }
                               ))
 
