@@ -47,3 +47,4 @@ Collate:
     'gstatusbar.R'
     'ggraphics.R'
     'gimage.R'
+    'dialogs.R'

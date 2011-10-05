@@ -125,6 +125,16 @@ GNotebook <- setRefClass("GNotebook",
                               remove_current_page = function() {
                                 child <- get_items(get_index())
                                 remove_child(child)
+                              },
+                              ## handlers
+                              add_handler_changed=function(handler, action=NULL, ...) {
+                                "A tab changed"
+                                if(!is_handler(h)) return()
+                                f <- function(h, nb, i, ...) {
+                                  h$page.no <- i
+                                  handler(h, nb, i, ...)
+                                }
+                                add_handler("change-current-page", event_decorator(f), action=action, ...)
                               }
                               ))
 

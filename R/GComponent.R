@@ -118,7 +118,7 @@ GComponent <- setRefClass("GComponent",
                                  },
                                  ## size
                                  get_size=function(...) {
-                                   alloc <- block$getAllocation()$allocation
+                                   alloc <- getBlock(.self)$getAllocation()$allocation
                                    c(width=alloc$width, height=alloc$height)
                                  },
                                  set_size=function(value, ...) {
@@ -169,7 +169,7 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       ),
                                     contains="GComponent",
                                     methods=list(
-                                      ## Some decorator for handlers
+                                      ## Some decorators for handlers
                                       ## these wrap the handler to satisfy or fill the h object or return value
                                       event_decorator=function(handler) {
                                         "Decorator for basic event"
@@ -201,19 +201,20 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                           ## stuff in some event information
                                           h$x <- event$getX(); h$X <- event$getXRoot()
                                           h$y <- event$getY(); h$Y <- event$getYRoot()
-                                          h$state <- event$getState(); h$button <- event$getButton()
+                                          h$state <- gsub("-mask", "", names(which(event$getState() == GdkModifierType)))
+                                          h$button <- event$getButton()
                                           handler(h, widget, event, ...)
                                         }
                                         event_decorator(f)
                                       },
                                       ## code for integrating observable interface with RGtk2
-                                      handler_widget = function() widget, # allow override for block (glabel)
+                                      handler_widget = function() widget, # allow override for block (e.g., glabel)
                                       is_handler=function(handler) {
                                         "Helper to see if handler is a handler"
                                         !missing(handler) && !is.null(handler) && is.function(handler)
                                       },
                                       add_handler=function(signal, handler, action=NULL) {
-                                        "Uses Observable framework for events. Adds observer, then call connect signal method"
+                                        "Uses Observable framework for events. Adds observer, then call connect signal method. Override last if done elsewhere"
                                         if(is_handler(handler)) {
                                           o <- gWidgets2:::observer(.self, handler, action)
                                           invisible(add_observer(o, signal))
@@ -235,11 +236,12 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       },
                                       ## initiate a handler (emit signal)
                                       invoke_handler=function(signal, ...) {
+                                        " Bypasses gSignalEmit which crashes R for me"
                                         "Invoke observers listening to signal"
                                         notify_observers(..., signal=signal)
                                       },
                                       invoke_change_handler=function(...) {
-                                        "Generic change handler invoker. Bypasses emitSignal which crashes R for me"
+                                        "Generic change handler invoker."
                                         if(!is(change_signal, "uninitializedField") && length(change_signal))
                                           invoke_handler(signal=change_signal, ...)
                                       },
@@ -326,3 +328,12 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       
                                       
                                       ))
+
+##'  Print method for components
+##'
+##' Stops a nasty recursion
+##' @exportMethod show
+##' @rdname gWidgets2-S4-methods
+##' @docType methods
+setMethod(show, signature="GComponent", function(object) cat(sprintf("Object of class %s\n", class(object))))
+

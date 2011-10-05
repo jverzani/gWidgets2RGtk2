@@ -6,7 +6,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 .gtimer.guiWidgetsToolkitRGtk2 <- function(toolkit, ms, FUN, data=NULL,  one.shot=FALSE, start=TRUE)
-  GTimer$new(ms, FUN, one.shot=FALSE, start=TRUE)
+  GTimer$new(toolkit, ms, FUN, one.shot=FALSE, start=TRUE)
 
 ##' Timer for gWidgets.
 GTimer <- setRefClass("GTimer",
@@ -18,7 +18,7 @@ GTimer <- setRefClass("GTimer",
                         ID = "ANY"
                         ),
                       methods=list(
-                        initialize=function(ms, FUN, one.shot=FALSE, start=TRUE) {
+                        initialize=function(toolkit, ms, FUN, one.shot=FALSE, start=TRUE) {
 
                           f <- function(...) {
                             FUN(...)

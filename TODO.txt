@@ -12,7 +12,7 @@ DONE gcomobox.R
 gcommandline.R
 gdfedit.R
 gdf.R
-gdfnotebook.R
+(General) gdfnotebook.R
 gdialogs.R
 DONE gedit.R
 DONE gexpandgroup.R
@@ -21,7 +21,7 @@ DONE gframe.R
 DONE ggraphics.R
 ggraphicsnotebook.R
 DONE ggroup.R
-ghelp.R
+(General) ghelp.R
 ghtml.R
 DONE gimage.R
 DONE glabel.R
@@ -36,7 +36,7 @@ DONE gspinbutton.R
 DONE gstatusbar.R
 gtable.R 
 DONE gtext.R
-gtkStuff.R
+DONE gtkStuff.R
 gtoolbar.R
 gtree.R
 gvarbrowser.R
