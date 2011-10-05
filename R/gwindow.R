@@ -124,6 +124,8 @@ GWindow <- setRefClass("GWindow",
                                   sapply(curChildren, infobar_area$getContentArea()$remove)
                                 infobar_area$getContentArea()$packStart(label, expand=TRUE, fill=TRUE)
                                 infobar_area$show()
+                                ## hide after 4 seconds of mouse click
+                                timer <- gtimer(4*1000, FUN=function(...) infobar_area$hide(), one.shot=TRUE, toolkit=toolkit)
                               },
                               ## set statusbar message
                               set_statusbar=function(msg, ...) {

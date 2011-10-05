@@ -1,6 +1,91 @@
 ##' @include GWidget.R
 NULL
 
+##' Base class for dialogs
+##'
+##' Override modify_widget, ok_response, cancel_response and get_buttons
+GDialog <- setRefClass("GDialog",
+                      contains="GContainer",
+                      methods=list(
+                        initialize=function(toolkit=NULL, msg="", title="", icon="info", parent=NULL, ...) {
+
+                          icon <- paste("GTK_MESSAGE_",toupper(icon), sep="")
+    
+                          ## parent
+                          .parent <- parent
+                          if(!is.null(.parent)) {
+                            .parent <- getBlock(.parent)
+                            if(!is(.parent,"GtkWindow"))
+                              .parent <- .parent$GetWindow()
+                            if(!is(.parent,"GtkWindow"))
+                              .parent <- NULL          # give up
+                          }
+  
+                            
+                          ## use message dialog for Gtk
+                          widget <<- gtkMessageDialogNew(
+                                                         parent = .parent,
+                                                         flags = 0,
+                                                         buttons = get_buttons(),
+                                                         type=icon,
+                                                         msg[1]
+                                                         )
+                          ## odd, should have show=FALSE above, but doesn't work
+                          widget$hide()
+                          
+                          if(length(message) > 1)
+                            widget$setSecondaryText(paste(msg[-1], collapse = "\n"))
+
+                          modify_widget()
+
+                          
+                          widget$SetTitle(title)
+                          widget$GrabFocus()
+                          widget$GetWindow()$Raise()
+                          widget$setDefaultResponse(GtkResponseType["ok"])
+
+                          initFields(block=widget)
+                          callSuper(toolkit)
+                        },
+                        get_buttons=function() {
+                          "Return string indicating buttons, cf GtkButtonsType"
+                          "GTK_BUTTONS_OK"
+                        },
+                        ok_response=function() {
+                          "Response for ok button"
+                          NULL
+                        },
+                        cancel_response=function() {
+                          "Response for cancel button"
+                          NULL
+                        },
+                        modify_widget=function() {
+                          "Modify widget, eg. add input area"
+                        },
+                        run=function() {
+                          "Run dialog in modal mode"
+                            ## run in modal mode
+                          widget$showAll()
+                          response = widget$Run()
+                          
+                          if (response == GtkResponseType["close"] ||
+                              response == GtkResponseType["delete-event"] ||
+                              response == GtkResponseType["cancel"]) {
+                            ret <- cancel_response()
+                            widget$Destroy()
+                          } else if(response == GtkResponseType["ok"]) {
+                            ret <- ok_response()
+                            widget$Destroy()
+                          } else {
+                            ret <- cancel_response()
+                            widget$Destroy()
+                          }
+                          invisible(ret)
+                        }
+                        ))
+
+
+
 ##' toolkit implementation for gmessage
 ##'
 ##' @param toolkit 
@@ -19,44 +104,15 @@ NULL
                                              parent=NULL,
                                              ...
                                              ) {
-  
-  icon <- match.arg(icon)
-  icon <- paste("GTK_MESSAGE_",toupper(match.arg(icon)), sep="")
-  
-  button <- "GTK_BUTTONS_OK"
-  
-  ## parent
-  if(!is.null(parent)) {
-    parent <- getBlock(parent)
-    if(!is(parent,"GtkWindow"))
-      parent <- parent$GetWindow()
-    if(!is(parent,"GtkWindow"))
-      parent <- NULL          # give up
-  }
-  
-  
-  ## use message dialog for Gtk
-  dlg <- gtkMessageDialogNew(
-                             parent = parent,
-                             flags = 0,
-                             buttons = button,
-                             type=icon,
-                             msg[1]
-                             )
-  
-  if(length(message) > 1)
-    dlg['secondary-text'] <- paste(msg[-1], collapse = "\n")
-  
-  dlg$SetTitle(title)
-  dlg$GrabFocus()
-  dlg$GetWindow()$Raise()
-  dlg$setDefaultResponse(GtkResponseType["ok"])
-  
-  ## run in modal mode
-  response <- dlg$Run()
-  dlg$destroy()
-  return(NULL)
+
+  dlg <- GMessage$new(toolkit, msg, title, icon, parent, ...)
+  dlg$run()
 }
+
+##' subclass for message dialog
+GMessage <- setRefClass("GMessage", contains="GDialog")
+
+
 
 ##' toolkit implementation for gconfirm
 ##'
@@ -76,57 +132,21 @@ NULL
                                               parent=NULL,
                                               ...
                                               ) {
-            
-  if(missing(icon))
-    icon <- "question"
-  icon <- match.arg(icon)
-  icon <- paste("GTK_MESSAGE_",toupper(match.arg(icon)), sep="")
-  buttons <- "GTK_BUTTONS_OK_CANCEL"
-            
-  ## parent
-  if(!is.null(parent)) {
-    parent <- getBlock(parent)
-    if(!is(parent,"GtkWindow"))
-      parent <- parent$GetWindow()
-    if(!is(parent,"GtkWindow"))
-      parent <- NULL          # give up
-  }
-              
-  
+  dlg <- GConfirm$new(toolkit, msg, title, icon, parent, ...)
+  dlg$run()
 
-  dlg <- gtkMessageDialogNew(
-                             parent = parent,
-                             flags = 0,
-                             buttons = buttons,
-                             type=icon,
-                             msg[1]
-                             )
-  if(length(msg) > 1)
-    dlg['secondary-text'] <- paste(msg[-1], collapse = "\n")
-  
-  dlg$SetTitle(title)            
-  dlg$GrabFocus()
-  dlg$GetWindow()$Raise()
-  dlg$setDefaultResponse(GtkResponseType["ok"]) # fails -- need to use gtkDialog directly
-  
-  ## add callback to close
-  close.handler = function(h,...) h$obj$Destroy()
-            
-  ## run in modal mode
-  response = dlg$Run()
-  if (response == GtkResponseType["close"] ||
-      response == GtkResponseType["delete-event"] ||
-      response == GtkResponseType["cancel"]) {
-    dlg$Destroy()
-    invisible(FALSE)
-  } else if(response == GtkResponseType["ok"]) {
-    dlg$Destroy()
-    invisible(TRUE)
-  } else {
-    ## not sure what this is
-    invisible(FALSE)
-  }
 }
+
+##' class for confirmation dialog
+GConfirm <- setRefClass("GConfirm",
+                        contains="GDialog",
+                        methods=list(
+                          ok_response=function() TRUE,
+                          cancel_response=function() FALSE,
+                          get_buttons=function() "GTK_BUTTONS_OK_CANCEL"
+                          ))
+                        
+
 
 ##' toolkit implmentation of ginput
 ##'
@@ -148,59 +168,33 @@ NULL
                                            parent=NULL,                   
                                            ...
                                            ) {
-  
-  icon <- paste("GTK_MESSAGE_",toupper(match.arg(icon)), sep="")
-  
-  ## parent
-  if(!is.null(parent)) {
-    parent <- getBlock(parent)
-    if(!is(parent,"GtkWindow"))
-      parent <- parent$GetWindow()
-    if(!is(parent,"GtkWindow"))
-      parent <- NULL          # give up
-  }
-  
-  
-  ## use message dialog for Gtk
-  dlg <- gtkMessageDialogNew(
-                             parent = parent,
-                             flags = 0,
-                             buttons = "GTK_BUTTONS_OK_CANCEL",
-                             type=icon,
-                             msg[1]
-                             )
-  if(length(msg) > 1)
-    dlg['secondary-text'] <- paste(msg[-1], collapse = "\n")
-  dlg$SetTitle(title)
-  dlg$setDefaultResponse(GtkResponseType["ok"])
-            
-  dlg$GrabFocus()
-  dlg$GetWindow()$Raise()
-
-  entry <- gtkEntry()
-  dlg$GetVbox()$PackStart(entry) 
-
-  ## set as default
-  entry['can-default'] <- TRUE
-  entry$grabFocus()
-  entry$grabDefault()
-            
-  ## run in modal mode
-  response = dlg$Run()
-  if(response == GtkResponseType["cancel"] ||
-     response == GtkResponseType["close"] ||
-     response == GtkResponseType["delete-event"]) {
-    dlg$Destroy()
-    invisible(character(0))
-  } else if(response == GtkResponseType["ok"]) {
-    val <- entry$getText()
-    dlg$Destroy()
-    return(val)
-  } else {
-    dlg$Destroy()
-    invisible(character(0))
-  }
+  dlg <- GInput$new(toolkit, msg, title, icon, parent, ...)
+  dlg$set_text(text)
+  dlg$run()
 }         
+
+
+GInput <- setRefClass("GInput",
+                      contains="GDialog",
+                      fields=list(
+                        entry="ANY"
+                        ),
+                      methods=list(
+                        get_buttons=function() "GTK_BUTTONS_OK_CANCEL",
+                        ok_response=function() entry$getText(),
+                        cancel_response=function() character(0),
+                        modify_widget=function() {
+                          ## define entry
+                          entry <<- gtkEntry()
+                          widget$GetVbox()$PackStart(entry) 
+
+                          ## set as default
+                          entry$setCanDefault(TRUE)
+                          entry$grabFocus()
+                          entry$grabDefault()
+                        },
+                        set_text=function(txt) entry$setText(txt)
+                        ))
 
 ##' toolkit implementation
 ##'
@@ -366,7 +360,7 @@ GBasicDialog <- setRefClass("GBasicDialog",
                                             ) {
 
             ## insert an info bar here?
-            if(is(parent, "gWindow")) {
+            if(is(parent, "GWindow")) {
               parent$set_infobar(msg)
             } else {
               ## make a transient dialog window
@@ -399,7 +393,7 @@ GBasicDialog <- setRefClass("GBasicDialog",
 
               w$show()
 
-              timer <- gtimer(delay*1000, FUN=f, one.shot=TRUE)
+              timer <- gtimer(delay*1000, FUN=f, one.shot=TRUE, toolkit=toolkit)
             }
           }
  
