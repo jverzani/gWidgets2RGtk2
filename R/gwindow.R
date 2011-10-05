@@ -26,6 +26,34 @@ GWindow <- setRefClass("GWindow",
 
                                 widget <<- gtkWindow(show=visible)
                                 set_value(title)
+                                if(is.null(width))
+                                  width <- 400L
+                                if(is.null(height))
+                                  height <- as.integer(0.7 * width)
+                                widget$setDefaultSize(width, height)
+
+
+                                if(!is.null(parent)) {
+                                  if(inherits(parent, "GComponent")) {
+                                    ## a widget
+                                    parent_widget <- getWidget(parent)
+                                    if(!inherits(parent_widget,"GtkWindow"))
+                                      parent_widget <- getGtkWindow(parent_widget)
+                                    widget$setTransientFor(parent_widget)
+                                    widget$setPosition(GtkWindowPosition["center-on-parent"])
+                                    widget$setDestroyWithParent(TRUE)
+                                    ## windows fixes
+                                    widget$setSkipTaskbarHint(TRUE)
+                                    widget$setSkipPagerHint(TRUE)
+                                  } else {
+                                    ## check that parent is a numeric pair
+                                    if(is.numeric(parent) && length(parent) >= 2) {
+                                      widget$Move(as.integer(parent[1]),as.integer(parent[2]))
+                                    }
+                                  }
+                                }
+
+                                
                                 initFields(toolkit=toolkit, block=NULL,
                                            menubar_area=gtkHBox(),
                                            toolbar_area=gtkHBox(),
@@ -38,10 +66,7 @@ GWindow <- setRefClass("GWindow",
                                 ## add areas to widget. For now we have simple
                                 layout_widget()
                                 
-
-                                ## process parent (make transient for, location, ....
-                                ## size of widget ...
-                                ## handler for window close
+                                handler_id <<- add_handler_changed(handler, action)
 
                                 callSuper(...)
                               },
@@ -142,6 +167,19 @@ GWindow <- setRefClass("GWindow",
                               clear_statusbar=function(...) {
                                 if(!is(statusbar_widget, "uninitializedField"))
                                   statusbar_widget$set_value("")
+                              },
+
+                              ## handlers
+                              add_handler_changed=function(handler, action=NULL, ...) {
+                                add_handler_destory(handler, action, ...)
+                              },
+                              add_handler_destroy=function(handler, action=NULL, ...) {
+                                "window manager delete event"
+                                add_handler("destroy", handler, action=action, ...)
+                              },
+                              add_handler_unrealize=function(handler, action, ...) {
+                                "Intercept window manager delete event"
+                                add_event_handler("delete-event", handler, action=action, ...)
                               }
                               ))
 
