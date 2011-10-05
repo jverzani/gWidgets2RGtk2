@@ -8,12 +8,14 @@ GDialog <- setRefClass("GDialog",
                       contains="GContainer",
                       methods=list(
                         initialize=function(toolkit=NULL, msg="", title="", icon="info", parent=NULL, ...) {
-
+                          
                           icon <- paste("GTK_MESSAGE_",toupper(icon), sep="")
     
-                          ## parent
+                          ## parent is for placement, not tracking widget heirarchy
                           .parent <- parent
                           if(!is.null(.parent)) {
+                            if(is(.parent, "GWindow"))
+                              .parent <- .parent
                             .parent <- getBlock(.parent)
                             if(!is(.parent,"GtkWindow"))
                               .parent <- .parent$GetWindow()
@@ -30,7 +32,16 @@ GDialog <- setRefClass("GDialog",
                                                          type=icon,
                                                          msg[1]
                                                          )
-                          ## odd, should have show=FALSE above, but doesn't work
+                          ## odd, should have show=FALSE above, but doesn't work. Not sure why. Error is:
+                          ## > dlg = GDialog$new(NULL, msg="asdf")
+                          ## Error in .Object$initialize(...) : attempt to apply non-function
+                          ## > traceback()
+                          ## 5: .Object$initialize(...)
+                          ## 4: initialize(value, ...)
+                          ## 3: initialize(value, ...)
+                          ## 2: methods::new(def, ...)
+                          ## 1: GDialog$new(NULL, msg = "asdf")
+
                           widget$hide()
                           
                           if(length(message) > 1)
@@ -49,7 +60,7 @@ GDialog <- setRefClass("GDialog",
                         },
                         get_buttons=function() {
                           "Return string indicating buttons, cf GtkButtonsType"
-                          "GTK_BUTTONS_OK"
+                          "GTK_BUTTONS_CLOSE"
                         },
                         ok_response=function() {
                           "Response for ok button"

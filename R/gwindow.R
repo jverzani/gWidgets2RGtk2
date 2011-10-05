@@ -86,6 +86,9 @@ GWindow <- setRefClass("GWindow",
                               update_widget=function(...) {
                                 widget$setSizeRequest(-1, -1)
                               },
+                              is_extant=function() {
+                                !is(widget, "<invalid>")
+                              },
                               ##
                               ## add methods
                               add_child=function(child, ...) {
@@ -125,7 +128,10 @@ GWindow <- setRefClass("GWindow",
                                 infobar_area$getContentArea()$packStart(label, expand=TRUE, fill=TRUE)
                                 infobar_area$show()
                                 ## hide after 4 seconds of mouse click
-                                timer <- gtimer(4*1000, FUN=function(...) infobar_area$hide(), one.shot=TRUE, toolkit=toolkit)
+                                timer <- gtimer(4*1000, FUN=function(...) {
+                                  if(is_extant())
+                                    infobar_area$hide()
+                                }, one.shot=TRUE, toolkit=toolkit)
                               },
                               ## set statusbar message
                               set_statusbar=function(msg, ...) {
