@@ -24,6 +24,7 @@
 \alias{.gstatusbar.guiWidgetsToolkitRGtk2}
 \alias{.gtext.guiWidgetsToolkitRGtk2}
 \alias{.gtimer.guiWidgetsToolkitRGtk2}
+\alias{.gtoolbar.guiWidgetsToolkitRGtk2}
 \title{Toolkit button constructor}
 \usage{
   .gbutton.guiWidgetsToolkitRGtk2(toolkit, text, handler,
@@ -118,6 +119,10 @@
   .gimage.guiWidgetsToolkitRGtk2(toolkit, filename = "",
   dirname = "", stock.id = NULL, size = "", handler = NULL,
   action = NULL, container = NULL, ...)
+
+  .gtoolbar.guiWidgetsToolkitRGtk2(toolkit, toolbar.list =
+  list(), style = c("both", "icons", "text", "both-horiz"),
+  container = NULL, ...)
 }
 \description{
   Toolkit button constructor
@@ -161,6 +166,8 @@
   Toolkit constructor
 
   Toolkit implementation
+
+  Toolkit constructor
 
   Toolkit constructor
 

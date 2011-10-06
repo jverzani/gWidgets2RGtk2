@@ -11,12 +11,12 @@ NULL
                                               container = NULL,
                                               ... ) {
   GToolBar$new(toolkit,
-               toolbar.list=toolbar,list, style=style,
+               toolbar.list=toolbar.list, style=style,
                container=container ,...)
 }
 
 
-## XXX
+## toolbar class
 GToolBar <- setRefClass("GToolBar",
                         contains="GWidget",
                         fields=list(
@@ -36,17 +36,26 @@ GToolBar <- setRefClass("GToolBar",
 
                             add_toolbar_items(toolbar.list)
 
-                            add_to_parent(container, .self, ...)
+                            if(!is.null(container) && is(container, "GWindow"))
+                              add_to_parent(container, .self, ...)
                             
                             callSuper(toolkit)
                           },
                           add_toolbar_items=function(items) {
                             "Map a toolbar list, a named list of gaction items or gsepartor items"
-                            dispatcher <- function(obj) UseMethod("dispatcher")
-                            dispatcher.GAction <- function(obj) add_gaction_item(obj)
-                            dispatcher.GSeparator <- function(obj) add_gseparator(obj)
-                            sapply(items, dispatcher)
-                            toolbar_list <- merge(toolbar_list, items)
+                            ## XXX Odd, doesn't seem to like this style -- doesn't find dispatcher.GAction
+                            ## dispatcher <- function(item) UseMethod("dispatcher")
+                            ## dispatcher.default <- dispatcher.GAction <- function(item) add_gaction_item(item)
+                            ## dispatcher.GSeparator <- function(item) add_gseparator(item)
+                            ## sapply(items, dispatcher)
+                            sapply(items, function(item) {
+                              if(is(item, "GAction"))
+                                add_gaction_item(item)
+                              else if(is(item, "GSeparator"))
+                                add_gseparator(item)
+                            })
+                            widget$show()
+                            toolbar_list <<- merge(toolbar_list, items)
                           },
                           add_gseparator=function(obj) {
                             "Helper to add a separator"
@@ -60,6 +69,9 @@ GToolBar <- setRefClass("GToolBar",
                           },
                           clear_toolbar=function() {
                             "Clear toolbar items"
+                            x <- widget$getChildren()
+                            sapply(rev(x), widget$remove)
+                            widget$hide()
                           },
                           get_value=function( ...) {
                             toolbar_list

@@ -24,7 +24,7 @@ GWindow <- setRefClass("GWindow",
                               initialize=function(toolkit=NULL, title="",  visible=TRUE, name=NULL, width=NULL, height=NULL,
                                 parent=NULL, handler, action, ...) {
 
-                                widget <<- gtkWindow(show=visible)
+                                widget <<- gtkWindow(show=FALSE)
                                 set_value(title)
                                 if(is.null(width))
                                   width <- 400L
@@ -68,6 +68,9 @@ GWindow <- setRefClass("GWindow",
                                 
                                 handler_id <<- add_handler_changed(handler, action)
 
+                                if(visible)
+                                  widget$show()
+                                
                                 callSuper(...)
                               },
                               layout_widget = function() {
@@ -75,11 +78,11 @@ GWindow <- setRefClass("GWindow",
                                 tbl <- gtkTable(rows=4, columns=1, homogeneous=FALSE)
                                 tbl$SetColSpacings(0)
                                 tbl$SetRowSpacings(0)
-                                tbl$Attach(menubar_area, 0,1,0,1, yoptions = c("fill"))
-                                tbl$Attach(toolbar_area, 0,1,1,2, yoptions = c("fill"))
-                                tbl$Attach(infobar_area, 0,1,2,3, xoptions=c("shrink", "fill"), yoptions = c("shrink"))
-                                tbl$AttachDefaults(content_area, 0,1,3,4)
-                                tbl$Attach(statusbar_area, 0,1,4,5, yoptions = c("fill"))
+                                tbl$Attach(menubar_area, 0,1,0,1, xoptions=c("expand", "fill"), yoptions = c("shrink"))
+                                tbl$Attach(toolbar_area, 0,1,1,2,  xoptions=c("expand", "fill"), yoptions = c("shrink"))
+                                tbl$Attach(infobar_area, 0,1,2,3, xoptions=c("expand", "fill"), yoptions = c("shrink"))
+                                tbl$Attach(content_area, 0,1,3,4, xoptions=c("expand", "fill"), yoptions=c("expand", "fill"))
+                                tbl$Attach(statusbar_area, 0,1,4,5, xoptions=c("expand", "fill"), yoptions = c("shrink"))
                                 
                                 ## size grip issue if no statusbar
                                 ##content_area['border-width'] <<- 13
@@ -117,13 +120,23 @@ GWindow <- setRefClass("GWindow",
                               ##
                               ## add methods
                               add_child=function(child, ...) {
+                                                                
                                 if(missing(child) || is.null(child))
                                   return()
-                                ## clear out old (only one child allowed)
-                                sapply(content_area$getChildren(), content_area$remove)
-                                ## add. Child can be RGtk2Object or GComponent
-                                content_area$packStart(getBlock(child), expand=TRUE, fill=TRUE)
 
+                                ## whoa nelly, must check on type of child here -- not just in add method
+                                if(is(child, "GMenuBar")) {
+                                  add_menubar(child)
+                                } else if(is(child, "GToolBar")) {
+                                  add_toolbar(child)
+                                } else if(is(child, "GStatusBar")) {
+                                  add_statusbar(child)
+                                } else {
+                                  ## clear out old (only one child allowed)
+                                  sapply(content_area$getChildren(), content_area$remove)
+                                  ## add. Child can be RGtk2Object or GComponent
+                                  content_area$packStart(getBlock(child), expand=TRUE, fill=TRUE)
+                                }
                                 child_bookkeeping(child)
                               },
                               remove_child=function(child) {
@@ -171,7 +184,7 @@ GWindow <- setRefClass("GWindow",
 
                               ## handlers
                               add_handler_changed=function(handler, action=NULL, ...) {
-                                add_handler_destory(handler, action, ...)
+                                add_handler_destroy(handler, action, ...)
                               },
                               add_handler_destroy=function(handler, action=NULL, ...) {
                                 "window manager delete event"

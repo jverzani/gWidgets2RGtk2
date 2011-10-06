@@ -40,6 +40,6 @@ DONE gtkStuff.R
 gtoolbar.R
 gtree.R
 gvarbrowser.R
-DONE gwindow.R
+FIXES NEEDED gwindow.R
 DONE icons.R
 

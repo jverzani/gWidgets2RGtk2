@@ -3,7 +3,7 @@ NULL
 
 ##' Base class for container objects
 GContainer <- setRefClass("GContainer",
-                          contains="GComponent",
+                          contains="GComponentObservable",
                           fields=list(
                             children="list"
                             ),
