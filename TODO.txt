@@ -37,9 +37,9 @@ DONE gstatusbar.R
 gtable.R 
 DONE gtext.R
 DONE gtkStuff.R
-gtoolbar.R
+DONE gtoolbar.R
 gtree.R
 gvarbrowser.R
-FIXES NEEDED gwindow.R
+DONE gwindow.R
 DONE icons.R
 
