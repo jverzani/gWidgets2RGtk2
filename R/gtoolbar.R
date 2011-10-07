@@ -45,26 +45,36 @@ GToolBar <- setRefClass("GToolBar",
                             "Map a toolbar list, a named list of gaction items or gsepartor items"
                             ## XXX Odd, doesn't seem to like this style -- doesn't find dispatcher.GAction
                             ## dispatcher <- function(item) UseMethod("dispatcher")
-                            ## dispatcher.default <- dispatcher.GAction <- function(item) add_gaction_item(item)
-                            ## dispatcher.GSeparator <- function(item) add_gseparator(item)
+                            ## dispatcher.default <- function(item) add_widget_toolitem(item)
+                            ## dispatcher.GAction <- function(item) add_gaction_toolitem(item)
+                            ## dispatcher.GSeparator <- function(item) add_gseparator_toolitem(item)
                             ## sapply(items, dispatcher)
                             sapply(items, function(item) {
+                              ## do dispatch based on class
                               if(is(item, "GAction"))
-                                add_gaction_item(item)
+                                add_gaction_toolitem(item)
                               else if(is(item, "GSeparator"))
-                                add_gseparator(item)
+                                add_gseparator_toolitem(item)
+                              else
+                                add_widget_toolitem(item)
                             })
                             widget$show()
                             toolbar_list <<- merge(toolbar_list, items)
                           },
-                          add_gseparator=function(obj) {
+                          add_gseparator_toolitem=function(obj) {
                             "Helper to add a separator"
                             item <- gtkSeparatorToolItemNew()
                             widget$insert(item, pos=-1)
                           },
-                          add_gaction_item=function(obj) {
+                          add_gaction_toolitem=function(obj) {
                             "Helper to add a gaction item"
                             item <- obj$widget$createToolItem()
+                            widget$insert(item, pos=-1)
+                          },
+                          add_widget_toolitem=function(obj) {
+                            "Add a widget to the toolbar"
+                            item <- gtkToolItemNew()
+                            item$add(getBlock(obj))
                             widget$insert(item, pos=-1)
                           },
                           clear_toolbar=function() {
