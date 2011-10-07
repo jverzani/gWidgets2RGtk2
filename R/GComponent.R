@@ -300,10 +300,38 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       },
                                       ##
                                       add_popup_menu = function(menulist, action=NULL, ...) {
-                                        XXX("Add popup menu code")
+                                        if(is(menulist, "list")) 
+                                          mb <- gmenu(menulist, popup=TRUE)
+                                        else
+                                          mb <- menulist
+                                        if(is(mb, "GMenuPopup"))
+                                          stop("Pass in popupmenu or list defining one")
+
+                                        f <- function(w, e, ...) {
+                                          if(e$button == 1 && e$type == GdkEventType['button-press']) {
+                                            mb$widget$popup(button=e$button, activate.time=e$time)
+                                          }
+                                          FALSE
+                                        }
+                                        gSignalConnect(handler_widget(), "button-press-event", f)
                                       },
-                                      add_3rdmouse_popupmenu=function(menulist, action=NULL, ...) {
-                                        XXX("Add 3rd mouse")
+                                      add_3rd_mouse_popup_menu=function(menulist, action=NULL, ...) {
+                                        if(is(menulist, "list")) 
+                                          mb <- gmenu(menulist, popup=TRUE)
+                                        else
+                                          mb <- menulist
+                                        print(mb)
+                                        if(!is(mb, "GMenuPopup"))
+                                          stop("Pass in popupmenu or list defining one")
+                                        
+                                        f <- function(w, e, ...) {
+                                          ## make work wih mac and right mouse!!!
+                                          if(e$button == 3 && e$type == GdkEventType['button-press']) {
+                                            mb$widget$popup(button=e$button, activate.time=e$time)
+                                          }
+                                          FALSE
+                                        }
+                                        gSignalConnect(handler_widget(), "button-press-event", f)
                                       },
 
 

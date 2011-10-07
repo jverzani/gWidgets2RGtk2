@@ -13,11 +13,11 @@ NULL
   if(popup)
     GMenuPopup$new(toolkit, menu.list=menu.list, container = container, ...)
   else
-    GMenuBar$new(toolkit, menu.list=menu.list, container = container, ...)
+    GMenuBar$new(toolkit, menu.list=menu.list, ...)
 }
 
 
-## XXX
+## Toplevel menu bar
 GMenuBar <- setRefClass("GMenuBar",
                      contains="GWidget",
                      fields=list(
@@ -28,14 +28,15 @@ GMenuBar <- setRefClass("GMenuBar",
                          menu.list=list(),
                          container=NULL, ...) {
 
-                         widget <<- gtkMenuBarNew()
-                         initFields(block=widget)
-
-                         menu_list <<- list()
-                         set_value(menu.list)
+                         if(is(widget, "uninitializedField")) {
+                           widget <<- gtkMenuBarNew()
+                           initFields(block=widget)
+                           
+                           menu_list <<- list()
+                           set_value(menu.list)
                          
-                         add_to_parent(container, .self, ...)
-                         
+                           add_to_parent(container, .self, ...)
+                         }
                          callSuper(toolkit)
                        },
                        ## add items
@@ -144,14 +145,11 @@ GMenuPopup <- setRefClass("GMenuPopup",
                             methods=list(
                               initialize=function(toolkit=NULL,
                                 menu.list=list(),
-                                container=NULL,
                                 ...) {
-                                ## could tighten up by callSuper
-                                widget <<- gtkMenuBarNew()
+                                widget <<- gtkMenuNew()
                                 initFields(block=widget)
                                 menu_list <<- menu.list
                                 add_menu_items(widget, menu.list)
-                                add_to_parent(container, .self, ...)
                                 callSuper(toolkit)
                               }
                               ))
