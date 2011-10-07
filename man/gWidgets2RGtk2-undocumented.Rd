@@ -14,6 +14,7 @@
 \alias{.gimage.guiWidgetsToolkitRGtk2}
 \alias{.glabel.guiWidgetsToolkitRGtk2}
 \alias{.glayout.guiWidgetsToolkitRGtk2}
+\alias{.gmenu.guiWidgetsToolkitRGtk2}
 \alias{.gnotebook.guiWidgetsToolkitRGtk2}
 \alias{.gpanedgroup.guiWidgetsToolkitRGtk2}
 \alias{.gradio.guiWidgetsToolkitRGtk2}
@@ -123,6 +124,9 @@
   .gtoolbar.guiWidgetsToolkitRGtk2(toolkit, toolbar.list =
   list(), style = c("both", "icons", "text", "both-horiz"),
   container = NULL, ...)
+
+  .gmenu.guiWidgetsToolkitRGtk2(toolkit, menu.list =
+  list(), popup = FALSE, container = NULL, ...)
 }
 \description{
   Toolkit button constructor
@@ -166,6 +170,8 @@
   Toolkit constructor
 
   Toolkit implementation
+
+  Toolkit constructor
 
   Toolkit constructor
 

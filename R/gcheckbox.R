@@ -37,8 +37,9 @@ GCheckbox <- setRefClass("GCheckbox",
                              callSuper(toolkit)
                            },
                            set_value=function(value, index=TRUE, drop=TRUE, ...) {
-                                widget$setActive(value)
-                              },
+                             widget$setActive(value)
+                             ## invoke_change_handler() # not needed?
+                           },
                            get_value=function(index=TRUE, drop=TRUE, ...) {
                              widget$getActive()
                            },
