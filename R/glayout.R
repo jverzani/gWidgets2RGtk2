@@ -65,6 +65,9 @@ GLayout <- setRefClass("GLayout",
                              value <- glabel(value, toolkit=toolkit)
                            }
 
+                           expand <- getWithDefault(expand, getWithDefault(child$default_expand, FALSE))
+                           fill <- getWithDefault(fill, getWithDefault(child$default_fill, FALSE))
+                           
                            ## widgets
                            child <- getBlock(value)
                            
@@ -77,11 +80,11 @@ GLayout <- setRefClass("GLayout",
                            
                            ## we do things differently if there is a gtkAlignment for a block
                            if(is(child, "GtkAlignment")) {
-                             if(expand && (fill =="both" || fill == "x")) {
+                             if(expand && (fill == TRUE || fill =="both" || fill == "x")) {
                                child['xscale'] <- 1
                              }
 
-                             if(expand && (fill == "both" || fill == "y")) {
+                             if(expand && (fill== TRUE || fill == "both" || fill == "y")) {
                                child['yscale'] <- 1
                              }
                              
@@ -103,15 +106,22 @@ GLayout <- setRefClass("GLayout",
                            nr <- max(i); nc <- max(j)
                            if( nr > d[1] || nc > d[2])
                              widget$Resize(max(max(i), nr), max(max(j), nc))
+
+                           xopts <- yopts <- "fill"
                            
-                           if(expand)
-                             opts <- c("fill","expand","shrink")
-                           else
-                             opts <- c("fill")
-            
+                           if(expand) {
+                             if(is.null(fill) || (is.logical(fill) && fill) || (is.character(fill) && fill = "both")) {
+                               xopts <- yopts <- c("fill","expand","shrink")
+                             } else if(is.character(fill) && fill == "x") {
+                               xopts <-  c("fill","expand","shrink")
+                             } else if(is.character(fill) && fill == "y") {
+                               yopts <-  c("fill","expand","shrink")
+                             }
+                           }  
+                           
                            widget$Attach(child,
                                          min(j)-1, max(j), min(i)-1, max(i),
-                                         xoptions=opts, yoptions=opts)
+                                         xoptions=xopts, yoptions=yopts)
 
                              
                            ## Internal bookkeeping, add to lists

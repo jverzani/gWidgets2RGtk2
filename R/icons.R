@@ -31,6 +31,8 @@ NULL
       tmp <- icons[[sprintf("gtk-%s", icon)]]
     if(is.null(tmp))
       tmp <- icons[[sprintf("gw-%s", icon)]]
+    if(is.null(tmp))
+      tmp <- ""
     tmp
   })
 }

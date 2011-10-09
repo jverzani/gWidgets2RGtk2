@@ -33,7 +33,9 @@ GComponent <- setRefClass("GComponent",
                                  block="ANY",
                                  parent="ANY", # NULL for gwindow, else parent container
                                  handler_id="ANY",
-                                 .e="environment"
+                                 .e="environment",
+                                 default_expand="LogicalCharacterOrNULL",
+                                 default_fill="LogicalCharacterOrNULL"
                                  ),
                                methods=list(
                                  initialize=function(toolkit=guiToolkit(), ...) {
@@ -42,7 +44,13 @@ GComponent <- setRefClass("GComponent",
                                               )
                                    if(is(handler_id, "uninitializedField"))
                                      handler_id <<- NULL
-                                   
+
+                                   if(is(default_expand, "uninitializedField"))
+                                     default_expand <<- NULL
+
+                                   if(is(default_fill, "uninitializedField"))
+                                     default_fill <<- NULL
+
                                    callSuper(...)
                                  },
                                  ## length

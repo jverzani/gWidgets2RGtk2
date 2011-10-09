@@ -3,6 +3,7 @@ NULL
 
 ##' Toolkit constructor
 ##'
+##' @inheritParams gWidgets2::.gmenu
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 .gmenu.guiWidgetsToolkitRGtk2 <-  function(toolkit,
@@ -11,9 +12,9 @@ NULL
                                            container = NULL,
                                            ... ) {
   if(popup)
-    GMenuPopup$new(toolkit, menu.list=menu.list, container = container, ...)
+    GMenuPopup$new(toolkit, menu.list=menu.list,  ...)
   else
-    GMenuBar$new(toolkit, menu.list=menu.list, ...)
+    GMenuBar$new(toolkit, menu.list=menu.list, container = container, ...)
 }
 
 
@@ -34,7 +35,6 @@ GMenuBar <- setRefClass("GMenuBar",
                            
                            menu_list <<- list()
                            set_value(menu.list)
-                         
                            add_to_parent(container, .self, ...)
                          }
                          callSuper(toolkit)

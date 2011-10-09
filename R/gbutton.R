@@ -3,6 +3,7 @@ NULL
 
 ##' Toolkit button constructor
 ##'
+##' @inheritParams gWidgets2::gbutton
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 .gbutton.guiWidgetsToolkitRGtk2 <- function(toolkit, text, handler, action, container, ...) {
@@ -10,6 +11,12 @@ NULL
 }
 
 ##' Button class
+##'
+##' For RGtk2, the button class has some extra reference methods:
+##' \itemize{
+##' \item {\code{remove_border} will remove the border around the button. (The \code{border=FALSE} argument is deprecated.)}
+##' }
+##' @rdname gWidgets2RGtk2-package
 GButton <- setRefClass("GButton",
                             contains="GWidget",
                             fields=list(
@@ -63,6 +70,7 @@ GButton <- setRefClass("GButton",
                                   widget$setImage(image)
                                 }
                                 widget$setLabel(value)
+                                ## signal change, not done by widget
                                 invoke_change_handler()
                               },
                               get_value=function(index=TRUE, drop=TRUE, ...) {
@@ -78,6 +86,7 @@ GButton <- setRefClass("GButton",
                               add_handler_clicked=function(handler, action=NULL, ...) {
                                 add_handler_changed(handler, action, ...)
                               },
+                              ## Extra methods
                               remove_border=function() {
                                 "Remove border by setting relief to none"
                                 widget$SetRelief(GtkReliefStyle['none'])

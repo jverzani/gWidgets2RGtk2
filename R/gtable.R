@@ -42,8 +42,8 @@ GTable <- setRefClass("GTable",
                       fields=list(
                         items="ANY",
                         chosen_col="integer",
-                        icon_col="integerOrNULL",
-                        tooltip_col="integerOrNULL"
+                        icon_col="IntegerOrNULL",
+                        tooltip_col="IntegerOrNULL"
                         ),
                       methods=list(
                               initialize=function(toolkit=NULL,
@@ -86,7 +86,9 @@ GTable <- setRefClass("GTable",
                                 initFields(chosen_col=as.integer(chosen.col),
                                            icon_col = icon.col,
                                            tooltip_col=tooltip.col,
-                                           change_signal="row-activated"
+                                           change_signal="row-activated",
+                                           default_expand=TRUE,
+                                           default_fill=TRUE
                                            )
 
 
@@ -193,6 +195,8 @@ GTable <- setRefClass("GTable",
                       set_value=function(value, ...) {
                         "Set selected values by vector matching chosen.col"
                         ind <- match(value, get_value(drop=TRUE))
+                        if(length(ind) == 1 && is.na(ind))
+                          return() ## no match
                         set_index(ind)
                       },
                       get_index = function(...) {
@@ -201,7 +205,7 @@ GTable <- setRefClass("GTable",
                       },
                       set_index = function(value,...) {
                         "set selected values in value"
-                        set_selected(as.integer(value))
+                        set_selected(as.integer(value) - 1L)
                       },
                       get_items = function(i, j, ..., drop=TRUE) {
                         DF <- get_model()[]
@@ -244,8 +248,6 @@ GTable <- setRefClass("GTable",
                       },
                       set_names =function(value) {
                         ## check length
-                        print(get_dim())
-                        print(value)
                         m <- get_dim()[2]
                         if(length(value) != m)
                           return()
@@ -266,10 +268,6 @@ GTable <- setRefClass("GTable",
                         },
                         ## Handlers
                         add_handler_changed=function(handler, action=NULL, ...) {
-                          ## double click to activate
-                          add_handler_double_clicked(handler, action=action, ...)
-                        },
-                        add_handler_clicked=function(handler, action, ...) {
                           ## selection changed
                           if(is_handler(handler)) {
                             o <- gWidgets2:::observer(.self, handler, action)
@@ -279,8 +277,25 @@ GTable <- setRefClass("GTable",
                             }, data=.self, user.data.first=TRUE)
                           }
                         },
+                        add_handler_clicked=function(handler, action, ...) {
+                          add_handler_changed(handler, action=action, ...)
+                        },
                         add_handler_double_clicked=function(handler, action, ...) {
-                          add_handler("row-activated", handler, action=action, ...)
+##                          add_handler("row-activated", handler, action=action, ...)
+
+                           if(!is_handler(handler))
+                             return()
+                           double_click_handler <- function(h, w, e, ...) {
+                             ## XXX this shouldn't need -1L here.
+                             if(e$getButton() == 1 && e$getType() == GdkEventType['2button-press'] - 1L) # XXX ???
+                               handler(h, w, e, ...)
+                           }
+                           enter_key_handler <- function(h, w, e, ...) {
+                             if(e$getKeyval() == GDK_Return)
+                               handler(h, w, e, ...)
+                           }
+                           add_event_handler("button-press-event", double_click_handler, action=action, ...)
+                           add_event_handler("key-release-event", enter_key_handler, action=action, ...)
                         },
                         ##
                         hide_names=function(value) {

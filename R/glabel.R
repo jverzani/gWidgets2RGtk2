@@ -3,6 +3,7 @@ NULL
 
 ##' Toolkit label constructor
 ##'
+##' @inheritParams gWidgets2::glabel
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 .glabel.guiWidgetsToolkitRGtk2 <- function(toolkit, text="", markup=FALSE, editable=FALSE,
@@ -11,7 +12,13 @@ NULL
   GLabel$new(toolkit, text, markup, editable, handler, action, container, ...)
 }
 
-##' label class
+##' label class for RGtk2
+##'
+##' The label class for RGtk2 has some extra methods:
+##' \itemize{
+##' \item{\code{set_angle} Can be used to set the angle for the text. A value of 90 will rotate ccw to read bottom to top}
+##' }
+##' @rdname gWidgetsRGtk2-package
 GLabel <- setRefClass("GLabel",
                             contains="GWidget",
                             fields=list(
@@ -75,6 +82,8 @@ GLabel <- setRefClass("GLabel",
                                   widget$setMarkup(value)
                                 else
                                   widget$setLabel(value)
+                                ## signal change, not done by widget
+                                invoke_change_handler()
                               },
                               ## tricky part is for markup
                               get_value=function(index=TRUE, drop=TRUE, ...) {

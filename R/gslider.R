@@ -44,7 +44,7 @@ GSlider <- setRefClass("GSlider",
                            
                            initFields(block=widget,
                                       default_expand=TRUE,
-                                      default_fill=if(horizontal, "x", "y"),
+                                      default_fill=ifelse(horizontal, "x", "y"),
                                       change_signal="value-changed")
                            
                            add_to_parent(container, .self, ...)
