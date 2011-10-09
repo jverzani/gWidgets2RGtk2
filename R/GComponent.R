@@ -131,6 +131,8 @@ GComponent <- setRefClass("GComponent",
                                  },
                                  set_size=function(value, ...) {
                                    "Set widget size (size request), value=c(width=-1, height=-1)"
+                                   if(is.list(value))
+                                     value <- unlist(value) # list is named components
                                    if(length(value) >= 2) {
                                      width <- value[1]; height <- value[2]
                                    } else if(names(value) == "height") {
@@ -173,7 +175,8 @@ GComponent <- setRefClass("GComponent",
 ##' integrate in handler code
 GComponentObservable <- setRefClass("GComponentObservable",
                                     fields=list(
-                                      change_signal="character" # what signal is default change signal
+                                      change_signal="character", # what signal is default change signal
+                                      connected_signals="list"
                                       ),
                                     contains="GComponent",
                                     methods=list(
@@ -236,11 +239,13 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                           add_handler(signal, event_decorator(handler), action, ...)
                                         }
                                       },
-                                      connect_to_toolkit_signal=function(signal) {
+                                      connect_to_toolkit_signal=function(signal, f=function(self, ...) {
+                                        self$notify_observers(signal=signal, ...)
+                                      }) {
                                         "Connect signal of toolkit to notify observer"
-                                        gSignalConnect(handler_widget(), signal, f=function(self, ...) {
-                                          self$notify_observers(signal=signal, ...)
-                                        }, data=.self, user.data.first=TRUE)
+                                        if(is.null(connected_signals[[signal, exact=TRUE]]))
+                                          gSignalConnect(handler_widget(), signal, f, data=.self, user.data.first=TRUE)
+                                        connected_signals[[signal]] <<- TRUE
                                       },
                                       ## initiate a handler (emit signal)
                                       invoke_handler=function(signal, ...) {
