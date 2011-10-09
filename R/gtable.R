@@ -266,6 +266,22 @@ GTable <- setRefClass("GTable",
                           value <- rep(value, length.out=nrow(DF))
                           DF[,ncol(DF)] <- value
                         },
+                        set_size=function(value, ...) {
+                          "set size also has possibility of column widths"
+                          if(is.list(value)) {
+                            col_widths <- value$column.widths
+                            value$column.widths <- NULL
+                            set_column_widths(col_widths)
+                            value <- c(width=value$width, height=value$height) # make vector, not list
+                          }
+                          callSuper(value, ...)
+                        },
+                        set_column_widths=function(value) {
+                          if(length(value) == get_dim()[2]) {
+                            cols <- widget$getColumns()[-1]
+                            mapply(gtkTreeViewColumnSetMinWidth, cols, value)
+                          }
+                        },
                         ## Handlers
                         add_handler_changed=function(handler, action=NULL, ...) {
                           ## selection changed
@@ -281,30 +297,34 @@ GTable <- setRefClass("GTable",
                           add_handler_changed(handler, action=action, ...)
                         },
                         add_handler_double_clicked=function(handler, action, ...) {
-##                          add_handler("row-activated", handler, action=action, ...)
+                          ## There is an oddity here. When using row-activated it does as desired unless
+                          ## we alos have addHandlerChanged called in which case this is always called. So
+                          ## we bypass and do button and mouse events as they arise
+                          ## add_handler("row-activated", handler, action=action, ...)
 
                            if(!is_handler(handler))
                              return()
-                           double_click_handler <- function(h, w, e, ...) {
+                           o <- gWidgets2:::observer(.self, handler, action)
+                           add_observer(o, "button-press-event")
+                           add_observer(o, "key-release-event") 
+                           double_click_handler <- function(self, w, e, ...) {
                              ## XXX this shouldn't need -1L here.
                              if(e$getButton() == 1 && e$getType() == GdkEventType['2button-press'] - 1L) # XXX ???
-                               handler(h, w, e, ...)
+                               self$notify_observers(signal="button-press-event")
+                             FALSE
                            }
-                           enter_key_handler <- function(h, w, e, ...) {
+                           enter_key_handler <- function(self, w, e, ...) {
                              if(e$getKeyval() == GDK_Return)
-                               handler(h, w, e, ...)
+                               self$notify_observers(signal="key-release-event")
+                             FALSE
                            }
-                           add_event_handler("button-press-event", double_click_handler, action=action, ...)
-                           add_event_handler("key-release-event", enter_key_handler, action=action, ...)
+                           connect_to_toolkit_signal("button-press-event", double_click_handler)
+                           connect_to_toolkit_signal("key-release-event", enter_key_handler)
                         },
                         ##
                         hide_names=function(value) {
-                          "Toggle visibility of header"
-                          if(value) {
-                            ## hide header
-                          } else {
-                            ## show header
-                          }
+                          "adjust visibility of header"
+                          widget$setHeadersVisible(!as.logical(value))
                         }
 
                         ))
