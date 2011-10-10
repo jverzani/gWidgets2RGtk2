@@ -1,6 +1,7 @@
 * make signaling main properties by using observable as possible and
   svalue invoke command
-
+* add default_expand, default_fill properties so things like gtable
+  can have them set without user interaction.
 common.R
 dnd.R
 DONE gaction.R
@@ -26,7 +27,7 @@ ghtml.R
 DONE gimage.R
 DONE glabel.R
 DONE glayout.R
-gmenu.R
+DONE gmenu.R
 DONE gnotebook.R
 DONE gpanedgroup.R
 DONE gradio.R
@@ -34,7 +35,7 @@ DONE gseparator.R
 DONE gslider.R
 DONE gspinbutton.R
 DONE gstatusbar.R
-gtable.R 
+DONE gtable.R 
 DONE gtext.R
 DONE gtkStuff.R
 DONE gtoolbar.R

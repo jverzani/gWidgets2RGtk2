@@ -317,11 +317,12 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                           mb <- gmenu(menulist, popup=TRUE)
                                         else
                                           mb <- menulist
-                                        if(is(mb, "GMenuPopup"))
+                                        if(!is(mb, "GMenuPopup"))
                                           stop("Pass in popupmenu or list defining one")
 
                                         f <- function(w, e, ...) {
-                                          if(e$button == 1 && e$type == GdkEventType['button-press']) {
+                                          ## XXX count is wrong!
+                                          if(e$button == 1 && e$type == GdkEventType['button-press'] - 1L) {
                                             mb$widget$popup(button=e$button, activate.time=e$time)
                                           }
                                           FALSE

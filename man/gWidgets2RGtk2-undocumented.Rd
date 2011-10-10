@@ -23,6 +23,7 @@
 \alias{.gspinbutton.guiWidgetsToolkitRGtk2}
 \alias{.gstackwidget.guiWidgetsToolkitRGtk2}
 \alias{.gstatusbar.guiWidgetsToolkitRGtk2}
+\alias{.gtable.guiWidgetsToolkitRGtk2}
 \alias{.gtext.guiWidgetsToolkitRGtk2}
 \alias{.gtimer.guiWidgetsToolkitRGtk2}
 \alias{.gtoolbar.guiWidgetsToolkitRGtk2}
@@ -127,6 +128,60 @@
 
   .gmenu.guiWidgetsToolkitRGtk2(toolkit, menu.list =
   list(), popup = FALSE, container = NULL, ...)
+
+  .gtable.guiWidgetsToolkitRGtk2(toolkit, items, multiple =
+  FALSE, chosen.col = 1, icon.col = NULL, tooltip.col =
+  NULL, handler = NULL, action = NULL, container = NULL,
+  ...)
+}
+\arguments{
+  \item{text}{label text. If text matches a stock icon
+  name, that is used as well}
+
+  \item{toolkit}{toolkit instance}
+
+  \item{handler}{optional handler. If given added through
+  addHandlerChanged. Overridden if \code{editable=TRUE}.}
+
+  \item{action}{passed to handler through \code{action}
+  component of first argument of handler. For buttons, this
+  may also be a \code{GAction} instance.}
+
+  \item{container}{parent container (Optional for some
+  toolkits, but not all).}
+
+  \item{...}{passed to \code{add} method of parent
+  container}
+
+  \item{markup}{logical. If toolkit supports markup, this
+  indicates it will be used}
+
+  \item{value}{integer amount of spacing}
+
+  \item{menu.list}{A list defining the menu structure.
+  Named sub lists determine the submenu titles and
+  structure. The list may have components of class:
+  \code{GAction}, mapped to a button; \code{GSeparator},
+  mapped to a horizontal separator; \code{GRadio}, mapped
+  to linked buttons; or \code{GCheckbox}, mapped to a
+  checkbox button.}
+
+  \item{popup}{logical. If true, make a popup window to be
+  added through a handler call}
+
+  \item{items}{data.frame specifies items for selection.
+  May be a vector, matrix or data frame}
+
+  \item{multiple}{logical allow multiple selectino}
+
+  \item{chosen.col}{which value from the row is returned by
+  selection}
+
+  \item{icon.col}{NULL or integer. If latter, specifies
+  column containing stock icon}
+
+  \item{tooltip.col}{NULL or integer. If latter, specifies
+  column containing tooltip}
 }
 \description{
   Toolkit button constructor
@@ -170,6 +225,8 @@
   Toolkit constructor
 
   Toolkit implementation
+
+  Toolkit constructor
 
   Toolkit constructor
 

@@ -3,6 +3,7 @@ NULL
 
 ##' Toolkit constructor
 ##'
+##' @inheritParams gWidgets2::.XXX
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 .XXX.guiWidgetsToolkitRGtk2 <-  function(toolkit,

@@ -30,6 +30,8 @@ GToolBar <- setRefClass("GToolBar",
                             ...) {
                             
                             widget <<- gtkToolbar()
+                            widget$setStyle(match.arg(style))
+                            
                             initFields(block=widget,
                                        toolbar_list=list()
                                        )
