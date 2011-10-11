@@ -166,8 +166,73 @@ GComponent <- setRefClass("GComponent",
                                    }
 
                                    parent$add_child(child, expand, fill, anchor, ...)
-                                 }
+                                 },
 
+                                 ## Drag and drop
+                                 add_drop_source=function(handler, action=NULL, data.type="text", ...) {
+                                   "Specify widget is a drag source"
+                                  gtkDragSourceSet(handler_widget(),
+                                                   start.button.mask=c("button1-mask", "button3-mask"),
+                                                   targets=widgetTargetTypes[[data.type]],
+                                                   actions="copy")
+
+                                   if(data.type == "text") {
+                                     f <- function(h, widget, context, sel, tType, eTime) {
+                                       val <- handler(h) # returns text
+                                       sel$setText(val) 
+                                     }
+                                   }
+                                   else if(data.type == "object") {
+                                     print("Set object")
+                                     key <- digest(.self)
+                                     f <- function(h, widget, context, sel, tType, eTime) {
+                                       val <- handler(h) ## returns an object
+                                       .dnd.env[[key]] <- val
+                                       sel$setText(key) 
+                                     }
+                                   }
+                                     
+                                   
+                                   gSignalConnect(handler_widget(), "drag-data-get", f= f,
+                                                 data=list(obj=.self, action=action), user.data.first=TRUE)
+                                   
+                                   if(data.type == "object") {
+                                     gSignalConnect(handler_widget(), "drag-end", f=function(key, ...) {
+                                       .dnd.env[[key]] <- NULL # clean up
+                                     }, data=digest(.self), user.data.first=TRUE)
+                                   }
+                                 },
+                                 add_drop_target=function(handler, action=NULL, ...) {
+                                   "Specify that widget is a drop target"
+                                   gtkDragDestSet(handler_widget(),
+                                                  flags="all", 
+                                                  targets=widgetTargetTypes,
+                                                  actions="copy")
+
+                                   gSignalConnect(handler_widget(), "drag-data-received",
+                                                  function(h, widget, context, x, y, sel, data.type, event.time) {
+                                                    target <- context$getTargets()[[3]] # GdkAtom instance
+                                                    target <- as.integer(attr(target, "name"))
+                                                    ## do different things depending on context
+                                                    if(target == TARGET.TYPE.TEXT) {
+                                                      h$dropdata <- rawToChar(sel$getText())
+                                                    } else if(target == TARGET.TYPE.OBJECT) {
+                                                      key <- rawToChar(sel$getText())
+                                                      h$dropdata <- .dnd.env[[key]]; 
+                                                    }
+                                                    ## call handler
+                                                    handler(h)
+                                                    ## all donw
+                                                    gtkDragFinish(context, TRUE, FALSE, time=event.time)
+                                                  }, data=list(obj=.self, action=action), user.data.first=TRUE)
+                                 },
+                                 add_drag_motion=function(handler, action=NULL, ...) {
+                                   "Called when motion over widget occurs"
+                                   ## avoid add-handler, here we do directly, as above.
+                                   gSignalConnect(handler_widget(), "drag-motion", f=function(h, ...) {
+                                     handler(h, ...)
+                                   }, data=list(obj=.self, action=action), user.data.first=TRUE)
+                                 }
                                  
                                  )
                                )
