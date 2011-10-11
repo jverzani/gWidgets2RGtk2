@@ -138,8 +138,8 @@ GTable <- setRefClass("GTable",
                           sapply(get_valid_columns(), function(col) {
                             treeview_col <- make_treeview_column(DF[,col], col - 1L)
                             widget$insertColumn(treeview_col, pos = -1) # at end
-                            add_popup_menu_to_column(treeview_col)
                           })
+                          add_popup_menu()
                         },
                         make_icon_column=function() {
                           "Make column for icons"
@@ -153,57 +153,65 @@ GTable <- setRefClass("GTable",
                           view.col$setWidget(event_box)
                           view.col
                         },
-                        add_popup_menu_to_column=function(view.col) {
-                          "Add a popup menu to the column for sorting, ..."
-                          
-                          view.col$setClickable(TRUE)
-                          find_col_no <- function(view.col) {
-                            ind <- which(sapply(widget$getColumns(), function(i) identical(i, view.col)))
-                            ind - !is.null(icon_col)
-                          }
+                        default_popup_menu=function(col_index) {
+                          "Provide default popup menu (passed to gmenu(..., popup=TRUE))"
                           actions <- list(sort_increasing=
                                           gaction("Sort (increasing)", handler=function(h, ...) {
-                                            col_index <- find_col_no(view.col)
                                             DF <- get_model()
                                             ind <- order(DF[,col_index], decreasing=FALSE)
                                             DF$setFrame(DF[][ind,])
                                           }),
                                           sort_decreasing=
                                           gaction("Sort (decreasing)", handler=function(h, ...) {
-                                            col_index <- find_col_no(view.col)
                                             DF <- get_model()
                                             ind <- order(DF[,col_index], decreasing=TRUE)
                                             DF$setFrame(DF[][ind,])
                                           }),
                                           gseparator(),
                                           gaction("Rename column", handler=function(h,...) {
-                                            col_index <- find_col_no(view.col)
                                             cur_nms <- get_names()
                                             out <- ginput("Rename column", text=cur_nms[col_index], parent=widget)
                                             if(nchar(out)) {
-                                              out <- make.names(c(cur_nms, out))
-                                              view.col$getWidget()$getChild()$setLabel(tail(out, n=1))
+                                              cur_nms[col_index] <- out
+                                              set_names(cur_nms)
                                             }
                                           })
                                           )
-                          popup <- gmenu(actions, popup=TRUE, toolkit=toolkit)
-                          event_box <- view.col$getWidget()
-                          ## This is a *real* hack, as the following doesn't
-                          ## work when I use event_box. NOt sure why
-                          ## not, seems like the right combination of
-                          ## arguments is given
-                          btn <- event_box$getParent()$getParent()$getParent()
-                          id <- gSignalConnect(btn, "button-press-event", f=function(w, e, ...) {
-                            if(e$button == 1 && e$type == GdkEventType['button-press'] - 1L) {
-                              popup$widget$popup(button=e$button, activate.time=e$time)
-                            }
-                            FALSE
-                          })
+                          actions
+                        },
+                        add_popup_menu=function(menu_fun=NULL) {
+                          "Add a popup menu to the columns. Function should generate list of actions, ..."
+                          if(is.null(menu_fun))
+                            menu_fun <- .self$default_popup_menu
+                          
+                          ## perhaps needs optimization, loops over all columns so n^2 stuff here.
+                          find_col_no <- function(view.col) {
+                            ind <- which(sapply(widget$getColumns(), function(i) identical(i, view.col)))
+                            ind - !is.null(icon_col)
+                          }
+                          sapply(get_view_columns(), function(view.col) {
+                            view.col$setClickable(TRUE)
+                            col_no <- find_col_no(view.col)
+                            popup <- gmenu(menu_fun(col_no), popup=TRUE, toolkit=toolkit)
+                            event_box <- view.col$getWidget()
+                            ## This is a *real* hack, as the following doesn't
+                            ## work when I use event_box. NOt sure why
+                            ## not, seems like the right combination of
+                            ## arguments is given
+                            btn <- event_box$getParent()$getParent()$getParent()
+                            id <- gSignalConnect(btn, "button-press-event", f=function(w, e, ...) {
+                              if(e$button == 1 && e$type == GdkEventType['button-press'] - 1L) {
+                                popup$widget$popup(button=e$button, activate.time=e$time)
+                              }
+                              FALSE
+                            })
                           btn$setData("popup_id", id)
+                          })
                         },
                         remove_popup_menu=function() {
                           "remove popup menu from column headers"
-                          sapply(widget$getColumns(), function(view.col) {
+                          
+                          sapply(get_view_columns(), function(view.col) {
                             btn <- view.col$getWidget()$getParent()$getParent()$getParent()
                             if(!is.null(id <- btn$getData("popup_id")))
                               gSignalHandlerDisconnect(btn, id)
@@ -229,7 +237,13 @@ GTable <- setRefClass("GTable",
                           j <- seq_len(dim(DF)[2] - 1L) # last col is ..visible
                           setdiff(j, not_these())
                         },
-                        
+                        get_view_columns=function() {
+                          "Helper: get non-icon columns to iterate over"
+                          columns <- widget$getColumns()
+                          if(!is.null(icon_col))
+                            columns <- columns[-1]
+                          columns
+                        }, 
                         get_selected=function() {
                           "Get selected indices or numeric(0)"
                           sel_model <- widget$getSelection()
@@ -287,8 +301,10 @@ GTable <- setRefClass("GTable",
                         },
                         get_items = function(i, j, ..., drop=TRUE) {
                           DF <- get_model()[]
-                          ## we drop out some stuff
-                          DF[, get_valid_columns()][i,j]
+                          DF <- DF[, get_valid_columns()]
+                          names(DF) <- get_names()
+                          ## we possibly drop out some stuff
+                          DF[i,j, drop=getWithDefault(drop, TRUE)]
                         },
                         set_items = function(value, i, j, ...) {
                           if(missing(i) && missing(j)) {
@@ -322,7 +338,7 @@ GTable <- setRefClass("GTable",
                           c(rows=dim(get_model())[1], columns=length(get_valid_columns()))
                         },
                         get_names=function() {
-                          sapply(widget$getColumns(), function(col) {
+                          sapply(get_view_columns(), function(col) {
                             label <- col$getWidget()$getChild()
                             label$getLabel()
                           })
@@ -332,15 +348,12 @@ GTable <- setRefClass("GTable",
                           m <- get_dim()[2]
                           if(length(value) != m)
                             return()
-                          view_cols <- widget$getColumns()
-                          ## adjust for icons
-                          if(!is.null(icon_col))
-                            view_cols <- view_cols[-1]
+                         
                           f <- function(col, nm) {
                             label <- col$getWidget()$getChild()
                             label$setLabel(nm)
                           }
-                          mapply(f, view_cols, value)
+                          mapply(f, get_view_columns(), value)
                         },
                         get_visible=function() {
                           ## return last column in DF
@@ -364,7 +377,7 @@ GTable <- setRefClass("GTable",
                         },
                         set_column_widths=function(value) {
                           if(length(value) == get_dim()[2]) {
-                            cols <- widget$getColumns()[-1]
+                            cols <-get_view_columns()
                             mapply(gtkTreeViewColumnSetMinWidth, cols, value)
                           }
                         },
