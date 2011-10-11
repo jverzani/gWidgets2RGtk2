@@ -114,3 +114,18 @@ isRightMouseClick <- function(e) {
   e$GetButton() == 3 ||
   (e$GetState() == GdkModifierType['control-mask'] && e$GetButton() == 1) 
 }
+
+
+## for drag and drop we define some global values
+
+## parameters
+TARGET.TYPE.TEXT   <- 80L                # our enumeration
+TARGET.TYPE.OBJECT <- 81L                  
+widgetTargetTypes <- 
+  list(text = gtkTargetEntry("text/plain", 0, 
+         TARGET.TYPE.TEXT),
+       object = gtkTargetEntry("text/plain", 0, 
+         TARGET.TYPE.OBJECT))
+
+## an environment to store objects when dragging and dropping
+.dnd.env <- new.env()
