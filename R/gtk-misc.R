@@ -129,3 +129,29 @@ widgetTargetTypes <-
 
 ## an environment to store objects when dragging and dropping
 .dnd.env <- new.env()
+
+
+###
+##################################################
+## Map between R class an dGObject class
+## right way, but was not working...
+## RtoGObjectConversion <- function(x) UseMethod("RtoGObjectConversion")
+## RtoGObjectConversion.default <- function(x) "gchararray"
+## RtoGObjectConversion.factor <- function(x) "gchararray"
+## RtoGObjectConversion.integer <- function(x) "gint"
+## RtoGObjectConversion.numeric <- function(x) "double"
+## RtoGObjectConversion.RGtkObject <- function(x) "GObject"
+## RtoGObjectConversion.logical <- function(x) "gboolean"
+
+RtoGObjectConversion <- function(x) {
+  if(is(x, "factor"))
+    "gchararray"
+  else if(is(x, "integer"))
+    "gint"
+  else if(is(x, "numeric"))
+    "gdouble"
+  else if(is(x, "logical"))
+    "gboolean"
+  else
+    "gchararray"
+}

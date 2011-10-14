@@ -27,8 +27,9 @@ NULL
 
 
 ## helper to make treeview columns based on type of data
-make_treeview_column <- function(x, col_no, editable=FALSE, model=NULL) UseMethod("make_treeview_column")
-make_treeview_column.default <- function(x, col_no, editable=FALSE, model=NULL) {
+## Need S3 methods defined outside of reference class method, not sure why
+make_treeview_column <- function(x, col_no) UseMethod("make_treeview_column")
+make_treeview_column.default <- function(x, col_no) {
   ## Return a tree view column instance to render x, located in 0-based col in model
   cellrenderer <- gtkCellRendererText()
   view_col <- gtkTreeViewColumnNew()
@@ -40,7 +41,7 @@ make_treeview_column.default <- function(x, col_no, editable=FALSE, model=NULL) 
   event_box <- gtkEventBox()
   event_box$SetVisibleWindow(FALSE)
   label <- gtkLabel()
-  event_box$addEvents('all-events-mask')
+##  event_box$addEvents('all-events-mask')
   event_box$add(label)
   event_box$setAboveChild(TRUE)         # gets events to box
   
@@ -53,7 +54,7 @@ make_treeview_column.default <- function(x, col_no, editable=FALSE, model=NULL) 
 ##' This class implements a few additional reference methods:
 ##' \code{hide_names} to hide the header names;
 ##' \code{remove_popup_menu} to remove the popup menu;
-##' 
+##' \code{add_popup} to add a popup menu
 GTable <- setRefClass("GTable",
                       contains="GWidget",
                       fields=list(
@@ -102,7 +103,7 @@ GTable <- setRefClass("GTable",
                                 initFields(chosen_col=as.integer(chosen.col),
                                            icon_col = icon.col,
                                            tooltip_col=tooltip.col,
-                                           change_signal="row-activated",
+                                           change_signal="changed",
                                            default_expand=TRUE,
                                            default_fill=TRUE,
                                            toolkit=toolkit # needed here for gmenu call later
@@ -139,7 +140,7 @@ GTable <- setRefClass("GTable",
                             treeview_col <- make_treeview_column(DF[,col], col - 1L)
                             widget$insertColumn(treeview_col, pos = -1) # at end
                           })
-                          add_popup_menu()
+                          add_popup()
                         },
                         make_icon_column=function() {
                           "Make column for icons"
@@ -179,7 +180,11 @@ GTable <- setRefClass("GTable",
                                           )
                           actions
                         },
-                        add_popup_menu=function(menu_fun=NULL) {
+                        add_popup_menu=function(menulist) {
+                          f <- function(...) menulist
+                          add_popup(f)
+                        },
+                        add_popup=function(menu_fun=NULL) {
                           "Add a popup menu to the columns. Function should generate list of actions, ..."
                           if(is.null(menu_fun))
                             menu_fun <- .self$default_popup_menu
@@ -212,6 +217,7 @@ GTable <- setRefClass("GTable",
                           "remove popup menu from column headers"
                           
                           sapply(get_view_columns(), function(view.col) {
+                            view.col$setClickable(FALSE)
                             btn <- view.col$getWidget()$getParent()$getParent()$getParent()
                             if(!is.null(id <- btn$getData("popup_id")))
                               gSignalHandlerDisconnect(btn, id)

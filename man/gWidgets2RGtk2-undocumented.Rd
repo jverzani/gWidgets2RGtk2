@@ -27,6 +27,7 @@
 \alias{.gtext.guiWidgetsToolkitRGtk2}
 \alias{.gtimer.guiWidgetsToolkitRGtk2}
 \alias{.gtoolbar.guiWidgetsToolkitRGtk2}
+\alias{.gtree.guiWidgetsToolkitRGtk2}
 \title{Toolkit button constructor}
 \usage{
   .gbutton.guiWidgetsToolkitRGtk2(toolkit, text, handler,
@@ -133,25 +134,45 @@
   FALSE, chosen.col = 1, icon.col = NULL, tooltip.col =
   NULL, handler = NULL, action = NULL, container = NULL,
   ...)
+
+  .gtree.guiWidgetsToolkitRGtk2(toolkit, offspring = NULL,
+  offspring.data = NULL, chosen.col = 1, offspring.col = 2,
+  icon.col = NULL, tooltip.col = NULL, multiple = FALSE,
+  handler = NULL, action = NULL, container = NULL, ...)
 }
 \arguments{
+  \item{toolkit}{Each widget constructor is passed in the
+  toolkit it will use. This is typically done using the
+  default, which will lookup the toolkit through
+  \code{\link{guiToolkit}}.}
+
   \item{text}{label text. If text matches a stock icon
   name, that is used as well}
 
-  \item{toolkit}{toolkit instance}
+  \item{handler}{A handler assigned to the default change
+  signal. Handlers are called when some event triggers a
+  widget to emit a signal. For each widget some default
+  signal is assumed, and handlers may be assigned to that
+  through \code{addHandlerChanged} or at construction time.
+  Handlers are functions whose first argument, \code{h} in
+  the documentation, is a list with atleast two components
+  \code{obj}, referring to the object emitting the signal
+  and \code{action}, which passes in user-specified data to
+  parameterize the function call.}
 
-  \item{handler}{optional handler. If given added through
-  addHandlerChanged. Overridden if \code{editable=TRUE}.}
+  \item{action}{User supplied data passed to the handler
+  when it is called}
 
-  \item{action}{passed to handler through \code{action}
-  component of first argument of handler. For buttons, this
-  may also be a \code{GAction} instance.}
+  \item{container}{A parent container. When a widget is
+  created it can be incorporated into the widget heirarchy
+  by passing in a parent container at construction time.
+  (For some toolkits this is not optional, e.g.
+  \pkg{gWidgets2tcltk} or \pkg{gWidgetsWWW2}.)}
 
-  \item{container}{parent container (Optional for some
-  toolkits, but not all).}
-
-  \item{...}{passed to \code{add} method of parent
-  container}
+  \item{...}{These values are passed to the \code{add}
+  method of the parent container, and occasionally have
+  been used to sneak in hidden arguments to toolkit
+  implementations.}
 
   \item{markup}{logical. If toolkit supports markup, this
   indicates it will be used}
@@ -182,6 +203,18 @@
 
   \item{tooltip.col}{NULL or integer. If latter, specifies
   column containing tooltip}
+
+  \item{offspring}{function. A function passed values
+  \code{path} and \code{data}, the latter from
+  \code{offspring.data}. The path is the current position
+  of the parent item using the named keys from the chosen
+  column.}
+
+  \item{offspring.data}{}
+
+  \item{offspring.col}{integer or column name. Points to
+  column containing logical values indicating if a row has
+  offspring.}
 }
 \description{
   Toolkit button constructor
@@ -225,6 +258,8 @@
   Toolkit constructor
 
   Toolkit implementation
+
+  Toolkit constructor
 
   Toolkit constructor
 

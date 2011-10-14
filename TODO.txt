@@ -1,9 +1,11 @@
 * make signaling main properties by using observable as possible and
   svalue invoke command
-* add default_expand, default_fill properties so things like gtable
+DONE * add default_expand, default_fill properties so things like gtable
   can have them set without user interaction.
+* copyright notice in headers
+
 common.R
-dnd.R
+dnd.R: do this
 DONE gaction.R
 DONE gbutton.R
 DONE gcalendar.R
@@ -12,15 +14,15 @@ DONE gcheckboxgroup.R
 DONE gcomobox.R 
 gcommandline.R
 gdfedit.R
-gdf.R
+gdf.R: see from SpreadR
 (General) gdfnotebook.R
-gdialogs.R
+DONE gdialogs.R
 DONE gedit.R
 DONE gexpandgroup.R
 DONE gfile.R
 DONE gframe.R
 DONE ggraphics.R
-ggraphicsnotebook.R
+ggraphicsnotebook.R: need general notebook interface
 DONE ggroup.R
 (General) ghelp.R
 ghtml.R
@@ -39,8 +41,9 @@ DONE gtable.R
 DONE gtext.R
 DONE gtkStuff.R
 DONE gtoolbar.R
-gtree.R
-gvarbrowser.R
+gtree.R: (data.frame with factors, key or offspring.fun and
+          offspring.data. Icon.col, tooltip.col given too
+gvarbrowser.R: integrate in wsbrowser code (see Michael's new code)
 DONE gwindow.R
 DONE icons.R
 

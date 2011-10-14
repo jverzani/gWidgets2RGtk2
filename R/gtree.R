@@ -20,7 +20,7 @@ NULL
 }
 
 
-## XXX
+##' Class for gtree objects. Extra reference methods are \code{set_multiple} to set whether multiple or single selection is being used.
 GTree <- setRefClass("GTree",
                      contains="GWidget",
                      fields=list(
@@ -29,7 +29,8 @@ GTree <- setRefClass("GTree",
                        icon_col="IntegerOrNULL",
                        tooltip_col="IntegerOrNULL",
                        offspring_data="ANY",
-                       offspring="function"
+                       offspring="function",
+                       multiple="logical"
                        ),
                      methods=list(
                        initialize=function(toolkit=NULL,
@@ -43,8 +44,7 @@ GTree <- setRefClass("GTree",
                          block$SetPolicy("GTK_POLICY_AUTOMATIC","GTK_POLICY_AUTOMATIC")
                          block$add(widget)
 
-                         if(multiple)
-                           set_selection_mode("multiple")
+                         set_multiple(multiple)
 
                          
                          ## call offspring to get data frame
@@ -72,7 +72,7 @@ GTree <- setRefClass("GTree",
                                     icon_col = icon.col,
                                     tooltip_col=tooltip.col,
                                     offspring_data=offspring.data,
-                                    change_signal="changed",
+                                    change_signal="row-activated",
                                     default_expand=TRUE,
                                     default_fill=TRUE,
                                     toolkit=toolkit # needed here for gmenu call later
@@ -86,6 +86,7 @@ GTree <- setRefClass("GTree",
                          widget$setModel(model)
 
                          make_columns(items)
+
                          add_child_items(items, NULL)
                          set_names(names(items)[-unlist(list(offspring_col, icon_col, tooltip_col))])
 
@@ -138,11 +139,20 @@ GTree <- setRefClass("GTree",
                          sel_model <- widget$getSelection()
                          sel_model$setMode(GtkSelectionMode[match.arg(mode)])
                        },
-                       make_columns=function(items) {
-                         "Make new columns, watching out for icons, tooltips, visible"
-                         if(!is.null(icon_col)) {
-                           widget$InsertColumn(make_icon_column(), 0L)
+                       set_multiple=function(value) {
+                         if(value) {
+                           set_selection_mode("multiple")
+                           multiple <<- TRUE
+                         } else {
+                           set_selection_mode("single")
+                           multiple <<- FALSE
                          }
+                       },
+                       make_columns=function(items) {
+                         "Make new columns, watching outE for icons, tooltips, visible"
+
+                         widget$insertColumn(make_key_column(), pos=1L) # first column
+                         
                          if(!is.null(tooltip_col)) {
                            ## use column tooltip_col - 1L for a tooltip
                            x <- seq_along(items);
@@ -150,14 +160,43 @@ GTree <- setRefClass("GTree",
                              widget$setTooltipColumn(tooltip_col - 1L)
                            }
                          }
+
+                         
                          ## now add columns, one by one skipping ones we don't represent
-                         not_these <- unlist(list(icon_col, tooltip_col, offspring_col))
+                         not_these <- unlist(list(chosen_col, icon_col, tooltip_col, offspring_col))
                          these <- setdiff(seq_along(items), not_these)
                          sapply(these, function(col) {
                            treeview_col <- make_treeview_column(items[,col], col - 1L)
                            widget$insertColumn(treeview_col, pos = -1) # at end
                           })
                         },
+                       make_key_column=function() {
+                         "Make column for key and icons, if present"
+                         view_col <- gtkTreeViewColumnNew()
+                         view_col$setResizable(TRUE)
+                         if(!is.null(icon_col)) {
+                            cellrenderer <- gtkCellRendererPixbufNew()
+                            view_col$PackStart(cellrenderer, FALSE)
+                            view_col$AddAttribute(cellrenderer, "stock-id", icon_col - 1L)
+                          }
+                         cellrenderer <- gtkCellRendererText()
+                         view_col$PackStart(cellrenderer, TRUE)
+                         cellrenderer['xalign'] = 0
+                         view_col$AddAttribute(cellrenderer, "text", chosen_col - 1L)
+                         ##
+                         add_label(view_col)
+                         view_col
+                       },
+                       add_label=function(view_col) {
+                         "Add label widget to hold names. This allows us to intercept clicks if desired"
+                         event_box <- gtkEventBox()
+                         event_box$SetVisibleWindow(FALSE)
+                         label <- gtkLabel()
+                         ##event_box$addEvents('all-events-mask')
+                         event_box$add(label)
+                         event_box$setAboveChild(TRUE)         # gets events to box
+                         view_col$setWidget(event_box)
+                       },
                         make_icon_column=function() {
                           "Make column for icons"
                           cellrenderer <- gtkCellRendererPixbufNew()
@@ -180,7 +219,6 @@ GTree <- setRefClass("GTree",
                        ## tree methods
                        add_child_items=function(children, parent.iter=NULL) {
                          model <- widget$getModel()$getModel()
-
                          if(nrow(children) == 0)
                            return()
 
@@ -195,6 +233,7 @@ GTree <- setRefClass("GTree",
                              model$SetValue(iter$iter, column=j-1, children[i,j])
                            }
                            ## add branch?
+
                            if(has_offspring[i]) {
                              model$Append(parent=iter$iter)
                            }
@@ -204,6 +243,13 @@ GTree <- setRefClass("GTree",
                        walk_back_from_path=function(path) {
                          "Walk the tree back from path"
                          ## assume path is not from sorted store
+                         if(is.numeric(path)) {
+                           ## create GtkTreePath
+                           tpath <- paste(path - 1L, collapse=":")
+                           path <- gtkTreePathNewFromString(tpath)
+                         }
+                         stopifnot(is(path, "GtkTreePath"))
+                         
                          model <- widget$getModel()$getModel()
                          iter <- model$getIter(path)
                          walk_back_from_iter(iter)
@@ -243,7 +289,7 @@ GTree <- setRefClass("GTree",
                        },
                        set_value=function(value, ...) {
                          "open path, set via match"
-
+                         ## this is trickier than it look
                          
                        },
                        get_index = function(...) {
@@ -268,15 +314,50 @@ GTree <- setRefClass("GTree",
                        },
                        set_index = function(value,...) {
                          "open to specifed index, if possible"
+                         ## value may be a list
+                         if(!is.list(value))
+                           value <- list(value)
+
+                         clear_selection() # out with old, in with new
+                         sel <- widget$getSelection()
+                         sapply(value, function(path) {
+                           path <- paste(path-1L, collapse=":")
+                           widget$expandToPath(gtkTreePathNewFromString(path))
+                           widget$collapseRow(gtkTreePathNewFromString(path))
+                           sel$selectPath(gtkTreePathNewFromString(path))
+                         })
                        },
                        get_items = function(i, j, ..., drop=TRUE) {
-                         "XXX"
+                         "Get items in the selected row"
+                         sel_model <- widget$getSelection()
+                         selected_rows <- sel_model$getSelectedRows()
+                         sel_list <- selected_rows$retval # a list of GtkTreePath objects
+                         if(length(sel_list) == 0)
+                           return(character(0)) # no selection
+
+                         sorted_model <- widget$getModel()
+                         model <- sorted_model$getModel() # non-sorted
+
+                         n <- model$getNColumns()
+                         out <- lapply(sel_list, function(i) {
+                           us_path <- sorted_model$ConvertPathToChildPath(i)
+                           iter <- model$getIter(us_path)
+                           not_these <- unlist(list(icon_col, tooltip_col, offspring_col))
+                           these <- setdiff(seq_len(n), not_these)
+                           lapply(these, function(i) model$getValue(iter$iter, i - 1L)$value)
+                         })
+                         if(getWithDefault(drop, FALSE)) {
+                           out <- lapply(out, function(x) x[[chosen_col]])
+                         }
+                         out <- do.call(rbind, out)
+                         colnames(out) <- get_names()
+                         out
                        },
                        set_items = function(value, i, j, ...) {
-                         "XXX"
+                         stop(gettext("One sets items at construction through the x argument of offspring function"))
                        },
                        get_names=function() {
-                         sapply(get_view_columns(), function(col) col$getWidget()$getWidget()$getLabel())
+                         sapply(get_view_columns(), function(col) col$getWidget()$getChild()$getLabel())
                        },
                        set_names=function(value) {
                          f <- function(col, nm) {
@@ -285,8 +366,24 @@ GTree <- setRefClass("GTree",
                          }
                          mapply(f, get_view_columns(), value)
                        },
+                       update_widget=function(...) {
+                         "Update base of widget, reopen selected paths if possible"
+                         cur_sel <- get_index()
+                         widget$collapseAll()
+##                         widget$removeBaseItems() XXX Need gtk here
+
+                         items <- offspring(c(), offspring_data)
+                         add_child_items(items, NULL)
+                         set_index(cur_sel)
+                       },
+                       ##
                        add_handler_changed=function(handler, action=NULL, ...) {
-                         add_handler_clicked(handler, action=action, ...)
+                         add_handler("row-activated", handler, action=action, ...)
+                       },
+                       ## Some extra methods
+                       clear_selection=function() {
+                         widget$getSelection()$unselectAll()
+
                        }
                        ))
 
