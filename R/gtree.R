@@ -2,6 +2,9 @@
 ##' @include gtree.R
 NULL
 
+## need to finish update_widget
+## another handler?
+
 ##' Toolkit constructor
 ##'
 ##' @inheritParams gWidgets2::.gtree
@@ -133,8 +136,7 @@ GTree <- setRefClass("GTree",
                          
                          callSuper(toolkit)
                        },
-                       ## Stolen from gtable -- inheritance
-                       set_selection_mode=function(mode=c("none","single","browse", "multiple", "extended")) {
+                       set_selection_mode=function(mode=c("none", "single", "browse", "multiple", "extended")) {
                          "Helper: Set the selection mode"
                          sel_model <- widget$getSelection()
                          sel_model$setMode(GtkSelectionMode[match.arg(mode)])
@@ -197,18 +199,6 @@ GTree <- setRefClass("GTree",
                          event_box$setAboveChild(TRUE)         # gets events to box
                          view_col$setWidget(event_box)
                        },
-                        make_icon_column=function() {
-                          "Make column for icons"
-                          cellrenderer <- gtkCellRendererPixbufNew()
-                          view.col <- gtkTreeViewColumnNew()
-                          view.col$PackStart(cellrenderer, TRUE)
-                          view.col$AddAttribute(cellrenderer, "stock-id", icon_col - 1L)
-                          event_box <- gtkEventBox() # need this for consistency
-                          label <- gtkLabel()
-                          event_box$add(label)
-                          view.col$setWidget(event_box)
-                          view.col
-                        },
                        get_view_columns=function() {
                          "Helper: get non-icon columns to iterate over"
                          columns <- widget$getColumns()
