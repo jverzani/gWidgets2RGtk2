@@ -358,13 +358,25 @@ GTree <- setRefClass("GTree",
                        },
                        update_widget=function(...) {
                          "Update base of widget, reopen selected paths if possible"
+                         block_observers()
                          cur_sel <- get_index()
                          widget$collapseAll()
-##                         widget$removeBaseItems() XXX Need gtk here
 
+                         ## clear base
+                         model <- widget$getModel()$getModel()
+                         n <- model$IterNChildren(NULL)
+                         if(n >= 1) {
+                           for(i in 0:(n-1)) {
+                             child_iter <- model$IterChildren(NULL)
+                             if(child_iter$retval)
+                               model$Remove(child_iter$iter)
+                           }
+                         }
+                         ## repopulate
                          items <- offspring(c(), offspring_data)
                          add_child_items(items, NULL)
                          set_index(cur_sel)
+                         unblock_observers()                         
                        },
                        ##
                        add_handler_changed=function(handler, action=NULL, ...) {

@@ -96,3 +96,32 @@ GWidgetsRGtk2Icons <- setRefClass("GWidgetsRGtk2Icons",
 
 .GWidgetsRGtk2Icons <- GWidgetsRGtk2Icons$new()
                                  
+##################################################
+
+##' Create icon from object
+##'
+##' @param x object
+##' @export
+##' @rdname icon_for_object
+icon_for_object <- function(x) UseMethod("icon_for_object")
+
+##' method
+##'
+##' @inheritParams icon_for_object
+##' @export
+##' @rdname icon_for_object
+icon_for_object.default <- function(x) "gtk-ok"
+
+##' method
+##'
+##' @inheritParams icon_for_object
+##' @export
+##' @rdname icon_for_object
+icon_for_object.numeric <- function(x) "gtk-cancel"
+
+##' method
+##'
+##' @inheritParams icon_for_object
+##' @export
+##' @rdname icon_for_object
+icon_for_object.data.frame <- function(x) "gtk-help"

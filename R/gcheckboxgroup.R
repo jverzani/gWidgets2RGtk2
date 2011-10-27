@@ -61,7 +61,7 @@ GCheckboxGroup <- setRefClass("GCheckboxGroup",
                                 if(is.logical(value))
                                   value <- rep(value, length=get_length())
                                 if(is.numeric(value)) {
-                                  value <- is.element(seq_length(get_length()), value)
+                                  value <- is.element(seq_len(get_length()), value)
                                 }
                                 mapply(gtkToggleButtonSetActive, object=widgets, is.active=value)
                                 unblock_observer()
@@ -199,7 +199,7 @@ GCheckboxGroupTable <-  setRefClass("GCheckboxGroupTable",
                               },
                               set_index=function(value, ...) {
                                 if(is.numeric(value)) {
-                                  value <- is.element(seq_length(get_length()), value)
+                                  value <- is.element(seq_len(get_length()), value)
                                 }
                                 store <- widget$getModel()
                                 store[,2] <- value

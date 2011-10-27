@@ -198,7 +198,7 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                                      user.data.first = TRUE)
                                     },
                                     add_handler_keystroke=function(handler, action=NULL, ...) {
-                                      gSignalConnect(widget$getChild(), "keystroke", keyrelease_decorator(handler),
+                                      gSignalConnect(widget$getChild(), "keystroke", key_release_decorator(handler),
                                                      data=list(obj=obj, action=action,...),
                                                      user.data.first = TRUE)
                                     }

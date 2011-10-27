@@ -52,3 +52,6 @@ Collate:
     'gmenu.R'
     'gtable.R'
     'gtree.R'
+    'RGtk2DfEdit.R'
+    'gdf.R'
+    'gvarbrowser.R'

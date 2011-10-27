@@ -1,9 +1,13 @@
+* make count right for new RGtk2 version GdkEventType['button-press']
+* gdf and gdfedit? that gives me some other options.
 * make signaling main properties by using observable as possible and
   svalue invoke command
 DONE * add default_expand, default_fill properties so things like gtable
   can have them set without user interaction.
 * copyright notice in headers
-
+* make gw icons in icons.R
+* check update in gtree
+* 
 common.R
 dnd.R: do this
 DONE gaction.R
@@ -14,7 +18,8 @@ DONE gcheckboxgroup.R
 DONE gcomobox.R 
 gcommandline.R
 gdfedit.R
-gdf.R: see from SpreadR
+gdf.R: see from SpreadR, ... Punted for now and using RGtkDfEdit
+                             (issue with importing gWidgets)
 (General) gdfnotebook.R
 DONE gdialogs.R
 DONE gedit.R

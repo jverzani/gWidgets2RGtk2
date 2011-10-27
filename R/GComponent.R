@@ -304,12 +304,16 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                           add_handler(signal, event_decorator(handler), action, ...)
                                         }
                                       },
-                                      connect_to_toolkit_signal=function(signal, f=function(self, ...) {
-                                        self$notify_observers(signal=signal, ...)
-                                      }) {
+                                      connect_to_toolkit_signal=function(
+                                        signal,
+                                        f=function(self, ...) {
+                                          self$notify_observers(signal=signal, ...)
+                                        },
+                                        emitter=handler_widget() # can override here
+                                        ) {
                                         "Connect signal of toolkit to notify observer"
                                         if(is.null(connected_signals[[signal, exact=TRUE]]))
-                                          gSignalConnect(handler_widget(), signal, f, data=.self, user.data.first=TRUE)
+                                          gSignalConnect(emitter, signal, f, data=.self, user.data.first=TRUE)
                                         connected_signals[[signal]] <<- TRUE
                                       },
                                       ## initiate a handler (emit signal)
@@ -358,7 +362,7 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       add_handler_keystroke=function(handler, action=NULL, ...) {
                                         "Keystroke handler. Defined for all, but might restrict to only gedit, gtext"
                                         if(!missing(handler) && is.function(handler)) {
-                                          add_handler("key-release-event", keyrelease_decorator(handler), action, ...)
+                                          add_handler("key-release-event", key_release_decorator(handler), action, ...)
                                         }
                                       },                                 
                                       
@@ -386,8 +390,8 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                           stop("Pass in popupmenu or list defining one")
 
                                         f <- function(w, e, ...) {
-                                          ## XXX count is wrong!
-                                          if(e$button == 1 && e$type == GdkEventType['button-press'] - 1L) {
+                                          ## XXX count is wrong! (Fixed count in newest RGtk2)
+                                          if(e$button == 1 && e$type == GdkEventType['button-press'] -1L) {
                                             mb$widget$popup(button=e$button, activate.time=e$time)
                                           }
                                           FALSE
