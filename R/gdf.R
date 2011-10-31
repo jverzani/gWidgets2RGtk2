@@ -1,5 +1,4 @@
 ##' @include GWidget.R
-##' @include RGtk2DfEdit.R
 NULL
 
 

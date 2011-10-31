@@ -30,7 +30,7 @@ PangoScale <- c(
 ##'
 ##' Like match, but works with list
 ##' @param lst a list to search through
-##' @ele element of list
+##' @param ele element of list
 ##' @return returns index of element or integer(0)
 get_index <- function(lst, ele) {
   n <- seq_along(lst)

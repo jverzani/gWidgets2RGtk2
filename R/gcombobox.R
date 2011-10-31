@@ -205,9 +205,3 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                     
                                     ))
 
-
-## ##' exported Subclass for users to subclass
-## ##'
-## ##' @exportClass GComboBoxRGtk2
-## GComboBoxRGtk2 <- setRefClass("GComboBoxRGtk2",
-##                                contains="GComboBox")

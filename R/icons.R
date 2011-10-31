@@ -95,7 +95,17 @@ GWidgetsRGtk2Icons <- setRefClass("GWidgetsRGtk2Icons",
                                     ))
 
 .GWidgetsRGtk2Icons <- GWidgetsRGtk2Icons$new()
-                                 
+
+load_gwidget_icons <- function() {
+  ## add the icons
+  ## we use xpm icons gimp can convert
+  iconFileNames <- list.files(system.file("images", package="gWidgets2"), full.names=TRUE)
+  iconFileNames <- Filter(function(x) grepl("\\.gif$", x), iconFileNames)
+  iconNames <- basename(iconFileNames)
+  iconNames <- gsub("\\.gif$","",iconNames)
+  .GWidgetsRGtk2Icons$add_to_gtk_stock_icons(iconNames, iconFileNames)
+}
+
 ##################################################
 
 ##' Create icon from object
@@ -107,21 +117,42 @@ icon_for_object <- function(x) UseMethod("icon_for_object")
 
 ##' method
 ##'
-##' @inheritParams icon_for_object
 ##' @export
 ##' @rdname icon_for_object
-icon_for_object.default <- function(x) "gtk-ok"
+icon_for_object.default <- function(x) "gw-symbol_dot"
 
 ##' method
 ##'
-##' @inheritParams icon_for_object
 ##' @export
 ##' @rdname icon_for_object
-icon_for_object.numeric <- function(x) "gtk-cancel"
+icon_for_object.numeric <- function(x) "gtk-numeric"
 
 ##' method
 ##'
-##' @inheritParams icon_for_object
 ##' @export
 ##' @rdname icon_for_object
-icon_for_object.data.frame <- function(x) "gtk-help"
+icon_for_object.numeric <- function(x) "gw-numeric"
+
+##' method
+##'
+##' @export
+##' @rdname icon_for_object
+icon_for_object.factor <- function(x) "gw-factor"
+
+##' method
+##'
+##' @export
+##' @rdname icon_for_object
+icon_for_object.character <- function(x) "gw-character"
+
+##' method
+##'
+##' @export
+##' @rdname icon_for_object
+icon_for_object.function <- function(x) "fw-function"
+
+##' method
+##'
+##' @export
+##' @rdname icon_for_object
+icon_for_object.data.frame <- function(x) "gw-dataframe"

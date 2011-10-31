@@ -1,5 +1,4 @@
 ##' @include GWidget.R
-##' @include gtree.R
 NULL
 
 ## need to finish update_widget

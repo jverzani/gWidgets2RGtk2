@@ -1,7 +1,7 @@
 ##' @include GWidget.R
 NULL
 
-##' Toolkit XXX constructor
+##' Toolkit constructor
 ##'
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
@@ -240,9 +240,3 @@ GCheckboxGroupTable <-  setRefClass("GCheckboxGroupTable",
                                 add_handler("toggled", handler, action, ...)
                               }
                               ))
-
-## ##' exported Subclass for users to subclass
-## ##'
-## ##' @exportClass GCheckboxGroupRGtk2
-## GCheckboxGroupRGtk2 <- setRefClass("GCheckboxGroupRGtk2",
-##                                contains="GCheckboxGroup")

@@ -1,6 +1,8 @@
 ##' @include GWidget.R
 NULL
 
+## TODO: drophandler -- doubles up!
+
 ##' Toolkit gedit constructor
 ##'
 ##' @export
