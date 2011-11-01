@@ -284,7 +284,7 @@ GTable <- setRefClass("GTable",
                         ## implement basic methods
                         get_value=function(drop=TRUE, ...) {
                           "Get selected values by value (or character(0))"
-                          vals <- get_items()[get_selected(), ]
+                          vals <- get_items(drop=FALSE)[get_selected(), , drop=FALSE]
                           if(getWithDefault(drop, TRUE))
                             vals[, chosen_col, drop=TRUE]
                           else
@@ -307,7 +307,7 @@ GTable <- setRefClass("GTable",
                         },
                         get_items = function(i, j, ..., drop=TRUE) {
                           DF <- get_model()[]
-                          DF <- DF[, get_valid_columns()]
+                          DF <- DF[, get_valid_columns(), drop=FALSE]
                           names(DF) <- get_names()
                           ## we possibly drop out some stuff
                           DF[i,j, drop=getWithDefault(drop, TRUE)]
