@@ -63,8 +63,9 @@ GGroup <- setRefClass("GGroup",
                           theArgs <- list(...) ## padding (around each)
 
                           ## get expand, anchor, fill
-                          expand <- getWithDefault(expand, getWithDefault(default_expand, FALSE))
-                          fill <- getWithDefault(fill, getWithDefault(default_fill, FALSE))
+                          expand <- getWithDefault(expand, getWithDefault(child$default_expand, FALSE))
+                          fill <- getWithDefault(fill, getWithDefault(child$default_fill, FALSE))
+
                           if(!is.null(theArgs$align))
                             theArgs$anchor <- theArgs$align
                           anchor <- getWithDefault(anchor, NULL)
