@@ -16,10 +16,10 @@ DONE gcalendar.R
 DONE gcheckbox.R
 DONE gcheckboxgroup.R
 DONE gcomobox.R 
-gcommandline.R
-gdfedit.R
-gdf.R: see from SpreadR, ... Punted for now and using RGtkDfEdit
-                             (issue with importing gWidgets)
+(general) gcommandline.R
+gdfedit.R using RGtkDfEdit (issue with importing gWidgets)
+DONE gdf.R: see from SpreadR, ... Punted for now
+
 (General) gdfnotebook.R
 DONE gdialogs.R
 DONE gedit.R
@@ -46,9 +46,9 @@ DONE gtable.R
 DONE gtext.R
 DONE gtkStuff.R
 DONE gtoolbar.R
-gtree.R: (data.frame with factors, key or offspring.fun and
+DONE gtree.R: (data.frame with factors, key or offspring.fun and
           offspring.data. Icon.col, tooltip.col given too
-gvarbrowser.R: integrate in wsbrowser code (see Michael's new code)
+DONE gvarbrowser.R: integrate in wsbrowser code (see Michael's new code)
 DONE gwindow.R
 DONE icons.R
 

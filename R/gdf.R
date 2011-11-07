@@ -8,22 +8,30 @@ NULL
 ## * handlers
 ## * edit factor labels dialog
 ## * column drag and drop
-## * change handler, other handlers
 ## * what to do about selection -- it ain't a working
 ## * size override for passing in column sizes through a list.
 
 
-## constructor here
 ##' Toolkit constructor
 ##'
 ##' @inheritParams gWidgets2::.XXX
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @note The \code{RGtk2} object has several methods defined for it
+##' that are toolkit specific, but may be useful. For example, the
+##' columns may be made editable or non editable
+##' (\code{block_editable_column} and \code{unblock_editable_column});
+##' the headers can be hidden/shown through the method
+##' \code{hide_names(boolean)}; the rownames can be hidden/shown
+##' through themethod \code{hide_row_names(boolean)}; the popup menus
+##' for the headers can be removed (\code{remove_popup_menu}) and
+##' customized (\code{add_popup}); similarly the cell popup can be
+##' (\code{remove_cell_popup} and \code{add_cell_popup}). 
 .gdf.guiWidgetsToolkitRGtk2 <-  function(toolkit,
-                                         items = NULL, name = deparse(substitute(items)),
+                                         items = NULL,
                     handler = NULL,action = NULL, container = NULL, ... ) {
   GDf$new(toolkit,
-           items=items, name=name,
+           items=items, 
            handler = handler, action = action, container = container, ...)
 }
 
@@ -157,6 +165,17 @@ make_editable_cell_renderer.logical <- function(x, self, model_idx, view_col) {
 
 ##' Reference class for data frame editor
 ##'
+##' This is a bit convoluted due to the command framework. To do
+##' something, say set a cell value we have 3 methods! One is a
+##' gWidgets methods (\code{set_items(i,j,value)}), this in turn calls
+##' a command with undo/redo support (\code{cmd_set_cell}), the
+##' command relies on the third method to actual set the cell value
+##' (\code{set_cell(i,j,value)}). To make matters worse, there is an
+##' issue defining one-off reference classes within a reference class
+##' when the \code{<<-} operator is involved. As such, we have a
+##' fourth place things may be defined -- in reference class
+##' definitions appearing after the one for \code{GDf}. Be warned,
+##' this is a maintenance issue.
 GDf <- setRefClass("GDf",
                    contains="GWidget",
                     fields=list(
@@ -191,7 +210,8 @@ GDf <- setRefClass("GDf",
 
                         ## initialize fields
                         initFields(default_expand=TRUE,
-                                   default_fill=TRUE)
+                                   default_fill=TRUE,
+                                   change_signal="row-changed")
                         set_frame(items)
 
                         ## menus only good once realized
@@ -656,10 +676,15 @@ GDf <- setRefClass("GDf",
                         x[i,j, ..., drop=TRUE]
                       },
                       set_items=function(value, i, j, ...) {
+                        "Replace part of data: whole thing, by column, by cell. By row?"
                         if(missing(i) && missing(j)) {
                           set_frame(value)
                         } else if(missing(i)) {
-                          ## set by column
+                          if(is.vector(value))
+                            cmds <- list(cmd_replace_column(j, value))
+                          else
+                            cmds <- lapply(seq_along(j), function(i) cmd_replace_column(value[i], j[i]))
+                          cmd_stack$add(CommandList(lst=cmds))
                         } else if(missing(j)) {
                           ## set by row
                         } else {
@@ -672,8 +697,9 @@ GDf <- setRefClass("GDf",
                       set_names=function(value) {
                         "Set the names of each column"
                         ## modify when using widget, not default
-                        f <- function(vc, nm) vc$getWidget()$getChild()$setLabel(nm)
-                        mapply(f, widget$getColumns()[-1], value)
+                        #f <- function(vc, nm) vc$getWidget()$getChild()$setLabel(nm)
+                        #mapply(f, widget$getColumns()[-1], value)
+                        cmd_set_column_names(value)
                       },
                       get_rownames=function() {
                         model[not_deleted(), 3]       # fixed
@@ -702,20 +728,30 @@ GDf <- setRefClass("GDf",
                       ##
                       ## Handler code
                       ##
-                      add_handler_changed = function(handler, action=NULL, ...) {
-                        "a value is changed (not selection)"
+                      handler_widget=function() {
+                        ## for add_handler_changed
+                        model
                       },
                       add_handler_clicked=function(handler, action=NULL, ...) {
-
+                        ## put this on tree view, we used handler_widget for the model
+                        signal <- "button-press-event"
+                        if(is_handler(handler)) {
+                          o <- gWidgets2:::observer(.self, event_decorator(handler), action)
+                          invisible(add_observer(o, signal))
+                          gSignalConnect(widget, signal, function(...) {
+                            .self$notify_observers(signal=signal, ...)
+                          })
+                          connected_signals[[signal]] <<- TRUE
+                        }
                       },
                       add_handler_column_clicked=function(handler, action=NULL, ...) {
-
+                        XXX()
                       },
                       add_handler_column_double_click=function(handler, action=NULL, ...) {
-
+                        XXX()
                       },
                       add_handler_column_right_click=function(handler, action=NULL, ...) {
-
+                        XXX()
                       },
                       ##
                       ## Command infrastructure
@@ -793,6 +829,12 @@ GDf <- setRefClass("GDf",
                       cmd_set_column_name=function(j, nm) {
                         cmd <- gWidgets2:::Command$new(receiver=.self, meth="set_name", j=j, value=nm)
                         cmd_stack$add(cmd)
+                      },
+                      cmd_set_column_names=function(value) {
+                        if(length(value) != get_dim()[2])
+                          stop(gettext("Wrong length names"))
+                        cmds <- lapply(seq_along(value), function(j) cmd_set_column_name(j, value[j]))
+                        cmd_stack$add(CommandList$new(lst=cmds))
                       },
                       ## row commands
                       cmd_insert_row=function(i, nm) {
