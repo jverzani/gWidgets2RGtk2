@@ -29,6 +29,7 @@ GRadio <- setRefClass("GRadio",
                             block <<- gtkVBox()
                           
                           set_items(value=items)
+                          set_index(selected)
                           
                           add_to_parent(container, .self, ...)
                           
