@@ -6,9 +6,7 @@ NULL
 
 ## TODO
 ## * handlers
-## * edit factor labels dialog
 ## * column drag and drop
-## * what to do about selection -- it ain't a working
 ## * size override for passing in column sizes through a list.
 
 
@@ -435,7 +433,7 @@ GDf <- setRefClass("GDf",
                       },
                       hide_row_names=function(value) {
                         "Toggle display of row names by logical value"
-                        hide_column(1, value)
+                        hide_column(0, value)
                       },
                       ##
                       ## mappings between view columns and model
@@ -478,6 +476,32 @@ GDf <- setRefClass("GDf",
                         "Get data in model for jth column in view coordinates"
                         model[not_deleted(), map_j(j)]
                       },
+                      ##
+                      ## Selection methods. From gtable
+                      ##
+                      get_selected=function() {
+                          "Get selected indices or numeric(0)"
+                          sel_model <- widget$getSelection()
+                          x <- sapply(sel_model$getSelectedRows()$retval, gtkTreePathToString)
+                          if(is.null(x))
+                            x <- integer(0)
+                          else
+                            x <- as.numeric(x) + 1L
+                          seq_len(nrow(model))[model[,1]][x] # not deleted
+                        },
+                        set_selected=function(ind) {
+                          "Set selected rows by index"
+                          old_ind <- get_selected()
+                          ind <- seq_len(nrow(model))[!model[,2]][ind]
+                          sel_model = widget$getSelection()
+                          block_handlers()
+                          sel_model$unselectAll()
+                          lapply(ind, function(i) {
+                            sel_model$selectPath(gtkTreePathNewFromString(i))
+                          })
+                                 
+                          unblock_handlers()
+                        },
                       ##
                       ## Popup menu methods. From gtable (should be a subclass)
                       ##
@@ -524,11 +548,23 @@ GDf <- setRefClass("GDf",
                                         }),
                                         gseparator(),
                                         gaction("Edit factor levels...", handler=function(h, ...) {
-                                          XXX("Write me")
-                                          w <- gbasicdialog(gettext("Edit factor levels"))
-                                          levs <- levels(x)
-                                          gtable(levs, cont=w)
-                                          visible(w, set=TRUE)
+                                          collapseFactor <- function(f, parent = NULL) {
+                                            out <- character()
+                                            w <- gbasicdialog("Collapse factor levels", parent = parent,
+                                                              handler = function(h,...) {
+                                                                new_f <- relf$get_value()
+                                                                out <<- factor(new_f)
+                                                              })
+                                            g <- ggroup(cont = w)
+                                            relf <- CollapseFactor$new(f, cont = g)
+                                            visible(w, set = TRUE)
+                                            out
+                                          }
+                                          out <- collapseFactor(x)
+                                          if(length(out)) {
+                                            cmd_replace_column(out, j)
+                                          }
+  
                                         }),
                                         gseparator(),
                                         gcheckbox("Editable", checked=is_editable(j), handler=function(h,...) {
@@ -659,17 +695,25 @@ GDf <- setRefClass("GDf",
                       get_length=function() {
                         get_dim()[2]
                       },
-                      get_value=function(...) {
-
+                      get_value=function(drop=TRUE, ...) {
+                        ind <- get_selected()
+                        if(length(ind) == 0)
+                          return(NULL)  # ?? what is right?
+                        
+                        DF <- get_frame()
+                        if(drop)
+                          DF[ind, 1]
+                        else
+                          DF[ind,]
                       },
                       set_value=function(value, ...) {
 
                       },
                       get_index=function(...) {
-
+                        get_selected()
                       },
                       set_index=function(value, ...) {
-
+                        set_selected(value)
                       },
                       get_items=function(i,j, ...,drop=TRUE) {
                         x <- get_frame()
@@ -681,14 +725,31 @@ GDf <- setRefClass("GDf",
                           set_frame(value)
                         } else if(missing(i)) {
                           if(is.vector(value))
-                            cmds <- list(cmd_replace_column(j, value))
+                            cmds <- list(cmd_replace_column(value, j))
                           else
-                            cmds <- lapply(seq_along(j), function(i) cmd_replace_column(value[i], j[i]))
-                          cmd_stack$add(CommandList(lst=cmds))
+                            cmds <- lapply(seq_along(j), function(i) cmd_replace_column(value[i], j[i], add=FALSE))
+                          cmd_stack$add(gWidgets2:::CommandList(lst=cmds))
                         } else if(missing(j)) {
-                          ## set by row
+                          
                         } else {
-                          cmd_set_cell(i, j, value)
+                          if(length(i) == 1) {
+                            value <- rep(value, length=length(j)) # recyle
+                            cmd_list <- lapply(seq_along(j), function(jj) cmd_set_cell(i, j[jj], value[jj], add=FALSE))
+                          } else if(length(j) == 1) {
+                            value <- rep(value, length=length(i)) # recyle
+                            cmd_list <- lapply(seq_along(i), function(ii) cmd_set_cell(i[ii], j, value[ii], add=FALSE))                                             } else {
+                              ## no recycling
+                              if(length(i) != nrow(value) || length(j) != ncol(value))
+                                stop(gettext("value not correct dimensions for indices"))
+                            cmd_list <- lapply(seq_len(length(i) * length(j)), function(x) NULL)
+                            ctr <- 1
+                            for(ii in seq_along(i))
+                              for(jj in seq_along(j)) {
+                                cmd_list[[ctr]] <- cmd_set_cell(i[ii], j[jj], value[i[ii], j[jj]], add=FALSE)
+                                ctr <- ctr + 1
+                              }
+                          }
+                          cmd_stack$add(gWidgets2:::CommandList$new(lst=cmd_list))
                         }
                       },
                       get_names=function() {
@@ -764,51 +825,53 @@ GDf <- setRefClass("GDf",
                       ##
                       ## Commands with undo support
                       ## 
-                      cmd_set_cell=function(i, j, value) {
+                      cmd_set_cell=function(i, j, value, add=TRUE) {
                         "Set cell i,j (in view indices) to value"
                         if(length(j)) {
                           cmd <- gWidgets2:::Command$new(receiver=.self, meth="set_cell",i=i, j=j, value=value)
-                          cmd_stack$add(cmd)
                         } else {
                           ## setting row name
                           cmd <- gWidgets2:::Command$new(receiver=.self, meth="set_row_name",i=i, value=value)
-                          cmd_stack$add(cmd)
                         }
+                        if(add)
+                          cmd_stack$add(cmd)
+                        invisible(cmd)
                       },
                       ## Column commands. 
-                      cmd_insert_column=function(x, nm, j) {
+                      cmd_insert_column=function(x, nm, j, add=TRUE) {
                         "Insert values from x into j"
                         if(missing(nm))
                           nm <- gettext("Replace me")
                         if(missing(j))
                           j <- get_dim()[2]
                         cmd <- InsertColumn$new(.self, meth="", x=x, nm=nm, j=j)
-                        cmd_stack$add(cmd)
+                        if(add)
+                          cmd_stack$add(cmd)
+                        invisible(cmd)
                       },
-                      cmd_replace_column=function(x, j) {
+                      cmd_replace_column=function(x, j, add=TRUE) {
                         "Replace values in column j with x"
                         cmd <- ReplaceColumn$new(.self, meth="", x=x, j=j)
-                        cmd_stack$add(cmd)
+                        if(add)
+                          cmd_stack$add(cmd)
+                        invisible(cmd)
                       },
-                      cmd_remove_column=function(j) {
+                      cmd_remove_column=function(j, add=TRUE) {
                         "remove column j"
                         cmd <- RemoveColumn$new(.self, meth="", j=j)
-                        cmd_stack$add(cmd)
+                        if(add)
+                          cmd_stack$add(cmd)
+                        invisible(cmd)
                       },
-                      cmd_hide_column=function(j) {
+                      cmd_hide_column=function(j, add=TRUE) {
                         "hide column j"
                         ## do command
                         cmd <-  gWidgets2:::Command$new(receiver=.self, meth="hide_column", j=j, value=TRUE)
-                        cmd_stack$add(cmd)
-#                        cmd <- setRefClass("HideColumn",
-#                                           contains="Command",
-#                                           methods=list(
-#                                             do=function() receiver$hide_column(params$col),
-#                                             undo=function() receiver$unhide_column(params$col)
-#                                             ))$new(.self, meth="", col=j)
-#                        cmd_stack$add(cmd)
+                        if(add)
+                          cmd_stack$add(cmd)
+                        invisible(cmd)
                       },
-                      cmd_unhide_column=function(j) {
+                      cmd_unhide_column=function(j, add=TRUE) {
                         "Show hidden column j"
                         ## do command
                         cmd <- setRefClass("UnhideColumn",
@@ -817,43 +880,60 @@ GDf <- setRefClass("GDf",
                                              do=function() receiver$unhide_column(params$col),
                                              undo=function() receiver$hide_column(params$col)
                                              ))$new(.self, meth="", col=j)
-                        cmd_stack$add(cmd)
+                        if(add)
+                          cmd_stack$add(cmd)
+                        invisible(cmd)
                       },
-                      cmd_coerce_column=function(j, coerce_with) {
+                      cmd_coerce_column=function(j, coerce_with, add) {
                         "Coerce column using coerce_with function, e.g. as.integer or as.character"
                         x <- get_column_value(j)
                         x <- coerce_with(x)
                         cmd <- ReplaceColumn$new(.self, meth="", j=j, x=x)
-                        cmd_stack$add(cmd)
+                        if(add)
+                          cmd_stack$add(cmd)
+                        invisible(cmd)
                       },
-                      cmd_set_column_name=function(j, nm) {
+                      cmd_set_column_name=function(j, nm, add=TRUE) {
                         cmd <- gWidgets2:::Command$new(receiver=.self, meth="set_name", j=j, value=nm)
-                        cmd_stack$add(cmd)
+                        if(add)
+                          cmd_stack$add(cmd)
+                        invisible(cmd)
                       },
-                      cmd_set_column_names=function(value) {
+                      cmd_set_column_names=function(value, add=TRUE) {
                         if(length(value) != get_dim()[2])
                           stop(gettext("Wrong length names"))
-                        cmds <- lapply(seq_along(value), function(j) cmd_set_column_name(j, value[j]))
-                        cmd_stack$add(CommandList$new(lst=cmds))
+                        cmds <- lapply(seq_along(value), function(j) cmd_set_column_name(j, value[j], add=FALSE))
+                        cmdlist <- gWidgets2:::CommandList$new(lst=cmds)
+                        if(add)
+                          cmd_stack$add(cmdlist)
+                        invisible(cmdlist)
                       },
                       ## row commands
-                      cmd_insert_row=function(i, nm) {
+                      cmd_insert_row=function(i, nm, add=TRUE) {
                         if(missing(nm))
                           nm <- ""
                         cmd <- InsertRow$new(.self, meth="", i=i, nm=nm)
-                        cmd_stack$add(cmd)
+                        if(add)
+                          cmd_stack$add(cmd)
+                        invisible(cmd)
                       },
-                      cmd_remove_row=function(i) {
+                      cmd_remove_row=function(i, add=TRUE) {
                         cmd <- RemoveRow$new(.self, meth="", i=i)
-                        cmd_stack$add(cmd)
+                        if(add)
+                          cmd_stack$add(cmd)
+                        invisible(cmd)
                       },
-                      cmd_hide_row=function(i) {
+                      cmd_hide_row=function(i, add=TRUE) {
                         cmd <- gWidgets2:::Command$new(.self, meth="hide_row", i=i, value=TRUE)
-                        cmd_stack$add(cmd)
+                        if(add)
+                          cmd_stack$add(cmd)
+                        invisible(cmd)
                       },
-                      cmd_unhide_row=function(i) {
+                      cmd_unhide_row=function(i, add=TRUE) {
                         cmd <- gWidgets2:::Command$new(.self, meth="hide_row", i=i, value=FALSE)
-                        cmd_stack$add(cmd)
+                        if(add)
+                          cmd_stack$add(cmd)
+                        invisible(cmd)
                       }
 
                       ))
@@ -958,6 +1038,70 @@ RemoveRow <- setRefClass("RemoveRow",
                            },
                            redo=function() do()
                            ))
+
+
+### Factor editor
+
+CollapseFactor <- setRefClass("CollapseFactor",
+                              fields = list(
+                               old = "ANY",
+                               widget = "ANY"
+                               ),
+                             methods = list(
+                               initialize = function(fac, cont = gwindow(), ...) {
+                                 old <<- as.character(fac)
+                                 make_gui(cont)
+                                 callSuper()
+                               },
+                               make_gui =  function(cont) {
+                                 group <- gpanedgroup(cont = cont)
+                                 levs <- sort(unique(as.character(old)))
+                                 DF <- data.frame(original = levs,
+                                                  new = levs, stringsAsFactors = FALSE)
+                                        #
+                                 widget <<- tbl <- gtable(DF, cont = group,  multiple = TRUE)
+                                 size(tbl) <- c(300, 200)
+                                        #
+                                 nested_group <- ggroup(cont = group, horizontal = FALSE)
+                                 instructions <- gettext("Select levels, then\n 
+enter a new combined level\n
+by typing or selecting a level and then enter")
+                                        #
+                                 glabel(instructions, cont = nested_group)
+#                                 factor_edit <- gcombobox(levs, selected = 0, editable = TRUE, 
+#                                                        cont = nested_group)
+                                 factor_edit <- gedit("", cont=nested_group)
+                                 factor_edit[] <- levs
+                                 enabled(factor_edit) <- FALSE
+                                        #
+                                 addHandlerClicked(widget, function(h,...) {
+                                   ind <- svalue(widget, index = TRUE)
+                                   enabled(factor_edit) <- (length(ind) > 0)
+                                 })
+                                 ##
+                                 addHandlerChanged(factor_edit, handler = function(h,...) {
+                                   ind <- svalue(tbl, index = TRUE)
+                                   if(length(ind) == 0 || ind == 0L) 
+                                     return()
+                                        #
+                                   tbl[ind,2] <- svalue(factor_edit)
+                                   svalue(tbl, index = TRUE) <- 0
+                                   blockHandler(factor_edit)
+                                   factor_edit[] <- sort(unique(tbl[,2]))
+                                   svalue(factor_edit) <- ""
+                                   unblockHandler(factor_edit)
+                                 })
+                               },
+                               get_value = function() {
+                                 "Return factor with new levels"
+                                 old_levels <- widget[,1]
+                                 new_levels <- widget[,2]
+                                 new <- old
+                                 for(i in seq_along(old_levels)) # one pass
+                                   new[new == old_levels[i]] <- new_levels[i]
+                                 factor(new)
+                               }
+                               ))
 
 
 

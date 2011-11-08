@@ -130,7 +130,17 @@ GGroup <- setRefClass("GGroup",
                           child$set_parent(NULL)
                           widget$remove(getBlock(child))
                         },
-                        
+                        add_spring=function() {
+                          widget$PackStart(gtkHBoxNew(),TRUE,TRUE,0)
+                        },
+                        add_space=function(value) {
+                          box <- gtkHBox()
+                          if(horizontal)
+                            box$setSizeRequest(value, -1L)
+                          else
+                            box$setSizeRequest(-1L, value)
+                          widget$PackStart(gtkHBoxNew(),FALSE, FALSE,0)
+                        },
                         ## [ for returning children
                         get_items = function(i, j, ..., drop=TRUE) {
                           "Return children"

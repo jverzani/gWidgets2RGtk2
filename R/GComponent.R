@@ -258,7 +258,7 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         }
                                         f
                                       },
-                                      key_release_decorator=function(handle) {
+                                      key_release_decorator=function(handler) {
                                         f <- function(d, widget, event,...) {
                                           h <- list(obj=d$obj,action=d$action)
                                           h$key <- event$getString() # XXX This is bad -- no locale, ...

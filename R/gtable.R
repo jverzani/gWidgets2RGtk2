@@ -255,9 +255,9 @@ GTable <- setRefClass("GTable",
                           sel_model <- widget$getSelection()
                           x <- sapply(sel_model$getSelectedRows()$retval, gtkTreePathToString)
                           if(is.null(x))
-                            x <- integer(0)
-                          else
-                            x <- as.numeric(x) + 1L
+                            return(integer(0))
+                          x <- as.numeric(x) + 1L # hide, deleted
+                          
                           x
                         },
                         set_selected=function(ind) {
@@ -302,8 +302,11 @@ GTable <- setRefClass("GTable",
                           get_selected()
                         },
                         set_index = function(value,...) {
-                          "set selected values in value"
-                          set_selected(as.integer(value) - 1L)
+                          "set selected values in value. integer(0) or 0L clears selection"
+                          if(length(value) == 0 || value < 1)
+                            widget$getSelection()$unselectAll() # clear selection if not >= 1
+                          else
+                            set_selected(as.integer(value) - 1L)
                         },
                         get_items = function(i, j, ..., drop=TRUE) {
                           DF <- get_model()[]
