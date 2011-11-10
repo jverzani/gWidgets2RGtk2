@@ -14,7 +14,7 @@ w <- gwindow("Select value by checkbox", visible=FALSE)
 tbl <- gdf(DF, cont=w)
 
 ## modify
-sapply(2:ncol(DF), function(i) tbl$block_editable_column(i))
+sapply(2:ncol(DF), function(j) editable(tbl, j=j) <- FALSE)
 tbl$hide_row_names(TRUE)
 tbl$remove_popup_menu()
 

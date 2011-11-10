@@ -179,7 +179,7 @@ GGraphics <- setRefClass("GGraphics",
                                                             set_value(fname)
                                                         }
                                                       })
-                             add_3rdmouse_popupmenu(l)
+                             add_3rd_mouse_popup_menu(l)
                            },
                            get_value=function( ...) {
                              

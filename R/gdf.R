@@ -235,6 +235,10 @@ GDf <- setRefClass("GDf",
                         model$setFrame(mod_items)
                         add_view_columns()
                       },
+                      save_data=function(nm) {
+                        assign(nm, get_frame(), .GlobalEnv)
+                        cmd_stack$clear()
+                      },
                       ##
                       ## View column methods
                       ##
@@ -313,12 +317,9 @@ GDf <- setRefClass("GDf",
                       },
                       move_column=function(from ,to) {
                         "Move a view column from j to i, shift others over. Does not effect model."
-                        columns <- widget$getColumns()[-1]
-                        from_col <- columns[[from]]
-                        if(to-1 == 0)
-                          to_col <- NULL
-                        else
-                          to_col <- columns[[to-1]]
+                        columns <- widget$getColumns()[] # includes rownames as 1, so no shift over
+                        from_col <- columns[[from + 1L]]
+                        to_col <- columns[[to]]
                         widget$moveColumnAfter(from_col, to_col)
                       },
                       hide_column=function(j, value) {
@@ -354,7 +355,7 @@ GDf <- setRefClass("GDf",
                       hide_row=function(i,value=TRUE) {
                         "Hide row i, i refers to non-deleted rows. value if TRUE to hide, FALSE to unhide"
                         i <- map_i(i)
-                        model[i,1] <- !as.logical(value)
+                        model[i,1] <<- !as.logical(value)
                         invisible(!value) # return opposite for command framework
                       },
                       remove_row=function(i, value, model_index=FALSE) {
@@ -362,14 +363,14 @@ GDf <- setRefClass("GDf",
                         ## we don't actually delete, we just make not visible and deleted.
                         if(!model_index)
                           i <- map_i(i)
-                        model[i,1] <- !as.logical(value)
-                        model[i,2] <- as.logical(value)
+                        model[i,1] <<- !as.logical(value)
+                        model[i,2] <<- as.logical(value)
                         invisible(i)
                       },
                       unremove_row=function(model_i) {
                         "Un delete row model_i."
-                        model[model_i,1] <- TRUE # show it
-                        model[model_i,2] <- FALSE
+                        model[model_i,1] <<- TRUE # show it
+                        model[model_i,2] <<- FALSE
                       },
                       insert_row=function(i, value) {
                         "Insert new row after position i, i=0:nrow"
@@ -428,7 +429,7 @@ GDf <- setRefClass("GDf",
                       set_row_name=function(i, value) {
                         i <- map_i(i)
                         old_value <- model[i, 3L]
-                        model[i, 3L] <- value
+                        model[i, 3L] <<- value
                         invisible(old_value)
                       },
                       hide_row_names=function(value) {
@@ -553,7 +554,7 @@ GDf <- setRefClass("GDf",
                                             w <- gbasicdialog("Collapse factor levels", parent = parent,
                                                               handler = function(h,...) {
                                                                 new_f <- relf$get_value()
-                                                                out <<- factor(new_f)
+                                                                assign(out, factor(new_f), inherits=TRUE)
                                                               })
                                             g <- ggroup(cont = w)
                                             relf <- CollapseFactor$new(f, cont = g)
@@ -784,7 +785,17 @@ GDf <- setRefClass("GDf",
                       },
                       set_visible=function(value) {
                         if(length(value) == length(not_deleted()))
-                          model[not_deleted(), 1L] <- as.logical(value)
+                          model[not_deleted(), 1L] <<- as.logical(value)
+                      },
+                      get_editable=function(j) {
+                        is_editable(j)
+                      },
+                      set_editable=function(value, j, ...) {
+                        "Make a column editable or not."
+                        if(value)
+                          unblock_editable_column(j)
+                        else
+                          block_editable_column(j)
                       },
                       ##
                       ## Handler code
@@ -884,7 +895,7 @@ GDf <- setRefClass("GDf",
                           cmd_stack$add(cmd)
                         invisible(cmd)
                       },
-                      cmd_coerce_column=function(j, coerce_with, add) {
+                      cmd_coerce_column=function(j, coerce_with, add=TRUE) {
                         "Coerce column using coerce_with function, e.g. as.integer or as.character"
                         x <- get_column_value(j)
                         x <- coerce_with(x)

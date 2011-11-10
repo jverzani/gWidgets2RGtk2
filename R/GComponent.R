@@ -28,14 +28,14 @@ NULL
 GComponent <- setRefClass("GComponent",
                                contains="BasicToolkitInterface",
                                fields=list(
-                                 toolkit="ANY",
-                                 widget="ANY",
-                                 block="ANY",
-                                 parent="ANY", # NULL for gwindow, else parent container
+#                                 toolkit="ANY",
+#                                 widget="ANY",
+#                                 block="ANY",
+#                                 parent="ANY", # NULL for gwindow, else parent container
                                  handler_id="ANY",
-                                 .e="environment",
-                                 default_expand="LogicalCharacterOrNULL",
-                                 default_fill="LogicalCharacterOrNULL"
+                                 .e="environment" #,
+#                                 default_expand="LogicalCharacterOrNULL",
+#                                 default_fill="LogicalCharacterOrNULL"
                                  ),
                                methods=list(
                                  initialize=function(toolkit=guiToolkit(), ...) {

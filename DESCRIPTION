@@ -55,3 +55,6 @@ Collate:
     'gdf.R'
     'gvarbrowser.R'
     'startup.R'
+    'notebook-widgets.R'
+    'gdfnotebook.R'
+    'ggraphicsnotebook.R'

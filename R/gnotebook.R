@@ -122,19 +122,22 @@ GNotebook <- setRefClass("GNotebook",
                                 ## remove from widget
                                 widget$remove(getBlock(child))
                               },
-                              remove_current_page = function() {
-                                child <- get_items(get_index())
+                              remove_page_by_index=function(i) {
+                                child <- get_items(i)
                                 remove_child(child)
+                              },
+                              remove_current_page = function() {
+                                remove_page_by_index(get_index())
                               },
                               ## handlers
                               add_handler_changed=function(handler, action=NULL, ...) {
                                 "A tab changed"
-                                if(!is_handler(h)) return()
-                                f <- function(h, nb, i, ...) {
-                                  h$page.no <- i
+                                if(!is_handler(handler)) return()
+                                f <- function(h, nb, pageref, i, ...) {
+                                  h$page.no <- i + 1L
                                   handler(h, nb, i, ...)
                                 }
-                                add_handler("change-current-page", event_decorator(f), action=action, ...)
+                                add_handler("switch-page", event_decorator(f), action=action, ...)
                               }
                               ))
 

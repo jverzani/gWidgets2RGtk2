@@ -133,7 +133,7 @@ GEdit <- setRefClass("GEdit",
                                 "Can we actually edit widget?"
                                 widget$getEditable()
                               },
-                              set_editable = function(value) {
+                              set_editable = function(value, j) {
                                 widget$setEditable(as.logical(value))
                               },
                               ## Handler: changed -> clicked

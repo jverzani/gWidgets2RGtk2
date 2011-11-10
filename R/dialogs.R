@@ -198,13 +198,15 @@ GInput <- setRefClass("GInput",
                           ## define entry
                           entry <<- gtkEntry()
                           widget$GetVbox()$PackStart(entry) 
-
-                          ## set as default
-                          entry$setCanDefault(TRUE)
-                          entry$grabFocus()
-                          entry$grabDefault()
+                          gSignalConnect(entry, "activate", function(...) {
+                            widget$response(GtkResponseType["ok"])
+                          })
                         },
-                        set_text=function(txt) entry$setText(txt)
+                        set_text=function(txt) {
+                          entry$setText(txt)
+                          entry$selectRegion(0L, -1L)
+                          entry$grabFocus()
+                        }
                         ))
 
 ##' toolkit implementation

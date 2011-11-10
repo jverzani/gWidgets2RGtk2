@@ -20,7 +20,7 @@ DONE gcomobox.R
 gdfedit.R using RGtkDfEdit (issue with importing gWidgets)
 DONE gdf.R: see from SpreadR, ... Punted for now
 
-(General) gdfnotebook.R
+(General) gdfnotebook.R Should be general, but having issue with inheritance
 DONE gdialogs.R
 DONE gedit.R
 DONE gexpandgroup.R

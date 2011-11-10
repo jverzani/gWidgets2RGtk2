@@ -8,10 +8,10 @@ setClass("guiWidgetsToolkitRGtk2",
          contains="guiWidgetsToolkit")
 
 ## some special class unions so we can have easier to deal with default
-setClassUnion("IntegerOrNULL", c("integer", "NULL"))
-setClassUnion("CharacterOrNULL", c("character", "NULL"))
-setClassUnion("LogicalOrNULL", c("logical", "NULL"))
-setClassUnion("LogicalCharacterOrNULL", c("logical", "character", "NULL"))
+## setClassUnion("IntegerOrNULL", c("integer", "NULL"))
+## setClassUnion("CharacterOrNULL", c("character", "NULL"))
+## setClassUnion("LogicalOrNULL", c("logical", "NULL"))
+## setClassUnion("LogicalCharacterOrNULL", c("logical", "character", "NULL"))
 
 
 ## Pango Scale for converting between name and numeric value
