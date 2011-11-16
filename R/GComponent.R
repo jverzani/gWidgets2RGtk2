@@ -16,26 +16,22 @@ NULL
 ##         - GExpandGroup
 ##     - GLayout
 ##     - GNotebook
+##       - GStacked
 ##     - GPanedGroup
-##     - GStacked
+
 
 
 ##' Base Class for widgets and containers
 ##' 
-##' GComponent as parent for GContainer and GWidget.
-##' Here we place GtkWidget and GtkObject methods. Container methods in GContainer
-##' @importClassesFrom gWidgets2 BasicToolkitInterface
+##' GComponent is a parent class for both GContainer and GWidget and
+##' inherits its primary interface from
+##' gWidgets2::BasicToolkitInterface.
+##' @rdname gWidgets2RGtk2-package
 GComponent <- setRefClass("GComponent",
                                contains="BasicToolkitInterface",
                                fields=list(
-#                                 toolkit="ANY",
-#                                 widget="ANY",
-#                                 block="ANY",
-#                                 parent="ANY", # NULL for gwindow, else parent container
                                  handler_id="ANY",
-                                 .e="environment" #,
-#                                 default_expand="LogicalCharacterOrNULL",
-#                                 default_fill="LogicalCharacterOrNULL"
+                                 .e="environment" # for tag
                                  ),
                                methods=list(
                                  initialize=function(toolkit=guiToolkit(), ...) {
@@ -52,6 +48,9 @@ GComponent <- setRefClass("GComponent",
                                      default_fill <<- NULL
 
                                    callSuper(...)
+                                 },
+                                 show = function() {
+                                   cat(sprintf("Object of class %s", class(.self)[1]))
                                  },
                                  ## length
                                  get_length = function(...) {
@@ -142,9 +141,13 @@ GComponent <- setRefClass("GComponent",
                                    }
                                    getBlock(.self)$SetSizeRequest(width,height)
                                  },
-
+                                 ##
                                  ## Work with containers
-                                 set_parent = function(parent) parent <<- parent,
+                                 ##
+                                 set_parent = function(parent) {
+                                   "Assign parent to parent property"
+                                   parent <<- parent
+                                 },
                                  add_to_parent = function(parent, child, expand=NULL, fill=NULL, anchor=NULL, ...) {
                                    "Add a child to parent if it is ia container and non null. Dispatches to add_child method of parent"
                                    
@@ -167,8 +170,9 @@ GComponent <- setRefClass("GComponent",
 
                                    parent$add_child(child, expand, fill, anchor, ...)
                                  },
-
+                                 ##
                                  ## Drag and drop
+                                 ##
                                  add_drop_source=function(handler, action=NULL, data.type="text", ...) {
                                    "Specify widget is a drag source"
                                   gtkDragSourceSet(handler_widget(),
@@ -237,7 +241,7 @@ GComponent <- setRefClass("GComponent",
                                  )
                                )
 
-##' integrate in handler code
+##' GComponentObservable adds the observable interface
 GComponentObservable <- setRefClass("GComponentObservable",
                                     fields=list(
                                       change_signal="character", # what signal is default change signal
@@ -305,21 +309,22 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         }
                                       },
                                       connect_to_toolkit_signal=function(
-                                        signal,
-                                        f=function(self, ...) {
+                                        signal, # which signal (gSignalConnect)
+                                        f=function(self, ...) { # notify observer in Gtk callback
                                           self$notify_observers(signal=signal, ...)
                                         },
                                         emitter=handler_widget() # can override here
                                         ) {
                                         "Connect signal of toolkit to notify observer"
+                                        ## only connect once
                                         if(is.null(connected_signals[[signal, exact=TRUE]]))
                                           gSignalConnect(emitter, signal, f, data=.self, user.data.first=TRUE)
                                         connected_signals[[signal]] <<- TRUE
                                       },
                                       ## initiate a handler (emit signal)
                                       invoke_handler=function(signal, ...) {
-                                        " Bypasses gSignalEmit which crashes R for me"
-                                        "Invoke observers listening to signal"
+                                        "Bypasses gSignalEmit which crashes R for me.
+                                        Invoke observers listening to signal"
                                         notify_observers(..., signal=signal)
                                       },
                                       invoke_change_handler=function(...) {
@@ -333,7 +338,7 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         block_observers()
                                       },
                                       block_handler=function(ID) {
-                                        "Block all handlers"
+                                        "Block a handler by ID"
                                         block_observer(ID)
                                       },
                                       unblock_handlers=function() {
@@ -341,11 +346,15 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         unblock_observers()
                                       },
                                       unblock_handler=function(ID) {
-                                        "unblock all handlers"
+                                        "unblock a handler by ID"
                                         unblock_observer(ID)
                                       },
+                                      remove_handlers=function() {
+                                        "Remove all observers"
+                                        remove_observers()
+                                      }, 
                                       remove_handler=function(ID) {
-                                        "remove all handlers"
+                                        "remove a handler by ID"
                                         remove_observer(ID)
                                       },
                                       
@@ -409,42 +418,34 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         
                                         f <- function(w, e, ...) {
                                           ## make work wih mac and right mouse!!!
-                                          if(e$button == 3 && e$type == GdkEventType['button-press']) {
+                                          if(isRightMouseClick(e)) {
                                             mb$widget$popup(button=e$button, activate.time=e$time)
                                           }
                                           FALSE
                                         }
                                         gSignalConnect(handler_widget(), "button-press-event", f)
-                                      },
-
-
-                                      ## Work with handlers (block, un, remove)
-                                      block_handler=function(ID) {
-                                        if(missing(ID))
-                                          ID <- handler_id
-                                        lapply(ID, gSignalHandlerBlock, obj=widget)
-                                      },
-                                      unblock_handler=function(ID) {
-                                        if(missing(ID))
-                                          ID <- handler_id
-                                        lapply(ID, gSignalHandlerUnblock, obj=widget)
-                                      },
-                                      remove_handler=function(ID) {
-                                        if(missing(ID))
-                                          ID <- handler_id
-                                        lapply(ID, gSignalHandlerDisconnect, obj=widget)
-                                        if(identical(ID, handler_id))
-                                          handler_id <<- NULL # zero out if this one
                                       }
+
+
+                                      ## ## Work with handlers (block, un, remove)
+                                      ## block_handler=function(ID) {
+                                      ##   if(missing(ID))
+                                      ##     ID <- handler_id
+                                      ##   lapply(ID, gSignalHandlerBlock, obj=widget)
+                                      ## },
+                                      ## unblock_handler=function(ID) {
+                                      ##   if(missing(ID))
+                                      ##     ID <- handler_id
+                                      ##   lapply(ID, gSignalHandlerUnblock, obj=widget)
+                                      ## },
+                                      ## remove_handler=function(ID) {
+                                      ##   if(missing(ID))
+                                      ##     ID <- handler_id
+                                      ##   lapply(ID, gSignalHandlerDisconnect, obj=widget)
+                                      ##   if(identical(ID, handler_id))
+                                      ##     handler_id <<- NULL # zero out if this one
+                                      ## }
                                       
                                       
                                       ))
-
-##'  Print method for components
-##'
-##' Stops a nasty recursion
-##' @exportMethod show
-##' @rdname gWidgets2-S4-methods
-##' @docType methods
-setMethod(show, signature="GComponent", function(object) cat(sprintf("Object of class %s\n", class(object))))
 

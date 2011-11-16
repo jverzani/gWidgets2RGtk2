@@ -1,9 +1,8 @@
 ##' @include GComponent.R
 NULL
 
-##' Base class for widget objects
-##'
-##' This inherits observable interface
+##' GWidget is the Base class for widget objects
+##' @rdname gWidgets2RGtk2-package
 GWidget <- setRefClass("GWidget",
                        contains="GComponentObservable",
                        fields=list(
@@ -12,8 +11,10 @@ GWidget <- setRefClass("GWidget",
                        )
 
                                    
-##' Class to hold widget with items where handlers apply to each item
-##' 
+##' GWidgetWithItems is Base class for selection widgets based on a set of items. The key
+##' here is the handlers apply to each item, but the handler is
+##' assigned to the class member.
+##' @rdname gWidgets2RGtk2-package
 GWidgetWithItems <- setRefClass("GWidgetWithItems",
                                 contains="GWidget",
                                 fields=list(

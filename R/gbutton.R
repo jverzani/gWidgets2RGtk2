@@ -1,29 +1,26 @@
 ##' @include GWidget.R
 NULL
 
-##' Toolkit button constructor
+##' Toolkit  constructor
 ##'
 ##' @inheritParams gWidgets2::gbutton
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @seealso The documentation for this is found at \code{\link{gbutton}}.
+##' @method .gbutton guiWidgetsToolkitRGtk2
+##' @S3method .gbutton guiWidgetsToolkitRGtk2
 .gbutton.guiWidgetsToolkitRGtk2 <- function(toolkit, text, handler, action, container, ...) {
   GButton$new(toolkit, text, handler, action, container, ...)
 }
 
-##' Button class
-##'
-##' For RGtk2, the button class has some extra reference methods:
-##' \itemize{
-##' \item {\code{remove_border} will remove the border around the button. (The \code{border=FALSE} argument is deprecated.)}
-##' }
+##' For RGtk2, the GButton class has the extra reference method
+##' \code{set_border}. The \code{border} argument has been deprecated.
 ##' @rdname gWidgets2RGtk2-package
 GButton <- setRefClass("GButton",
                             contains="GWidget",
-                            fields=list(
-                              other = "ANY"
-                              ),
                             methods=list(
                               initialize=function(toolkit=NULL, text=NULL,  handler, action, container, ...) {
+                                
                                 widget <<- gtkButton()
                                 toolkit <<- toolkit # otherwise next line fails to find toolkit for dispatch
                                 if(!is_empty(text))
@@ -94,8 +91,3 @@ GButton <- setRefClass("GButton",
                               ))
 
 
-## ##' exported Subclass of GComponent for users to subclass
-## ##'
-## ##' @exportClass GButtonRGtk2
-## GButtonRGtk2 <- setRefClass("GButtonRGtk2",
-##                                contains="GButton")

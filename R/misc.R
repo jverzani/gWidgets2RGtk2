@@ -1,8 +1,11 @@
 ## miscellaneous functions
+##' @import gWidgets2
+##' @include gWidgets2RGtk2-package.R
+NULL
 
 ##' toolkit class for RGtk2
 ##'
-##' @importClassesFrom gWidgets2 guiWidgetsToolkit
+##' @name guiWidgetsToolkitRGtk2-class
 ##' @export
 setClass("guiWidgetsToolkitRGtk2",
          contains="guiWidgetsToolkit")
@@ -28,7 +31,7 @@ PangoScale <- c(
 
 ##' get index of element of list
 ##'
-##' Like match, but works with list
+##' Like match, but works with a list
 ##' @param lst a list to search through
 ##' @param ele element of list
 ##' @return returns index of element or integer(0)

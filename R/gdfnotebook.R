@@ -5,9 +5,11 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::.XXX
+##' @inheritParams gWidgets2::gdfnotebook
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gdfnotebook guiWidgetsToolkitRGtk2
+##' @S3method .gdfnotebook guiWidgetsToolkitRGtk2
 .gdfnotebook.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                  items,
                                                  container = NULL, ... ) {

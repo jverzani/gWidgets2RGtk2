@@ -3,8 +3,11 @@ NULL
 
 ##' Toolkit constructor
 ##'
+##' @inheritParams gWidgets2::gpanedgroup
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gpanedgroup guiWidgetsToolkitRGtk2
+##' @S3method .gpanedgroup guiWidgetsToolkitRGtk2
 .gpanedgroup.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                 horizontal = TRUE, 
                                                 container = NULL, ... ) {

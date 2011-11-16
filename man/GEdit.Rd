@@ -1,8 +1,17 @@
+\docType{data}
 \name{GEdit}
 \alias{GEdit}
-\title{Single line edit class}
-\description{
-  We add a few methods beyond the spec: set_error,
-  clear_error, validate_value,
+\title{The GEdit class adds some methods beyond the spec: \code{set_error}, \code{clear_error}, \code{validate_value}}
+\format{Reference class 'refObjectGenerator' [package "methods"] with 2 fields
+ and 17 methods, of which 6 are possibly relevant:
+   accessors, fields, help, lock, methods, new}
+\usage{
+  GEdit
 }
+\description{
+  The GEdit class adds some methods beyond the spec:
+  \code{set_error}, \code{clear_error},
+  \code{validate_value}
+}
+\keyword{dataset}
 

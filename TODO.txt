@@ -20,14 +20,19 @@ DONE gcomobox.R
 gdfedit.R using RGtkDfEdit (issue with importing gWidgets)
 DONE gdf.R: see from SpreadR, ... Punted for now
 
-(General) gdfnotebook.R Should be general, but having issue with inheritance
+check: gcalendar
+ggroup -- spacing
+gtable set by non-index; [<- complaining
+gtext font<- choiking
+
+DONE gdfnotebook.R Should be general, but having issue with inheritance
 DONE gdialogs.R
 DONE gedit.R
 DONE gexpandgroup.R
 DONE gfile.R
 DONE gframe.R
 DONE ggraphics.R
-ggraphicsnotebook.R: need general notebook interface
+DONE ggraphicsnotebook.R: issue with general notebook interface
 DONE ggroup.R
 (General) ghelp.R
 ghtml.R

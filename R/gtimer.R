@@ -3,15 +3,18 @@ NULL
 
 ##' S3 method for gtimer
 ##'
-##' @inheritParams gWidgets2::.gtimer
+##' @inheritParams gWidgets2::gtimer
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gtimer guiWidgetsToolkitRGtk2
+##' @S3method .gtimer guiWidgetsToolkitRGtk2
 .gtimer.guiWidgetsToolkitRGtk2 <- function(toolkit, ms, FUN, data=NULL, one.shot=FALSE, start=TRUE)
   GTimer$new(toolkit, ms, FUN, data=data, one.shot=one.shot, start=start)
 
-##' Timer for gWidgets.
+##' Timer class for gWidgets.
 ##'
-##' Main methods are \code{start_timer} and \code{stop_timer}
+##' The main reference methods \code{GTimer} are \code{start_timer} and \code{stop_timer}
+##' @rdname gWidgets2RGtk2-package
 GTimer <- setRefClass("GTimer",
                       fields=list(
                         "oneShot"="logical",

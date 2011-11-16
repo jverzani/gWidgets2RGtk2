@@ -49,14 +49,14 @@ GNotebookOfPages <- setRefClass("GNotebookOfPages",
                                "Called when page is changed"
                              },
                              add_toolbar=function(tb_container) {
-                               XXX("Subclass")
+                               ### XXX("Subclass")
                              },
                              get_index_from_page=function(page) {
                                "get page index in the pages list"
                                which(sapply(pages, function(i) identical(i, page)))
                              },
                              add_page=function(...) {
-                               XXX("sublass")
+                               ### XXX("sublass")
                              },
                              remove_page=function(i) {
                                if(!is.numeric(i))

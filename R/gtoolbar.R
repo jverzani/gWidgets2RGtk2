@@ -3,11 +3,14 @@ NULL
 
 ##' Toolkit constructor
 ##'
+##' @inheritParams gWidgets2::gtoolbar
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gtoolbar guiWidgetsToolkitRGtk2
+##' @S3method .gtoolbar guiWidgetsToolkitRGtk2
 .gtoolbar.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                               toolbar.list=list(),
-                                              style = c("both", "icons", "text", "both-horiz"),
+                                              style = c("both","icons","text","both-horiz"),
                                               container = NULL,
                                               ... ) {
   GToolBar$new(toolkit,
@@ -61,7 +64,7 @@ GToolBar <- setRefClass("GToolBar",
                                 add_widget_toolitem(item)
                             })
                             widget$show()
-                            toolbar_list <<- merge(toolbar_list, items)
+                            toolbar_list <<- gWidgets2:::merge.list(toolbar_list, items)
                           },
                           add_gseparator_toolitem=function(obj) {
                             "Helper to add a separator"

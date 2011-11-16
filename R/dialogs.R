@@ -1,9 +1,9 @@
 ##' @include GWidget.R
 NULL
 
-##' Base class for dialogs
-##'
-##' Override modify_widget, ok_response, cancel_response and get_buttons
+## Base class for dialogs
+##
+## Override modify_widget, ok_response, cancel_response and get_buttons
 GDialog <- setRefClass("GDialog",
                       contains="GContainer",
                       methods=list(
@@ -99,15 +99,12 @@ GDialog <- setRefClass("GDialog",
 
 ##' toolkit implementation for gmessage
 ##'
-##' @param toolkit 
-##' @param msg 
-##' @param title 
-##' @param icon 
-##' @param parent 
-##' @param ... 
+##' @inheritParams gWidgets2::ginput
 ##' @return NULL
 ##' @export
-##' @rdname gWidgetsRGtk2-undocumented
+##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gmessage guiWidgetsToolkitRGtk2
+##' @S3method .gmessage guiWidgetsToolkitRGtk2
 .gmessage.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                              msg,
                                              title = "message",
@@ -127,19 +124,15 @@ GMessage <- setRefClass("GMessage", contains="GDialog")
 
 ##' toolkit implementation for gconfirm
 ##'
-##' @param toolkit 
-##' @param msg 
-##' @param title 
-##' @param icon 
-##' @param parent 
-##' @param ... 
-##' @return logical
+##' @inheritParams gWidgets2::ginput
 ##' @export
-##' @rdname gWidgetsRGtk2-undocumented
+##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gconfirm guiWidgetsToolkitRGtk2
+##' @S3method .gconfirm guiWidgetsToolkitRGtk2
 .gconfirm.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                               msg,
                                               title = "Confirm",
-                                              icon = c("info", "warning", "error", "question"),
+                                              icon = c("info","warning","error","question"),
                                               parent=NULL,
                                               ...
                                               ) {
@@ -148,7 +141,7 @@ GMessage <- setRefClass("GMessage", contains="GDialog")
 
 }
 
-##' class for confirmation dialog
+## class for confirmation dialog
 GConfirm <- setRefClass("GConfirm",
                         contains="GDialog",
                         methods=list(
@@ -161,21 +154,16 @@ GConfirm <- setRefClass("GConfirm",
 
 ##' toolkit implmentation of ginput
 ##'
-##' @param toolkit 
-##' @param msg 
-##' @param text 
-##' @param title 
-##' @param icon 
-##' @param parent 
-##' @param ... 
-##' @return character
+##' @inheritParams gWidgets2::ginput
 ##' @export
-##' @rdname gWidgetsRGtk2-undocumented
+##' @rdname gWidgets2RGtk2-undocumented
+##' @method .ginput guiWidgetsToolkitRGtk2
+##' @S3method .ginput guiWidgetsToolkitRGtk2
 .ginput.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                            msg,
                                            text="",
                                            title = "Input",
-                                           icon = c("info", "warning", "error", "question"),
+                                           icon = c("info","warning","error","question"),
                                            parent=NULL,                   
                                            ...
                                            ) {
@@ -211,16 +199,11 @@ GInput <- setRefClass("GInput",
 
 ##' toolkit implementation
 ##'
-##' @param toolkit 
-##' @param title 
-##' @param parent 
-##' @param do.buttons 
-##' @param handler 
-##' @param action 
-##' @param ... 
-##' @return logical
+##' @inheritParams gWidgets2::gbasicdialog
 ##' @export
-##' @rdname gWidgetsRGtk2-undocumented
+##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gbasicdialog guiWidgetsToolkitRGtk2
+##' @S3method .gbasicdialog guiWidgetsToolkitRGtk2
 .gbasicdialog.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                                  title = "Dialog",
                                                  parent=NULL,
@@ -355,15 +338,12 @@ GBasicDialog <- setRefClass("GBasicDialog",
 
 ##' toolkit implementation of galert
 ##'
-##' @param toolkit 
-##' @param msg 
-##' @param title 
-##' @param delay 
-##' @param parent 
-##' @param ... 
-##' @return NULL
+##' @param delay delay
+##' @inheritParams gWidgets2::gaction
 ##' @export
-##' @rdname gWidgetsRGtk2-undocumented
+##' @rdname gWidgets2RGtk2-undocumented
+##' @method .galert guiWidgetsToolkitRGtk2
+##' @S3method .galert guiWidgetsToolkitRGtk2
 .galert.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                             msg,
                                             title = "message",

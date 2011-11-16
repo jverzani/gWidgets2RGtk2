@@ -4,7 +4,10 @@ NULL
 ##' add stock icons
 ##'
 ##' @export
-##' @rdname gWidgets-undocumented
+##' @inheritParams gWidgets2::addStockIcons
+##' @rdname gWidgets2RGtk2-undocumented
+##' @method .addStockIcons guiWidgetsToolkitRGtk2
+##' @S3method .addStockIcons guiWidgetsToolkitRGtk2
 .addStockIcons.guiWidgetsToolkitRGtk2 <- function(toolkit, iconNames, iconFiles,... ) {
   .GWidgetsRGtk2Icons$add_to_gtk_stock_icons(iconNames, iconFiles)
 }
@@ -12,7 +15,9 @@ NULL
 ##' Returns list of stock ids
 ##'
 ##' @export
-##' @rdname gWidgets-undocumented
+##' @rdname gWidgets2RGtk2-undocumented
+##' @method .getStockIcons guiWidgetsToolkitRGtk2
+##' @S3method .getStockIcons guiWidgetsToolkitRGtk2
 .getStockIcons.guiWidgetsToolkitRGtk2 <- function(toolkit, ...) {
   lst <- gtkStockListIds()
   sapply(unlist(lst), identity, simplify=FALSE)
@@ -21,7 +26,9 @@ NULL
 ##' return stock id
 ##'
 ##' @export
-##' @rdname gWidgets-undocumented
+##' @rdname gWidgets2RGtk2-undocumented
+##' @method .getStockIconByName guiWidgetsToolkitRGtk2
+##' @S3method .getStockIconByName guiWidgetsToolkitRGtk2
 .getStockIconByName.guiWidgetsToolkitRGtk2 <- function(toolkit, name, ...) {
   icons <- getStockIcons(toolkit)
 
@@ -41,7 +48,7 @@ NULL
 ##' helper function
 ##'
 ##' @export
-##' @rdname gWidgets-undocumented
+##' @rdname gWidgets2RGtk2-undocumented
 addToGtkStockIcons <- function(iconNames, iconFiles) {
 
   iconfactory <- gtkIconFactoryNew()
@@ -108,51 +115,21 @@ load_gwidget_icons <- function() {
 
 ##################################################
 
-##' Create icon from object
-##'
-##' @param x object
-##' @export
-##' @rdname icon_for_object
-icon_for_object <- function(x) UseMethod("icon_for_object")
-
-##' method
+##' return stock id from object
 ##'
 ##' @export
-##' @rdname icon_for_object
-icon_for_object.default <- function(x) "gw-symbol_dot"
-
-##' method
-##'
-##' @export
-##' @rdname icon_for_object
-icon_for_object.numeric <- function(x) "gtk-numeric"
-
-##' method
-##'
-##' @export
-##' @rdname icon_for_object
-icon_for_object.numeric <- function(x) "gw-numeric"
-
-##' method
-##'
-##' @export
-##' @rdname icon_for_object
-icon_for_object.factor <- function(x) "gw-factor"
-
-##' method
-##'
-##' @export
-##' @rdname icon_for_object
-icon_for_object.character <- function(x) "gw-character"
-
-##' method
-##'
-##' @export
-##' @rdname icon_for_object
-icon_for_object.function <- function(x) "fw-function"
-
-##' method
-##'
-##' @export
-##' @rdname icon_for_object
-icon_for_object.data.frame <- function(x) "gw-dataframe"
+##' @rdname gWidgets2RGtk2-undocumented
+##' @method .stockIconFromObject guiWidgetsToolkitRGtk2
+##' @S3method .stockIconFromObject guiWidgetsToolkitRGtk2
+.stockIconFromObject.guiWidgetsToolkitRGtk2 <- function(toolkit, obj, ...) {
+  icon_for_object <- function(x) UseMethod("icon_for_object")
+  icon_for_object.default <- function(x) "gw-symbol_dot"
+  icon_for_object.numeric <- function(x) "gtk-numeric"
+  icon_for_object.numeric <- function(x) "gw-numeric"
+  icon_for_object.factor <- function(x) "gw-factor"
+  icon_for_object.character <- function(x) "gw-character"
+  icon_for_object.function <- function(x) "fw-function"
+  icon_for_object.data.frame <- function(x) "gw-dataframe"
+  
+  icon_for_object(obj)
+}

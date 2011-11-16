@@ -5,6 +5,8 @@ NULL
 ##'
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gexpandgroup guiWidgetsToolkitRGtk2
+##' @S3method .gexpandgroup guiWidgetsToolkitRGtk2
 .gexpandgroup.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                                  text, markup,  horizontal=TRUE,
                                                  handler=NULL, action=NULL,
@@ -12,7 +14,7 @@ NULL
   GExpandGroup$new(toolkit, text=text, markup=markup, horizontal=horizontal, handler=handler, action=action, container=container, ...)
 }
 
-##' base class for gframe
+## base class from gframe
 GExpandGroup <- setRefClass("GExpandGroup",
                             contains="GFrame",
                             methods=list(
@@ -58,8 +60,3 @@ GExpandGroup <- setRefClass("GExpandGroup",
                               }
                               ))
                             
-## ##' exported Subclass for users to subclass
-## ##'
-## ##' @exportClass GExpandGroupRGtk2
-## GExpandGroupRGtk2 <- setRefClass("GExpandGroupRGtk2",
-##                                contains="GExpandGroup")

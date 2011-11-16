@@ -1,12 +1,15 @@
 ##' @include GWidget.R
 NULL
 
-## TODO: drophandler -- doubles up!
+## TODO: XXX drophandler -- doubles up!
 
 ##' Toolkit gedit constructor
 ##'
+##' @param initial.msg initial.msg
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gedit guiWidgetsToolkitRGtk2
+##' @S3method .gedit guiWidgetsToolkitRGtk2
 .gedit.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                     text = "", width = 25, coerce.with = NULL, initial.msg=initial.msg,
                     handler = NULL,action = NULL, container = NULL, ... ) {
@@ -15,9 +18,7 @@ NULL
 }
 
 
-##' Single line edit class
-##'
-##' We add a few methods beyond the spec: set_error, clear_error, validate_value,
+##' The GEdit class adds some methods beyond the spec: \code{set_error}, \code{clear_error}, \code{validate_value}
 GEdit <- setRefClass("GEdit",
                             contains="GWidget",
                             fields=list(
@@ -178,8 +179,3 @@ GEdit <- setRefClass("GEdit",
                               }
                               ))
 
-## ##' exported Subclass for users to subclass
-## ##'
-## ##' @exportClass GEditRGtk2
-## GEditRGtk2 <- setRefClass("GEditRGtk2",
-##                                contains="GEdit")

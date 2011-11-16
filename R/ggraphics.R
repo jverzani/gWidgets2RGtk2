@@ -3,10 +3,13 @@ NULL
 
 ##' Toolkit constructor
 ##'
+##' @inheritParams gWidgets2::ggraphics
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .ggraphics guiWidgetsToolkitRGtk2
+##' @S3method .ggraphics guiWidgetsToolkitRGtk2
 .ggraphics.guiWidgetsToolkitRGtk2 <-  function(toolkit,
-                                               width = dpi * 6, height = dpi * 6, dpi = 75, ps = 12,    
+                                               width = dpi*6, height = dpi*6, dpi = 75, ps = 12,    
                                                handler = NULL,action = NULL, container = NULL, ... ) {
   GGraphics$new(toolkit,
                 width=width, height=height, dpi=dpi, ps=ps,

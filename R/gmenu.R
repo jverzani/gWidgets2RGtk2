@@ -3,9 +3,11 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::.gmenu
+##' @inheritParams gWidgets2::gmenu
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gmenu guiWidgetsToolkitRGtk2
+##' @S3method .gmenu guiWidgetsToolkitRGtk2
 .gmenu.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                            menu.list=list(),
                                            popup=FALSE,
@@ -133,13 +135,13 @@ GMenuBar <- setRefClass("GMenuBar",
                        },
                        append_value=function(items) {
                          "Append to menu list"
-                         menu_list <<- merge(menu_list, items)
+                         menu_list <<- gWidgets2:::merge.list(menu_list, items)
                          add_menu_items(widget, items)
                        }
                        ))
 
 
-##' Popup class
+## Popup class
 GMenuPopup <- setRefClass("GMenuPopup",
                             contains="GMenuBar",
                             methods=list(

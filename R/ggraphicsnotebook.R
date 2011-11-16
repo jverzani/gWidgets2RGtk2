@@ -2,8 +2,13 @@
 NULL
 
 ##' toolkit implementation
+##'
+##' @inheritParams gWidgets2::ggraphics
+##' @rdname gWidgets2RGtk2-undocumented
+##' @method .ggraphicsnotebook guiWidgetsToolkitRGtk2
+##' @S3method .ggraphicsnotebook guiWidgetsToolkitRGtk2
 .ggraphicsnotebook.guiWidgetsToolkitRGtk2 <- function(toolkit, width, height, dpi,  container, ...) {
-  GGraphicsNew$new(toolkit, width=width, height=height, dpi=dpi, container=container, ...)
+  GGraphicsNotebook$new(toolkit, width=width, height=height, dpi=dpi, container=container, ...)
 }
 
 ## basic subclass

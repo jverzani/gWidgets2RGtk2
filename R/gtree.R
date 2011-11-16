@@ -6,9 +6,11 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::.gtree
+##' @inheritParams gWidgets2::gtree
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gtree guiWidgetsToolkitRGtk2
+##' @S3method .gtree guiWidgetsToolkitRGtk2
 .gtree.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                            offspring = NULL, offspring.data = NULL,
                                            chosen.col = 1, offspring.col=2, icon.col=NULL, tooltip.col=NULL,
@@ -22,7 +24,11 @@ NULL
 }
 
 
-##' Class for gtree objects. Extra reference methods are \code{set_multiple} to set whether multiple or single selection is being used.
+##' Base class
+##'
+##' For \code{GTree}, there are extra reference methods:
+##' \code{set_multiple} to set whether multiple or single selection is
+##' being used.
 GTree <- setRefClass("GTree",
                      contains="GWidget",
                      fields=list(

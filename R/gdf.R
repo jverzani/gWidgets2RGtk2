@@ -12,19 +12,11 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::.XXX
+##' @inheritParams gWidgets2::gdf
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
-##' @note The \code{RGtk2} object has several methods defined for it
-##' that are toolkit specific, but may be useful. For example, the
-##' columns may be made editable or non editable
-##' (\code{block_editable_column} and \code{unblock_editable_column});
-##' the headers can be hidden/shown through the method
-##' \code{hide_names(boolean)}; the rownames can be hidden/shown
-##' through themethod \code{hide_row_names(boolean)}; the popup menus
-##' for the headers can be removed (\code{remove_popup_menu}) and
-##' customized (\code{add_popup}); similarly the cell popup can be
-##' (\code{remove_cell_popup} and \code{add_cell_popup}). 
+##' @method .gdf guiWidgetsToolkitRGtk2
+##' @S3method .gdf guiWidgetsToolkitRGtk2
 .gdf.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                          items = NULL,
                     handler = NULL,action = NULL, container = NULL, ... ) {
@@ -161,19 +153,31 @@ make_editable_cell_renderer.logical <- function(x, self, model_idx, view_col) {
 
 }
 
-##' Reference class for data frame editor
-##'
-##' This is a bit convoluted due to the command framework. To do
-##' something, say set a cell value we have 3 methods! One is a
-##' gWidgets methods (\code{set_items(i,j,value)}), this in turn calls
-##' a command with undo/redo support (\code{cmd_set_cell}), the
-##' command relies on the third method to actual set the cell value
-##' (\code{set_cell(i,j,value)}). To make matters worse, there is an
-##' issue defining one-off reference classes within a reference class
-##' when the \code{<<-} operator is involved. As such, we have a
-##' fourth place things may be defined -- in reference class
-##' definitions appearing after the one for \code{GDf}. Be warned,
-##' this is a maintenance issue.
+
+## This is a bit convoluted due to the command framework. To do
+## something, say set a cell value we have 3 methods! One is a
+## gWidgets methods (\code{set_items(i,j,value)}), this in turn calls
+## a command with undo/redo support (\code{cmd_set_cell}), the
+## command relies on the third method to actual set the cell value
+## (\code{set_cell(i,j,value)}). To make matters worse, there is an
+## issue defining one-off reference classes within a reference class
+## when the \code{<<-} operator is involved. As such, we have a
+## fourth place things may be defined -- in reference class
+## definitions appearing after the one for \code{GDf}. Be warned,
+## this is a maintenance issue.
+
+##' For \code{RGtk2}, a GDf object has several methods defined for it
+##' that are toolkit specific, but may be useful. For example, the
+##' columns may be made editable or non editable
+##' (\code{block_editable_column} and \code{unblock_editable_column})
+##' (accessed through \code{editable<-}); the headers can be
+##' hidden/shown through the method \code{hide_names(boolean)}; the
+##' rownames can be hidden/shown through themethod
+##' \code{hide_row_names(boolean)}; the popup menus for the headers
+##' can be removed (\code{remove_popup_menu}) and customized
+##' (\code{add_popup}); similarly the cell popup can be
+##' (\code{remove_cell_popup} and \code{add_cell_popup}).
+##' @rdname gWidgets2RGtk2-package
 GDf <- setRefClass("GDf",
                    contains="GWidget",
                     fields=list(
@@ -312,6 +316,7 @@ GDf <- setRefClass("GDf",
                         old_nm <- get_name(j)
                         model_idx <- column$getData("n") # model_idx is 1-based
                         widget$removeColumn(column)
+                        invoke_change_handler()
                         ## return info to reconstruct
                         invisible(list(nm=old_nm, model_idx=model_idx ))
                       },
@@ -416,6 +421,7 @@ GDf <- setRefClass("GDf",
                         old_nm <- get_name(j)
                         column <- get_view_column(j)
                         column$getWidget()$getChild()$setLabel(value)
+                        invoke_change_handler()
                         return(old_nm)
                       },
                       get_name=function(j) {
@@ -1115,78 +1121,3 @@ by typing or selecting a level and then enter")
                                ))
 
 
-
-## delete when done
-## GDf <- setRefClass("GDf",
-##                    contains="GWidget", 
-##                    methods=list(
-##                      initialize=function(toolkit, items, name=deparse(substitute(df)),
-##                        handler=NULL, action=NULL,
-##                        container=NULL,
-##                        ...) {
-
-##                        block <<- gtkDfEdit(items, name)
-##                        widget <<- block$getData(".local")$view # .local is gtkDfEdit thing
-
-##                        modify_df_edit()
-
-                       
-##                        add_to_parent(container, .self, ...)
-                       
-## ##                       handler_id <<- add_handler_changed(handler, action)
-                       
-##                        callSuper(toolkit)
-##                      },
-##                      modify_df_edit=function() {
-##                        ## Make changes to the dfedit object
-                       
-##                      },
-##                      ## The basic gWidgets interface functions
-##                      ##
-##                      get_value=function( ...) {
-##                        sels <- get_index()
-##                        block[sels[[1]], sels[[2]]]
-##                      },
-##                      set_value=function(value, ...) {
-                       
-##                      },
-##                      get_index = function(...) {
-##                       gtkDfEditGetSelection(block)
-##                      },
-##                      set_index = function(value,...) {
-                       
-##                      },
-##                      get_items = function(i, j, ..., drop=TRUE) {
-##                        block[i, j, ..., drop=drop]
-##                      },
-##                      set_items = function(value, i, j, ...) {
-                       
-##                      },
-##                      get_length=function() {
-##                        get_dim()[2]     # no cols
-##                      },
-##                      get_dim=function() {
-##                        block$getDimension()
-##                      },
-                     
-##                      get_dimnames=function() {
-##                        "Get the row and column names"
-##                        list(block$getRowNames(), block$getColumnNames())
-##                      },
-##                      set_dimnames=function(value) {
-                       
-##                      },
-##                      get_names=function() {
-##                        get_dimnames()[[2]]
-##                      },
-##                      add_handler_changed=function(handler, action=NULL, ...) {
-##                        signal <- "row-changed"
-##                        if(is_handler(handler)) {
-##                          o <- gWidgets2:::observer(.self, handler, action)
-##                          invisible(add_observer(o, signal))
-##                        }
-##                        ## now connect to model (not view, hence no call to add__handler
-##                        model <- widget$getModel()
-##                        connect_to_toolkit_signal(signal="row-changed", emitter=model)
-##                      }
-##                      ))

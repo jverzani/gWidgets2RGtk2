@@ -1,0 +1,19 @@
+\name{ensure_type}
+\alias{ensure_type}
+\title{S3 generic to ensure we don't change data type when assigning into column}
+\usage{
+  ensure_type(x, value)
+}
+\arguments{
+  \item{x}{column values}
+
+  \item{value}{new value}
+}
+\value{
+  coerced new value
+}
+\description{
+  S3 generic to ensure we don't change data type when
+  assigning into column
+}
+

@@ -3,9 +3,11 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::.gvarbrowser
+##' @inheritParams gWidgets2::gvarbrowser
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gvarbrowser guiWidgetsToolkitRGtk2
+##' @S3method .gvarbrowser guiWidgetsToolkitRGtk2
 .gvarbrowser.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                  handler = NULL,action = "summary", container = NULL, ... ) {
   GVarBrowser$new(toolkit,
@@ -13,7 +15,7 @@ NULL
 }
 
 
-##' Class for variable browser.
+## Class for variable browser.
 GVarBrowser <- setRefClass("GVarBrowser",
                             contains="GWidget",
                           fields=list(
@@ -122,7 +124,8 @@ GVarBrowser <- setRefClass("GVarBrowser",
                                 "Add a row to the model"
                                 model$setValue(iter$iter, column=0, name)
                                 model$setValue(iter$iter, column=1, short_summary(x))
-                                model$setValue(iter$iter, column=2, icon_for_object(x))
+#                                model$setValue(iter$iter, column=2, icon_for_object(x))
+                                model$setValue(iter$iter, column=2, stockIconFromObject(toolkit, x))
                                 model$setValue(iter$iter, column=3L, value="")
                                 model$setValue(iter$iter, column=4L, value=digest(x))
                                 ## recurse if needed
@@ -290,7 +293,7 @@ GVarBrowser <- setRefClass("GVarBrowser",
                               add_context_menu=function() {
                                 ## call back
                                 on_button_pressed <- function(view, event, data) {
-                                  if(gWidgetsRGtk2:::isRightMouseClick(event)) {
+                                  if(gWidgets2RGtk2:::isRightMouseClick(event)) {
                                     ret <- view$getPathAtPos(event$x, event$y)
                                     if(!ret$retval)
                                       return(FALSE)

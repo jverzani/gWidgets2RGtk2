@@ -3,8 +3,11 @@ NULL
 
 ##' Toolkit  constructor
 ##'
+##' @inheritParams gWidgets2::gslider
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gslider guiWidgetsToolkitRGtk2
+##' @S3method .gslider guiWidgetsToolkitRGtk2
 .gslider.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                              from = 0, to = 100, by = 1, value = from, horizontal = TRUE,
                                              handler = NULL, action = NULL, container = NULL, ... ) {

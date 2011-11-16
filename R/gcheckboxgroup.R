@@ -3,8 +3,11 @@ NULL
 
 ##' Toolkit constructor
 ##'
+##' @inheritParams gWidgets2::gcheckboxgroup
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gcheckboxgroup guiWidgetsToolkitRGtk2
+##' @S3method .gcheckboxgroup guiWidgetsToolkitRGtk2
 .gcheckboxgroup.guiWidgetsToolkitRGtk2 <-  function(toolkit=NULL,
                                                     items, checked = FALSE, horizontal = FALSE,
                                                     use.table=FALSE, handler = NULL,

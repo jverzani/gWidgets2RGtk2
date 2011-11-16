@@ -3,8 +3,11 @@ NULL
 
 ##' Toolkit constructor
 ##'
+##' @inheritParams gWidgets2::glayout
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .glayout guiWidgetsToolkitRGtk2
+##' @S3method .glayout guiWidgetsToolkitRGtk2
 .glayout.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                              homogeneous = FALSE, spacing = 10,
                                              container = NULL, ... ) {
@@ -76,7 +79,10 @@ GLayout <- setRefClass("GLayout",
                              anchor <- (anchor+1)/2      # [0,1]
                              anchor[2] <- 1 - anchor[2]     # flip yalign
                            }
-                        
+
+                           if(expand) {
+                             set_child_align(child, getWidget(value), anchor)
+                           }
                            
                            ## we do things differently if there is a gtkAlignment for a block
                            if(is(child, "GtkAlignment")) {
@@ -91,15 +97,7 @@ GLayout <- setRefClass("GLayout",
                              if(expand && fill == "") {
                                child['xscale'] <- child['yscale'] <- 1
                              }
-                             
-                             if(!is.null(anchor)) {
-                               child['xalign'] <- anchor[1]
-                               child['yalign'] <- anchor[2]
-                             }
-                           } else {
-                             ## in gtkstuff 
-                             setXYalign(child, getBlock(value), anchor)
-                           }
+                           } 
                            
                            ## resize table widget if needed
                            d <- get_dim()
@@ -107,10 +105,12 @@ GLayout <- setRefClass("GLayout",
                            if( nr > d[1] || nc > d[2])
                              widget$Resize(max(max(i), nr), max(max(j), nc))
 
+                           ## fill options
                            xopts <- yopts <- "fill"
-                           
                            if(expand) {
-                             if(is.null(fill) || (is.logical(fill) && fill) || (is.character(fill) && fill = "both")) {
+                             if(is.null(fill) ||
+                                (is.character(fill) && fill == "both")
+                               ) {
                                xopts <- yopts <- c("fill","expand","shrink")
                              } else if(is.character(fill) && fill == "x") {
                                xopts <-  c("fill","expand","shrink")

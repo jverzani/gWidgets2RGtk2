@@ -3,9 +3,11 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::.gtable
+##' @inheritParams gWidgets2::gtable
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gtable guiWidgetsToolkitRGtk2
+##' @S3method .gtable guiWidgetsToolkitRGtk2
 .gtable.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                          items,
                                          multiple = FALSE,
@@ -51,10 +53,11 @@ make_treeview_column.default <- function(x, col_no) {
 
 ##' Class for gtable widget
 ##'
-##' This class implements a few additional reference methods:
-##' \code{hide_names} to hide the header names;
+##' This GTable class for RGtk2 implements a few additional reference
+##' methods: \code{hide_names} to hide the header names;
 ##' \code{remove_popup_menu} to remove the popup menu;
 ##' \code{add_popup} to add a popup menu
+##' @rdname gWidgets2RGtk2-package
 GTable <- setRefClass("GTable",
                       contains="GWidget",
                       fields=list(
@@ -291,11 +294,17 @@ GTable <- setRefClass("GTable",
                             vals
                         },
                         set_value=function(value, ...) {
-                          "Set selected values by vector matching chosen.col"
-                          ind <- match(value, get_value(drop=TRUE))
+                          "Set selected values by vector matching chosen.col, unless an integer"
+                          block_handlers()
+                          vals <- get_value(drop=TRUE)
+                          if(is.numeric(value) && !is.numeric(vals))
+                            ind <- value
+                          else
+                            ind <- match(value, get_value(drop=TRUE))
                           if(length(ind) == 1 && is.na(ind))
                             return() ## no match
                           set_index(ind)
+                          unblock_handlers()                          
                         },
                         get_index = function(...) {
                           "Get index of selected rows or integer(0)"

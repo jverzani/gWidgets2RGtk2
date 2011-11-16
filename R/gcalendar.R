@@ -3,8 +3,11 @@ NULL
 
 ##' Toolkit constructor
 ##'
+##' @inheritParams gWidgets2::gcalendar
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gcalendar guiWidgetsToolkitRGtk2
+##' @S3method .gcalendar guiWidgetsToolkitRGtk2
 .gcalendar.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                text="",
                                                format="%Y-%m-%d",
@@ -46,7 +49,7 @@ GCalendar <- setRefClass("GCalendar",
                                win <- gtkWindowNew(show=FALSE)
                                cal <- gtkCalendarNew()
                                if(nchar(cur_date <- widget$getText())) {
-                                 tmp <- strsplit(cur_date, "-")[[1]]
+                                 tmp <- as.numeric(strsplit(cur_date, "-")[[1]])
                                  cal$selectDay(tmp[3])
                                  cal$selectMonth(tmp[2] - 1L, tmp[1])
                                }

@@ -3,8 +3,11 @@ NULL
 
 ##' Toolkit XXX constructor
 ##'
+##' @inheritParams gWidgets2::gcheckbox
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gcheckbox guiWidgetsToolkitRGtk2
+##' @S3method .gcheckbox guiWidgetsToolkitRGtk2
 .gcheckbox.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                               text, checked = FALSE, use.togglebutton=FALSE, handler = NULL, action = NULL,
                                               container = NULL, ... ) {
@@ -16,7 +19,7 @@ NULL
                   text, checked, handler, action, container, ...)
 }
 
-##' Basic check box
+## Checkbox reference class
 GCheckbox <- setRefClass("GCheckbox",
                          contains="GWidget",
                          methods=list(
@@ -56,7 +59,7 @@ GCheckbox <- setRefClass("GCheckbox",
                            ))
 
 
-##' Basic toggle button
+## Basic toggle button class
 GToggleButton <- setRefClass("GToggleButton",
                              contains="GCheckbox",
                              methods=list(
@@ -93,8 +96,3 @@ GToggleButton <- setRefClass("GToggleButton",
                               ## }
                               ))
 
-## ##' exported Subclass of GComponent for users to subclass
-## ##'
-## ##' @exportClass GCheckBoxRGtk2
-## GCheckboxRGtk2 <- setRefClass("GCheckboxRGtk2",
-##                                contains="GCheckbox")

@@ -3,8 +3,11 @@ NULL
 
 ##' Toolkit constructor
 ##'
+##' @inheritParams gWidgets2::gcombobox
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gcombobox guiWidgetsToolkitRGtk2
+##' @S3method .gcombobox guiWidgetsToolkitRGtk2
 .gcombobox.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                items, selected = 1, editable = FALSE, coerce.with = NULL,
                                                handler = NULL,action = NULL, container = NULL, ... ) {
@@ -21,7 +24,9 @@ NULL
 }
 
 
-## We create two subclasses of this to handle editable and non-editable situation. These methods end up being in common for both.
+## We create two subclasses of this to handle editable and
+## non-editable situation. These methods end up being in common for
+## both.
 GComboBox <- setRefClass("GComboBox",
                          contains="GWidget",
                          methods=list(
@@ -51,7 +56,7 @@ GComboBox <- setRefClass("GComboBox",
                            }
                            ))
 
-## combobox without entry can have icons, use rGtkDataFrame 
+## combobox without entry can have icons, use rGtkDataFrame
 GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
                                 contains="GComboBox",
                                 methods=list(
@@ -130,9 +135,10 @@ GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
                                   ))
 
 ## The editable code is *different* from the non-editable code, as the
-## gtkComboBoxNewWithEntry method isn't there yet. Instead we need to use
-## a convenience function and manipulate the values with that.
-## This method is deprecated as of 2.24, but that isn't what I have installed
+## gtkComboBoxNewWithEntry method isn't there yet. Instead we need to
+## use a convenience function and manipulate the values with that.
+## This method is deprecated as of 2.24, but that isn't what I have
+## installed
 GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                 contains="GComboBox",
                                   fields=list(

@@ -3,13 +3,16 @@ NULL
 
 ##' toolkit constructor for gwindow
 ##'
+##' @inheritParams gWidgets2::gwindow
 ##' @export
-##' @rdname gWidgetsRGtk2-undocumented
+##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gwindow guiWidgetsToolkitRGtk2
+##' @S3method .gwindow guiWidgetsToolkitRGtk2
 .gwindow.guiWidgetsToolkitRGtk2 <- function(toolkit, title, visible=visible, name, width, height, parent, handler, action,  ...) {
   GWindow$new(toolkit, title, visible=visible, name, width, height, parent, handler, action,  ...)
 }
 
-##' Main class for gwindow instances
+## Main class for gwindow instances
 GWindow <- setRefClass("GWindow",
                             contains="GContainer",
                             fields=list(

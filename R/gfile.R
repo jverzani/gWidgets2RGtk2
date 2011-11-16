@@ -3,11 +3,14 @@ NULL
 
 ##' Toolkit implementation
 ##'
+##' @inheritParams gWidgets2::gfile
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gfile guiWidgetsToolkitRGtk2
+##' @S3method .gfile guiWidgetsToolkitRGtk2
 .gfile.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                           text = "",
-                                          type = c("open", "save", "selectdir"),
+                                          type = c("open","save","selectdir"),
                                           initial.filename = NULL,
                                           filter = list(),
                                           multi=FALSE,
@@ -61,7 +64,7 @@ NULL
       filechooser$SetFilename(paste(getwd(),initial.filename, sep=.Platform$file.sep))
     } else if(type == "save") {
       filechooser$setCurrentFolder(getwd())
-      filechooser$setCurrentName(initialfilename)
+      filechooser$setCurrentName(initial.filename)
     }
   }
   
@@ -87,9 +90,11 @@ NULL
 ##'
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
+##' @method .gfilebrowse guiWidgetsToolkitRGtk2
+##' @S3method .gfilebrowse guiWidgetsToolkitRGtk2
 .gfilebrowse.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                  text = "",
-                                                 type = c("open", "save", "selectdir"),
+                                                 type = c("open","save","selectdir"),
                                                  initial.filename = NULL,
                                                  filter = list(),
                                                  quote=TRUE,
