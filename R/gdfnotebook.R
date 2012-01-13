@@ -10,7 +10,7 @@ NULL
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gdfnotebook guiWidgetsToolkitRGtk2
 ##' @S3method .gdfnotebook guiWidgetsToolkitRGtk2
-.gdfnotebook.guiWidgetsToolkitRGtk2 <-  function(toolkit,
+.gdfnotebook.guiWidgetsToolkitRGtk2XXX <-  function(toolkit,
                                                  items,
                                                  container = NULL, ... ) {
   GDfNotebook$new(toolkit,

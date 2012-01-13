@@ -1,15 +1,20 @@
-* make count right for new RGtk2 version GdkEventType['button-press']
-* gdf and gdfedit? that gives me some other options.
-* make signaling main properties by using observable as possible and
-  svalue invoke command
+* issue when assiging to gdf and increasing row count; (df[nr+1,] <- list(...))
+* gedit size and expand -- is off
+* make count right for new RGtk2 version GdkEventType['button-press']-1L is there, also 2button-press.
+* add dnd for column headers of gdf, gedit dnd is doubling up
+* do subset.by example for gdf
+* more docs 
+* Check that svalue<- signals change handler when there is a new value
+* copyright notice in headers
+* check update in gtree
+DONE * make gw icons in icons.R 
 DONE * add default_expand, default_fill properties so things like gtable
   can have them set without user interaction.
-* copyright notice in headers
-* make gw icons in icons.R
-* check update in gtree
-* 
-common.R
-dnd.R: do this
+
+DONE (For now, just gdf) * gdf and gdfedit? that gives me some other options.
+ 
+DONE common.R
+DONE? dnd.R: do this
 DONE gaction.R
 DONE gbutton.R
 DONE gcalendar.R
@@ -17,13 +22,13 @@ DONE gcheckbox.R
 DONE gcheckboxgroup.R
 DONE gcomobox.R 
 (general) gcommandline.R
-gdfedit.R using RGtkDfEdit (issue with importing gWidgets)
+DON'T DO NOW gdfedit.R using RGtkDfEdit (issue with importing gWidgets)
 DONE gdf.R: see from SpreadR, ... Punted for now
 
-check: gcalendar
-ggroup -- spacing
-gtable set by non-index; [<- complaining
-gtext font<- choiking
+DONE check: gcalendar
+DONE ggroup -- spacing
+DONE gtable set by non-index; [<- complaining
+DONE gtext font<- choiking
 
 DONE gdfnotebook.R Should be general, but having issue with inheritance
 DONE gdialogs.R
@@ -35,7 +40,7 @@ DONE ggraphics.R
 DONE ggraphicsnotebook.R: issue with general notebook interface
 DONE ggroup.R
 (General) ghelp.R
-ghtml.R
+NOTHING TO DO ;( ghtml.R
 DONE gimage.R
 DONE glabel.R
 DONE glayout.R

@@ -45,13 +45,24 @@ GLayout <- setRefClass("GLayout",
                            c(nrow=widget$getNrows(), ncol=widget$getNcols())
                          },
                          get_items = function(i, j, ..., drop=TRUE) {
-                           ind <- sapply(child_positions, function(comp) {
-                             i[1] %in% comp$x && j[1] %in% comp$y
+                           ## make matrix, then extract
+                           d <- get_dim()
+                           m <- matrix(nrow=d[1], ncol=d[2])
+                           for(index in seq_along(child_positions)) {
+                             item <- child_positions[[index]] 
+                             for(ii in item$x)
+                               for(jj in item$y) {
+                                 m[ii,jj] <- index
+                               }
+                           }
+                           widgets <- sapply(as.vector(m), function(ii) {
+                             if(is.na(ii))
+                               NA
+                             else
+                               child_positions[[ii]]$child
                            })
-                           if(any(ind))
-                             return(child_positions[ind][[1]]$child) # first
-                           else
-                             NA
+                           widgets <- matrix(widgets, ncol=d[2])
+                           widgets[i,j, drop=drop]
                          },
                          set_items = function(value, i, j, expand=FALSE, fill=FALSE, anchor=NULL) {
                            "Main method to add children"

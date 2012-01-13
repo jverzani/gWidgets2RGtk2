@@ -59,3 +59,4 @@ Collate:
     'gtree.R'
     'gvarbrowser.R'
     'gedit.R'
+    'gfilter.R'

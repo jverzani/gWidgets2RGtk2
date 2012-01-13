@@ -53,185 +53,174 @@
   \method{getBlock}{RGtkObject} (obj)
 
   \method{.addStockIcons}{guiWidgetsToolkitRGtk2} (toolkit,
-    iconNames, iconFiles, ...)
+  iconNames, iconFiles, ...)
 
   \method{.getStockIcons}{guiWidgetsToolkitRGtk2} (toolkit,
-    ...)
+  ...)
 
   \method{.getStockIconByName}{guiWidgetsToolkitRGtk2}
-    (toolkit, name, ...)
+  (toolkit, name, ...)
 
   addToGtkStockIcons(iconNames, iconFiles)
 
   \method{.stockIconFromObject}{guiWidgetsToolkitRGtk2}
-    (toolkit, obj, ...)
+  (toolkit, obj, ...)
 
   \method{.gbutton}{guiWidgetsToolkitRGtk2} (toolkit, text,
-    handler, action, container, ...)
+  handler, action, container, ...)
 
   \method{.ggroup}{guiWidgetsToolkitRGtk2} (toolkit,
-    horizontal = TRUE, spacing = 5,
-    use.scrollwindow = FALSE, container = NULL, ...)
+  horizontal = TRUE, spacing = 5, use.scrollwindow = FALSE,
+  container = NULL, ...)
 
   \method{.gframe}{guiWidgetsToolkitRGtk2} (toolkit, text,
-    markup, pos, horizontal = TRUE, container = NULL, ...)
+  markup, pos, horizontal = TRUE, container = NULL, ...)
 
   \method{.gexpandgroup}{guiWidgetsToolkitRGtk2} (toolkit,
-    text, markup, horizontal = TRUE, handler = NULL,
-    action = NULL, container = NULL, ...)
+  text, markup, horizontal = TRUE, handler = NULL, action =
+  NULL, container = NULL, ...)
 
   \method{.gcheckbox}{guiWidgetsToolkitRGtk2} (toolkit,
-    text, checked = FALSE, use.togglebutton = FALSE,
-    handler = NULL, action = NULL, container = NULL, ...)
+  text, checked = FALSE, use.togglebutton = FALSE, handler
+  = NULL, action = NULL, container = NULL, ...)
 
-  \method{.gcheckboxgroup}{guiWidgetsToolkitRGtk2}
-    (toolkit = NULL, items, checked = FALSE,
-    horizontal = FALSE, use.table = FALSE, handler = NULL,
-    action = NULL, container = NULL, ...)
+  \method{.gcheckboxgroup}{guiWidgetsToolkitRGtk2} (toolkit
+  = NULL, items, checked = FALSE, horizontal = FALSE,
+  use.table = FALSE, handler = NULL, action = NULL,
+  container = NULL, ...)
 
   \method{.gcombobox}{guiWidgetsToolkitRGtk2} (toolkit,
-    items, selected = 1, editable = FALSE,
-    coerce.with = NULL, handler = NULL, action = NULL,
-    container = NULL, ...)
+  items, selected = 1, editable = FALSE, coerce.with =
+  NULL, handler = NULL, action = NULL, container = NULL,
+  ...)
 
   \method{.gnotebook}{guiWidgetsToolkitRGtk2} (toolkit,
-    tab.pos = 3, container = NULL, ...)
+  tab.pos = 3, container = NULL, ...)
 
   \method{.gpanedgroup}{guiWidgetsToolkitRGtk2} (toolkit,
-    horizontal = TRUE, container = NULL, ...)
+  horizontal = TRUE, container = NULL, ...)
 
   \method{.gseparator}{guiWidgetsToolkitRGtk2} (toolkit,
-    horizontal = TRUE, container = NULL, ...)
+  horizontal = TRUE, container = NULL, ...)
 
   \method{.gstackwidget}{guiWidgetsToolkitRGtk2} (toolkit,
-    container = NULL, ...)
+  container = NULL, ...)
 
   \method{.gwindow}{guiWidgetsToolkitRGtk2} (toolkit,
-    title, visible = visible, name, width, height, parent,
-    handler, action, ...)
+  title, visible = visible, name, width, height, parent,
+  handler, action, ...)
 
   \method{.gmenu}{guiWidgetsToolkitRGtk2} (toolkit,
-    menu.list = list(), popup = FALSE, container = NULL,
-    ...)
+  menu.list = list(), popup = FALSE, container = NULL, ...)
 
   \method{.gstatusbar}{guiWidgetsToolkitRGtk2} (toolkit,
-    text = "", container = NULL, ...)
+  text = "", container = NULL, ...)
 
   \method{.gtoolbar}{guiWidgetsToolkitRGtk2} (toolkit,
-    toolbar.list = list(),
-    style = c("both",<c2><a0>"icons",<c2><a0>"text",<c2><a0>"both-horiz"),
-    container = NULL, ...)
+  toolbar.list = list(), style = c("both", "icons", "text",
+  "both-horiz"), container = NULL, ...)
 
-  \method{.gslider}{guiWidgetsToolkitRGtk2} (toolkit,
-    from = 0, to = 100, by = 1, value = from,
-    horizontal = TRUE, handler = NULL, action = NULL,
-    container = NULL, ...)
+  \method{.gslider}{guiWidgetsToolkitRGtk2} (toolkit, from
+  = 0, to = 100, by = 1, value = from, horizontal = TRUE,
+  handler = NULL, action = NULL, container = NULL, ...)
 
   \method{.gspinbutton}{guiWidgetsToolkitRGtk2} (toolkit,
-    from = 0, to = 10, by = 1, value = from, digits = 0,
-    handler = NULL, action = NULL, container = NULL, ...)
+  from = 0, to = 10, by = 1, value = from, digits = 0,
+  handler = NULL, action = NULL, container = NULL, ...)
 
   \method{.glayout}{guiWidgetsToolkitRGtk2} (toolkit,
-    homogeneous = FALSE, spacing = 10, container = NULL,
-    ...)
+  homogeneous = FALSE, spacing = 10, container = NULL, ...)
 
   \method{.gradio}{guiWidgetsToolkitRGtk2} (toolkit, items,
-    selected = 1, horizontal = FALSE, handler = NULL,
-    action = NULL, container = NULL, ...)
+  selected = 1, horizontal = FALSE, handler = NULL, action
+  = NULL, container = NULL, ...)
 
   \method{.gmessage}{guiWidgetsToolkitRGtk2} (toolkit, msg,
-    title = "message",
-    icon = c("info",<c2><a0>"warning",<c2><a0>"error",<c2><a0>"question"),
-    parent = NULL, ...)
+  title = "message", icon = c("info", "warning", "error",
+  "question"), parent = NULL, ...)
 
   \method{.gconfirm}{guiWidgetsToolkitRGtk2} (toolkit, msg,
-    title = "Confirm",
-    icon = c("info",<c2><a0>"warning",<c2><a0>"error",<c2><a0>"question"),
-    parent = NULL, ...)
+  title = "Confirm", icon = c("info", "warning", "error",
+  "question"), parent = NULL, ...)
 
   \method{.ginput}{guiWidgetsToolkitRGtk2} (toolkit, msg,
-    text = "", title = "Input",
-    icon = c("info",<c2><a0>"warning",<c2><a0>"error",<c2><a0>"question"),
-    parent = NULL, ...)
+  text = "", title = "Input", icon = c("info", "warning",
+  "error", "question"), parent = NULL, ...)
 
   \method{.gbasicdialog}{guiWidgetsToolkitRGtk2} (toolkit,
-    title = "Dialog", parent = NULL, do.buttons = TRUE,
-    handler = NULL, action = NULL, ...)
+  title = "Dialog", parent = NULL, do.buttons = TRUE,
+  handler = NULL, action = NULL, ...)
 
   \method{.galert}{guiWidgetsToolkitRGtk2} (toolkit, msg,
-    title = "message", delay = 3, parent = NULL, ...)
+  title = "message", delay = 3, parent = NULL, ...)
 
   \method{.gcalendar}{guiWidgetsToolkitRGtk2} (toolkit,
-    text = "", format = "\%Y-\%m-\%d", handler = NULL,
-    action = NULL, container = NULL, ...)
+  text = "", format = "\%Y-\%m-\%d", handler = NULL, action
+  = NULL, container = NULL, ...)
 
-  \method{.gfile}{guiWidgetsToolkitRGtk2} (toolkit,
-    text = "",
-    type = c("open",<c2><a0>"save",<c2><a0>"selectdir"),
-    initial.filename = NULL, filter = list(),
-    multi = FALSE, ...)
+  \method{.gfile}{guiWidgetsToolkitRGtk2} (toolkit, text =
+  "", type = c("open", "save", "selectdir"),
+  initial.filename = NULL, filter = list(), multi = FALSE,
+  ...)
 
   \method{.gfilebrowse}{guiWidgetsToolkitRGtk2} (toolkit,
-    text = "",
-    type = c("open",<c2><a0>"save",<c2><a0>"selectdir"),
-    initial.filename = NULL, filter = list(), quote = TRUE,
-    handler = NULL, action = NULL, container = NULL, ...)
+  text = "", type = c("open", "save", "selectdir"),
+  initial.filename = NULL, filter = list(), quote = TRUE,
+  handler = NULL, action = NULL, container = NULL, ...)
 
   \method{.gaction}{guiWidgetsToolkitRGtk2} (toolkit,
-    label, tooltip = NULL, icon = NULL, key.accel = NULL,
-    handler = NULL, action = NULL, parent = NULL, ...)
+  label, tooltip = NULL, icon = NULL, key.accel = NULL,
+  handler = NULL, action = NULL, parent = NULL, ...)
 
   \method{.ggraphics}{guiWidgetsToolkitRGtk2} (toolkit,
-    width = dpi<c2><a0>*<c2><a0>6,
-    height = dpi<c2><a0>*<c2><a0>6, dpi = 75, ps = 12,
-    handler = NULL, action = NULL, container = NULL, ...)
+  width = dpi * 6, height = dpi * 6, dpi = 75, ps = 12,
+  handler = NULL, action = NULL, container = NULL, ...)
 
   \method{.ggraphicsnotebook}{guiWidgetsToolkitRGtk2}
-    (toolkit, width, height, dpi, container, ...)
+  (toolkit, width, height, dpi, container, ...)
 
   \method{.gtable}{guiWidgetsToolkitRGtk2} (toolkit, items,
-    multiple = FALSE, chosen.col = 1, icon.col = NULL,
-    tooltip.col = NULL, handler = NULL, action = NULL,
-    container = NULL, ...)
+  multiple = FALSE, chosen.col = 1, icon.col = NULL,
+  tooltip.col = NULL, handler = NULL, action = NULL,
+  container = NULL, ...)
 
-  \method{.gdf}{guiWidgetsToolkitRGtk2} (toolkit,
-    items = NULL, handler = NULL, action = NULL,
-    container = NULL, ...)
+  \method{.gdf}{guiWidgetsToolkitRGtk2} (toolkit, items =
+  NULL, handler = NULL, action = NULL, container = NULL,
+  ...)
 
   \method{.gdfnotebook}{guiWidgetsToolkitRGtk2} (toolkit,
-    items, container = NULL, ...)
+  items, container = NULL, ...)
 
-  \method{.gtext}{guiWidgetsToolkitRGtk2} (toolkit,
-    text = NULL, width = NULL, height = 300,
-    font.attr = NULL, wrap = TRUE, handler = NULL,
-    action = NULL, container = NULL, ...)
+  \method{.gtext}{guiWidgetsToolkitRGtk2} (toolkit, text =
+  NULL, width = NULL, height = 300, font.attr = NULL, wrap
+  = TRUE, handler = NULL, action = NULL, container = NULL,
+  ...)
 
   \method{.gimage}{guiWidgetsToolkitRGtk2} (toolkit,
-    filename = "", dirname = "", stock.id = NULL,
-    size = "", handler = NULL, action = NULL,
-    container = NULL, ...)
+  filename = "", dirname = "", stock.id = NULL, size = "",
+  handler = NULL, action = NULL, container = NULL, ...)
 
-  \method{.glabel}{guiWidgetsToolkitRGtk2} (toolkit,
-    text = "", markup = FALSE, editable = FALSE,
-    handler = NULL, action = NULL, container = NULL, ...)
+  \method{.glabel}{guiWidgetsToolkitRGtk2} (toolkit, text =
+  "", markup = FALSE, editable = FALSE, handler = NULL,
+  action = NULL, container = NULL, ...)
 
   \method{.gtimer}{guiWidgetsToolkitRGtk2} (toolkit, ms,
-    FUN, data = NULL, one.shot = FALSE, start = TRUE)
+  FUN, data = NULL, one.shot = FALSE, start = TRUE)
 
   \method{.gtree}{guiWidgetsToolkitRGtk2} (toolkit,
-    offspring = NULL, offspring.data = NULL,
-    chosen.col = 1, offspring.col = 2, icon.col = NULL,
-    tooltip.col = NULL, multiple = FALSE, handler = NULL,
-    action = NULL, container = NULL, ...)
+  offspring = NULL, offspring.data = NULL, chosen.col = 1,
+  offspring.col = 2, icon.col = NULL, tooltip.col = NULL,
+  multiple = FALSE, handler = NULL, action = NULL,
+  container = NULL, ...)
 
   \method{.gvarbrowser}{guiWidgetsToolkitRGtk2} (toolkit,
-    handler = NULL, action = "summary", container = NULL,
-    ...)
+  handler = NULL, action = "summary", container = NULL,
+  ...)
 
-  \method{.gedit}{guiWidgetsToolkitRGtk2} (toolkit,
-    text = "", width = 25, coerce.with = NULL,
-    initial.msg = initial.msg, handler = NULL,
-    action = NULL, container = NULL, ...)
+  \method{.gedit}{guiWidgetsToolkitRGtk2} (toolkit, text =
+  "", width = 25, coerce.with = NULL, initial.msg =
+  initial.msg, handler = NULL, action = NULL, container =
+  NULL, ...)
 }
 \arguments{
   \item{digits}{digits}
@@ -295,9 +284,6 @@
   \item{use.togglebutton}{Use a toggle button (shows
   depressed) not a check box}
 
-  \item{value}{typically an array-like \R object of a
-  similar class as \code{x}.}
-
   \item{items}{checkbox labels}
 
   \item{use.table}{logical. If supported, and \code{TRUE}
@@ -311,6 +297,8 @@
   \item{coerce.with}{A function of function name to be
   called before selected value is returned by
   \code{svalue}}
+
+  \item{value}{new items for selection}
 
   \item{tab.pos}{integer. Position of tabs, 1 on bottom, 2
   left, 3 top, 4 right. (If supported)}

@@ -1,5 +1,6 @@
 \docType{package}
 \name{gWidgets2RGtk2-package}
+\alias{"gWidgets2RGtk2-package"}
 \alias{GButton}
 \alias{GComponent}
 \alias{GContainer}
@@ -11,28 +12,6 @@
 \alias{GWidgetWithItems}
 \alias{gWidgets2RGtk2-package}
 \title{gWidgets2Rtk2}
-\format{Reference class 'refObjectGenerator' [package "methods"] with 2 fields
- and 17 methods, of which 6 are possibly relevant:
-   accessors, fields, help, lock, methods, new}
-\usage{
-  GComponent
-
-  GContainer
-
-  GWidget
-
-  GWidgetWithItems
-
-  GButton
-
-  GTable
-
-  GDf
-
-  GLabel
-
-  GTimer
-}
 \description{
   The \pkg{gWidgets2} package provides a programming
   interface for making graphical user interfaces within R.
@@ -44,8 +23,9 @@
   implementation to interface with the underlying
   \pkg{RGtk2} package.
 
-  GComponent is a parent for GContainer and GWidget and
-  inherits from gWidgets2::BasicToolkitInterface.
+  GComponent is a parent class for both GContainer and
+  GWidget and inherits its primary interface from
+  gWidgets2::BasicToolkitInterface.
 
   GContainer is the base class for container objects. The
   main method is \code{add_child}, but there is also
@@ -94,6 +74,5 @@
 
   Maintainer: John Verzani \email{jverzani@gmail.com}
 }
-\keyword{dataset}
 \keyword{package}
 

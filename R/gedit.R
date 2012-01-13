@@ -11,7 +11,7 @@ NULL
 ##' @method .gedit guiWidgetsToolkitRGtk2
 ##' @S3method .gedit guiWidgetsToolkitRGtk2
 .gedit.guiWidgetsToolkitRGtk2 <-  function(toolkit,
-                    text = "", width = 25, coerce.with = NULL, initial.msg=initial.msg,
+                                           text = "", width = 25, coerce.with = NULL, initial.msg=initial.msg,
                     handler = NULL,action = NULL, container = NULL, ... ) {
   GEdit$new( toolkit, text = text, width = width, coerce.with = coerce.with, initial.msg=initial.msg,
                     handler = handler,action = action, container = container, ...)
@@ -34,6 +34,8 @@ GEdit <- setRefClass("GEdit",
                                 handler = NULL, action = NULL, container = NULL, ...) {
 
                                 widget <<- gtkEntryNew()
+                                widget$setWidthChars(width)
+                                
                                 initFields(block=widget,
                                            coerce_with=coerce.with,
                                            init_msg=initial.msg,

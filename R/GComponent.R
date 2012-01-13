@@ -293,19 +293,22 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         "Helper to see if handler is a handler"
                                         !missing(handler) && !is.null(handler) && is.function(handler)
                                       },
-                                      add_handler=function(signal, handler, action=NULL) {
+                                      ##
+                                      ## Adding a handler means to
+                                      ## a) create an observer and add an observer for the given signal
+                                      ## 
+                                      ## b) create a call back which
+                                      ## calls the notify observer
+                                      ## method when the widget
+                                      ## actualy emits the signal
+                                      add_handler=function(signal, handler, action=NULL, decorator, emitter) {
                                         "Uses Observable framework for events. Adds observer, then call connect signal method. Override last if done elsewhere"
                                         if(is_handler(handler)) {
+                                          if(!missing(decorator))
+                                            handler <- decorator(handler)
                                           o <- gWidgets2:::observer(.self, handler, action)
                                           invisible(add_observer(o, signal))
-                                          connect_to_toolkit_signal(signal)
-                                        }
-                                      },
-                                      ## for RGtk2, distinction made here
-                                      add_event_handler = function(signal, handler, action=NULL, ...) {
-                                        "Add event handler (needs logical for return value)"
-                                        if(!missing(handler) && is.function(handler)) {
-                                          add_handler(signal, event_decorator(handler), action, ...)
+                                          connect_to_toolkit_signal(signal, emitter=emitter)
                                         }
                                       },
                                       connect_to_toolkit_signal=function(
@@ -332,6 +335,7 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         if(!is(change_signal, "uninitializedField") && length(change_signal))
                                           invoke_handler(signal=change_signal, ...)
                                       },
+                                      ## block and unblock
                                       block_handlers=function() {
                                         "Block all handlers."
                                         ## default is to block the observers. 
@@ -367,28 +371,27 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         }
                                       },
                                       
-                                      ## some commaon handlers
+                                      ## Defind add_handler_EVENT methods
+                                      ## basically passes down to add_handler or add_event_handler as needed
+                                      ## by the RGtk2 event we bind the handler to.
+                                      ## we have to check is handler is missing or a function when we apply a decorator
                                       add_handler_keystroke=function(handler, action=NULL, ...) {
                                         "Keystroke handler. Defined for all, but might restrict to only gedit, gtext"
-                                        if(!missing(handler) && is.function(handler)) {
-                                          add_handler("key-release-event", key_release_decorator(handler), action, ...)
-                                        }
+                                        add_handler("key-release-event", handler, action, key_release_decorator, ...)
                                       },                                 
-                                      
                                       add_handler_clicked = function(handler, action=NULL, ...) {
                                         add_handler("clicked", handler, action, ...)
                                       },
                                       add_handler_button_press=function(handler, action=NULL, ...) {
-                                        if(!missing(handler) && is.function(handler)) {
-                                          add_handler("button-press-event", button_press_decorator(handler), action, ...)
-                                        }
+                                        add_handler("button-press-event", handler, action, button_press_decorator, ...)
                                       },
                                       add_handler_focus=function(handler, action=NULL, ...) {
-                                        add_event_handler("focus-in-event", handler, action, ...)
+                                        add_handler("focus-in-event", handler, action, event_decorator, ...)
                                       },
                                       add_handler_blur=function(handler, action=NULL, ...) {
-                                        add_event_handler("focus-out-event", handler, action, ...)
+                                        add_handler("focus-out-event", handler, action, event_decorator, ...)
                                       },
+                                      ## XXX add stibs for others
                                       ##
                                       add_popup_menu = function(menulist, action=NULL, ...) {
                                         if(is(menulist, "list")) 
@@ -427,25 +430,5 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       }
 
 
-                                      ## ## Work with handlers (block, un, remove)
-                                      ## block_handler=function(ID) {
-                                      ##   if(missing(ID))
-                                      ##     ID <- handler_id
-                                      ##   lapply(ID, gSignalHandlerBlock, obj=widget)
-                                      ## },
-                                      ## unblock_handler=function(ID) {
-                                      ##   if(missing(ID))
-                                      ##     ID <- handler_id
-                                      ##   lapply(ID, gSignalHandlerUnblock, obj=widget)
-                                      ## },
-                                      ## remove_handler=function(ID) {
-                                      ##   if(missing(ID))
-                                      ##     ID <- handler_id
-                                      ##   lapply(ID, gSignalHandlerDisconnect, obj=widget)
-                                      ##   if(identical(ID, handler_id))
-                                      ##     handler_id <<- NULL # zero out if this one
-                                      ## }
-                                      
-                                      
                                       ))
 

@@ -138,7 +138,7 @@ GCheckboxGroupTable <-  setRefClass("GCheckboxGroupTable",
                                 widget$insertColumn(vc, 1)
 
                                 ## icons, tooltips???
-
+                                initFields(change_signal="toggled")
                                 set_items(value=items)
                                 set_index(checked)
                                 
@@ -226,7 +226,7 @@ GCheckboxGroupTable <-  setRefClass("GCheckboxGroupTable",
                                   
                                   store[i,] <- items
                                 }
-                                
+                                invoke_change_handler()
                               },
                               get_length = function() {
                                 "Number of items to choose from"
@@ -238,8 +238,5 @@ GCheckboxGroupTable <-  setRefClass("GCheckboxGroupTable",
                                 view_column <- widget$getColumn(0)
                                 cell_renderer <- view_column$getCellRenderers()[[1]]
                                 cell_renderer
-                              },
-                              add_handler_changed = function(handler, action=NULL, ...) {
-                                add_handler("toggled", handler, action, ...)
                               }
                               ))

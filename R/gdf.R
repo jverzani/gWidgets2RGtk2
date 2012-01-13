@@ -790,8 +790,11 @@ GDf <- setRefClass("GDf",
                         model[not_deleted(),1L]
                       },
                       set_visible=function(value) {
+                        ## don't update
+                        block_handlers()
                         if(length(value) == length(not_deleted()))
                           model[not_deleted(), 1L] <<- as.logical(value)
+                        unblock_handlers()
                       },
                       get_editable=function(j) {
                         is_editable(j)

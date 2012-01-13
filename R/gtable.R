@@ -208,7 +208,7 @@ GTable <- setRefClass("GTable",
                             ## arguments is given
                             btn <- event_box$getParent()$getParent()$getParent()
                             id <- gSignalConnect(btn, "button-press-event", f=function(w, e, ...) {
-                              if(e$button == 1 && e$type == GdkEventType['button-press'] - 1L) {
+                              if(e$button == 1 && e$type == GdkEventType['button-press']) {
                                 popup$widget$popup(button=e$button, activate.time=e$time)
                               }
                               FALSE
@@ -426,7 +426,7 @@ GTable <- setRefClass("GTable",
                            add_observer(o, "key-release-event") 
                            double_click_handler <- function(self, w, e, ...) {
                              ## XXX this shouldn't need -1L here.
-                             if(e$getButton() == 1 && e$getType() == GdkEventType['2button-press'] - 1L) # XXX ???
+                             if(e$getButton() == 1 && e$getType() == GdkEventType['2button-press'] ) # XXX ???
                                self$notify_observers(signal="button-press-event")
                              FALSE
                            }
