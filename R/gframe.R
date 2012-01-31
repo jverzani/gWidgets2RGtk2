@@ -14,7 +14,7 @@ NULL
 
 ## base class for gframe
 GFrame <- setRefClass("GFrame",
-                      contains="GGroup",
+                      contains="GGroupBase",
                       fields=list(
                         markup="logical"
                         ),
@@ -23,8 +23,7 @@ GFrame <- setRefClass("GFrame",
 
                           horizontal <<- horizontal
 
-                          if(is(widget, "uninitializedField"))
-                            make_widget(text, markup, pos)
+                          make_widget(text, markup, pos)
                           
                           add_to_parent(container, .self, ...)
                           

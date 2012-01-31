@@ -14,49 +14,15 @@ NULL
 
 ## TODO XXX raise on drag motion
 
-## base class for box containers. 
-GGroup <- setRefClass("GGroup",
+GGroupBase <- setRefClass("GGroupBase",
                       contains="GContainer",
-                      
-                      
                       fields=list(
                         horizontal="logical"
                         ),
-                      methods=list(
+                          ## Make a widget, for subclassing
 
-                        ## main intialize method
-                        initialize=function(toolkit=NULL,
-                          horizontal=TRUE, spacing=5,
-                          use.scrollwindow=FALSE,
-                          container=NULL, ...) {
-                          
-                          horizontal <<- horizontal
-                          ## To be able to subclass we define widget in separate method
-                          if(is(widget, "uninitializedField")) 
-                            make_widget(use.scrollwindow, spacing)
-                          
-                          add_to_parent(container, .self, ...)
-                          
-                          callSuper(toolkit)
-                        },
-
-                        ## Make a widget, for subclassing
-                        make_widget = function(use.scrollwindow, spacing) {
-                               if(horizontal)
-                                 widget <<- gtkHBox(homogeneous=FALSE, spacing=spacing)
-                               else
-                                 widget <<- gtkVBox(homogeneous=FALSE, spacing=spacing)
-                               widget$SetBorderWidth(0L)
-                               
-                               if(use.scrollwindow) {
-                                 block <<- gtkScrolledWindowNew()
-                                 block$SetPolicy("GTK_POLICY_AUTOMATIC","GTK_POLICY_AUTOMATIC")
-                                 block$AddWithViewport(widget)
-                               } else {
-                                 block <<- widget
-                               }
-                             },
-
+                          methods=list(
+                            make_widget=function(...) {},
                         
                         ## Main add method
                         add_child = function(child, expand, fill, anchor, ...) {
@@ -151,3 +117,39 @@ GGroup <- setRefClass("GGroup",
                         ))
 
                               
+
+## base class for box containers. 
+GGroup <- setRefClass("GGroup",
+                      contains="GGroupBase",
+                      methods=list(
+                        ## main intialize method
+                        initialize=function(toolkit=NULL,
+                          horizontal=TRUE, spacing=5,
+                          use.scrollwindow=FALSE,
+                          container=NULL, ...) {
+                          
+                          horizontal <<- horizontal
+                          ## To be able to subclass we define widget in separate method
+                          if(is(widget, "uninitializedField")) 
+                            make_widget(use.scrollwindow, spacing)
+                          
+                          add_to_parent(container, .self, ...)
+                          
+                          callSuper(toolkit)
+                        },
+                        make_widget = function(use.scrollwindow, spacing) {
+                               if(horizontal)
+                                 widget <<- gtkHBox(homogeneous=FALSE, spacing=spacing)
+                               else
+                                 widget <<- gtkVBox(homogeneous=FALSE, spacing=spacing)
+                               widget$SetBorderWidth(0L)
+                               
+                               if(use.scrollwindow) {
+                                 block <<- gtkScrolledWindowNew()
+                                 block$SetPolicy("GTK_POLICY_AUTOMATIC","GTK_POLICY_AUTOMATIC")
+                                 block$AddWithViewport(widget)
+                               } else {
+                                 block <<- widget
+                               }
+                             }            
+                        ))

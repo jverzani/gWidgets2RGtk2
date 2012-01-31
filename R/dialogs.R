@@ -330,6 +330,7 @@ GBasicDialog <- setRefClass("GBasicDialog",
                         } else {
                           ret <- FALSE
                         }
+                        
                         block$Destroy()
                         return(invisible(ret))
                       }

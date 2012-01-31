@@ -311,17 +311,23 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                           connect_to_toolkit_signal(signal, emitter=emitter)
                                         }
                                       },
+                                      add_event_handler=function(handler, action=NULL, ..., decorator) {
+                                        add_handler(handler, action=NULL, decorator=.self$event_decorator, ...)
+                                      },
+                                      
+
                                       connect_to_toolkit_signal=function(
                                         signal, # which signal (gSignalConnect)
                                         f=function(self, ...) { # notify observer in Gtk callback
                                           self$notify_observers(signal=signal, ...)
                                         },
-                                        emitter=handler_widget() # can override here
+                                        emitter=.self$handler_widget() # can override here
                                         ) {
                                         "Connect signal of toolkit to notify observer"
                                         ## only connect once
+                                        message("connect to toolkit")
                                         if(is.null(connected_signals[[signal, exact=TRUE]]))
-                                          gSignalConnect(emitter, signal, f, data=.self, user.data.first=TRUE)
+                                          gSignalConnect(handler_widget(), signal, f, data=.self, user.data.first=TRUE)
                                         connected_signals[[signal]] <<- TRUE
                                       },
                                       ## initiate a handler (emit signal)
@@ -370,7 +376,6 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                           stop("No change_signal defined for widget")
                                         }
                                       },
-                                      
                                       ## Defind add_handler_EVENT methods
                                       ## basically passes down to add_handler or add_event_handler as needed
                                       ## by the RGtk2 event we bind the handler to.
@@ -431,4 +436,3 @@ GComponentObservable <- setRefClass("GComponentObservable",
 
 
                                       ))
-

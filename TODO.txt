@@ -1,4 +1,5 @@
 * issue when assiging to gdf and increasing row count; (df[nr+1,] <- list(...))
+* ggraphics notebook -- lost it?
 * gedit size and expand -- is off
 * make count right for new RGtk2 version GdkEventType['button-press']-1L is there, also 2button-press.
 * add dnd for column headers of gdf, gedit dnd is doubling up

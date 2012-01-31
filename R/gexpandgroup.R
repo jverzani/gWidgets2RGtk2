@@ -16,7 +16,10 @@ NULL
 
 ## base class from gframe
 GExpandGroup <- setRefClass("GExpandGroup",
-                            contains="GFrame",
+                            contains="GGroupBase",
+                            fields=list(
+                              "markup"="logical"
+                              ),
                             methods=list(
                               initialize=function(toolkit=NULL, text, markup=FALSE, horizontal=TRUE, handler, action, container=NULL, ...) {
 

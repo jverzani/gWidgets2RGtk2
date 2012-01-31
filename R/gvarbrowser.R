@@ -32,6 +32,7 @@ GVarBrowser <- setRefClass("GVarBrowser",
                                 o = gWidgets2:::Observer$new(function(self) {self$update_view()}, obj=.self)
                                 ws_model$add_observer(o)
 
+                                
                                 model <<- gtkTreeStore(c(key="gchararray", summary="gchararray",
                                                         icon="gchararray", background="gchararray",
                                                         digest="gchararray"))

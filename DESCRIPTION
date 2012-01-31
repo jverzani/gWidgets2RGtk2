@@ -48,7 +48,6 @@ Collate:
     'gfile.R'
     'gaction.R'
     'ggraphics.R'
-    'ggraphicsnotebook.R'
     'gtable.R'
     'gdf.R'
     'gdfnotebook.R'
@@ -59,4 +58,3 @@ Collate:
     'gtree.R'
     'gvarbrowser.R'
     'gedit.R'
-    'gfilter.R'
