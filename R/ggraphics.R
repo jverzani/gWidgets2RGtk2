@@ -76,10 +76,9 @@ GGraphics <- setRefClass("GGraphics",
                              x <- c(x0, x); y <- c(y0, y)
                              x0 <- min(x); x <- max(x)
                              y0 <- min(y); y <- max(y)
-                             
-                             allocation = widget$allocation ## GetAllocation()
-                             a.width <- allocation$allocation$width
-                             a.height <- allocation$allocation$height 
+
+                             a.width <- widget$getAllocation()$allocation$width
+                             a.height <- widget$getAllocation()$allocation$height
 
                              ## background style
                              gcb <- gdkGCNew(widget$window)
@@ -132,8 +131,8 @@ GGraphics <- setRefClass("GGraphics",
                                  return(FALSE)
                                clear_rectangle()
                                
-                               a.width <- widget$getAllocation()$width
-                               a.height <- widget$getAllocation()$height
+                               a.width <- w$getAllocation()$allocation$width
+                               a.height <- w$getAllocation()$allocation$height
 
 
                                env <- rubber_band
@@ -206,9 +205,8 @@ GGraphics <- setRefClass("GGraphics",
                              x.pixel <- sort(c(e$x0, e$x))
                              y.pixel <- sort(c(e$y0, e$y))
   
-                             allocation = widget$allocation ## GetAllocation()
-                             da.w <- allocation$allocation$width
-                             da.h <- allocation$allocation$height 
+                             da.w <- widget$getAllocation()$allocation$width
+                             da.h <- widget$getAllocation()$allocation$height 
                              
                              ndc <- list(x=x.pixel/da.w, y= 1- rev(y.pixel/da.h))
                              return(ndc)
@@ -235,11 +233,11 @@ GGraphics <- setRefClass("GGraphics",
                                   return(FALSE)
                                 
                                 ## changes to allocation storage with newer RGtk2
-                                allocation <- w$allocation ## GetAllocation()
                                 xclick <- e$GetX()
                                 yclick <- e$GetY()
-                                width <- allocation$allocation$width
-                                height <- allocation$allocation$height 
+                                da.w <- w$getAllocation()$allocation$width
+                                da.h <- w$getAllocation()$allocation$height 
+                                
                                 
                                 x <- xclick/width
                                 y <- (height - yclick)/height
