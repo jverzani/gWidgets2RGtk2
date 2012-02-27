@@ -31,10 +31,12 @@ GComponent <- setRefClass("GComponent",
                                contains="BasicToolkitInterface",
                                fields=list(
                                  handler_id="ANY",
-                                 .e="environment" # for tag
+                                 .e="environment", # for tag
                                  ),
                                methods=list(
-                                 initialize=function(toolkit=guiToolkit(), ...) {
+                                 initialize=function(toolkit=guiToolkit(), ...,
+                                   expand, fill, anchor, label # should be gobbled prior, but don't want to pass on
+                                   ) {
                                    initFields(toolkit=toolkit,
                                               .e=new.env()
                                               )
