@@ -21,14 +21,14 @@ GExpandGroup <- setRefClass("GExpandGroup",
                               "markup"="logical"
                               ),
                             methods=list(
-                              initialize=function(toolkit=NULL, text, markup=FALSE, horizontal=TRUE, handler, action, container=NULL, ...) {
+                              initialize=function(toolkit=NULL, text, markup=FALSE, horizontal=TRUE, handler, action, container=NULL, ..., expand=FALSE, fill=FALSE) {
 
                                 horizontal <<- horizontal
                                 if(is(widget, "uninitializedField")) 
                                   make_widget(text, markup)
                                 
                                 handler_id <<- add_handler_changed(handler, action)
-                                add_to_parent(container, .self, ...)
+                                add_to_parent(container, .self, expand, fill, ...)
                                 
                                 callSuper(toolkit, horizontal=horizontal, ...)
                               },

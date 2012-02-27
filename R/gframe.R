@@ -16,33 +16,42 @@ NULL
 GFrame <- setRefClass("GFrame",
                       contains="GGroupBase",
                       fields=list(
-                        markup="logical"
+                        markup="logical",
+                        spacing="numeric"
                         ),
                       methods=list(
-                        initialize=function(toolkit=NULL, text="", markup=FALSE, pos=0, horizontal=TRUE, spacing=5, container=NULL, ...) {
+                        initialize=function(toolkit=NULL, text="", markup=FALSE, pos=0, horizontal=TRUE, spacing=5, container=NULL,use.scrollwindow=FALSE, ...) {
 
                           horizontal <<- horizontal
-
-                          make_widget(text, markup, pos)
+                          spacing <<- spacing
+                          make_widget(text, markup, pos, use.scrollwindow)
                           
                           add_to_parent(container, .self, ...)
                           
-                          callSuper(toolkit, horizontal=horizontal, spacing=spacing, ...)
+                          callSuper(toolkit, horizontal=horizontal, ...)
                         },
-                        make_widget = function(text, markup, pos) {
+                        make_widget = function(text, markup, pos, use.scrollwindow) {
                           if(horizontal)
                             widget <<- gtkHBox()
                           else
                             widget <<- gtkVBox()
-
-                          markup <<- markup
-                          block <<- gtkFrameNew()
-                          block$add(widget)
                           
+                          markup <<- markup
+
+                          block <<- gtkFrameNew()
                           block$SetLabelAlign(pos,0.5)
                           label <- gtkLabelNew()
                           block$setLabelWidget(label)
                           set_names(text)
+                          
+                          if(use.scrollwindow) {
+                            sw <- gtkScrolledWindowNew()
+                            sw$SetPolicy("GTK_POLICY_AUTOMATIC","GTK_POLICY_AUTOMATIC")
+                            sw$AddWithViewport(widget)
+                            block$add(sw)
+                          } else {
+                            block$add(widget)
+                          }
                         },
                         get_names=function(...) {
                           label <- block$getLabelWidget()

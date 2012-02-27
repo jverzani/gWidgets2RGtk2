@@ -21,7 +21,7 @@ GWidgetWithItems <- setRefClass("GWidgetWithItems",
                                   widgets="list"
                                   ),
                                 methods=list(
-                                  connect_to_toolkit_signal=function(signal,f) {
+                                  connect_to_toolkit_signal=function(signal,f, emitter) {
                                     ## override, done when adding items
                                   }
                                 ))
