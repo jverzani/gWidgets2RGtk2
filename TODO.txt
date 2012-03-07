@@ -1,3 +1,4 @@
+* gvarbrowser -- right click hsould be context sensitive
 * issue when assiging to gdf and increasing row count; (df[nr+1,] <- list(...))
 * ggraphics notebook -- lost it?
 * gedit size and expand -- is off

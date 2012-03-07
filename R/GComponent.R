@@ -31,7 +31,7 @@ GComponent <- setRefClass("GComponent",
                                contains="BasicToolkitInterface",
                                fields=list(
                                  handler_id="ANY",
-                                 .e="environment", # for tag
+                                 .e="environment" # for tag
                                  ),
                                methods=list(
                                  initialize=function(toolkit=guiToolkit(), ...,
@@ -384,16 +384,16 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       ## we have to check is handler is missing or a function when we apply a decorator
                                       add_handler_keystroke=function(handler, action=NULL, ...) {
                                         "Keystroke handler. Defined for all, but might restrict to only gedit, gtext"
-                                        add_handler("key-release-event", handler, action, key_release_decorator, ...)
+                                        add_handler("key-release-event", handler, action, .self$key_release_decorator, ...)
                                       },                                 
                                       add_handler_clicked = function(handler, action=NULL, ...) {
                                         add_handler("clicked", handler, action, ...)
                                       },
                                       add_handler_button_press=function(handler, action=NULL, ...) {
-                                        add_handler("button-press-event", handler, action, button_press_decorator, ...)
+                                        add_handler("button-press-event", handler, action, .self$button_press_decorator, ...)
                                       },
                                       add_handler_focus=function(handler, action=NULL, ...) {
-                                        add_handler("focus-in-event", handler, action, event_decorator, ...)
+                                        add_handler("focus-in-event", handler, action, .self$event_decorator, ...)
                                       },
                                       add_handler_blur=function(handler, action=NULL, ...) {
                                         add_handler("focus-out-event", handler, action, event_decorator, ...)

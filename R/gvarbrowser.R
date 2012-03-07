@@ -153,6 +153,7 @@ GVarBrowser <- setRefClass("GVarBrowser",
                                         if(key %in% out_names) {
                                           ## "Alread there did it change?"
                                           dgest <- model$getValue(child_iter$iter, column=4L)$value
+                                          print(list("modify children", dgest, digest(get(key, .GlobalEnv))))
                                           if(dgest != digest(get(key, .GlobalEnv))) {
                                             replace_key <- TRUE
                                           } else {
@@ -311,28 +312,32 @@ GVarBrowser <- setRefClass("GVarBrowser",
                                     menu$append(gtkMenuItemNewWithLabel(gettext(sprintf("Actions for %s:", nm))))
                                     menu$append(gtkSeparatorMenuItem())
 
-                                    ## rm, only if length 1
-                                    if(length(out) == 1) {
-                                      menuitem <- gtkMenuItemNewWithLabel(gettext("rm"))
-                                      gSignalConnect(menuitem, "activate", function(data) {
-                                        rm(list=out, envir=.GlobalEnv)
-                                      })
-                                      menu$append(menuitem)
-                                    }
-                                    ## view
-                                    menuitem <- gtkMenuItemNewWithLabel(gettext("View"))
-                                    gSignalConnect(menuitem, "activate", function(data) {
-                                      View(obj)
-                                    })
-                                    menu$append(menuitem)
-                                    ## fix?
-                                    if(length(out) == 1) {
-                                      menuitem <- gtkMenuItemNewWithLabel(gettext("fix"))
-                                      gSignalConnect(menuitem, "activate", function(data) {
-                                        fix(obj)
-                                      })
-                                    }
-                                    menu$append(menuitem)
+
+                                    popup_actions(obj, nm, menu)
+                                    
+                                    ## ## XXX Need to make this item sensistive. S3 method to dispatch on out
+                                    ## ## rm, only if length 1
+                                    ## if(length(out) == 1) {
+                                    ##   menuitem <- gtkMenuItemNewWithLabel(gettext("rm"))
+                                    ##   gSignalConnect(menuitem, "activate", function(data) {
+                                    ##     rm(list=out, envir=.GlobalEnv)
+                                    ##   })
+                                    ##   menu$append(menuitem)
+                                    ## }
+                                    ## ## view
+                                    ## menuitem <- gtkMenuItemNewWithLabel(gettext("View"))
+                                    ## gSignalConnect(menuitem, "activate", function(data) {
+                                    ##   View(obj)
+                                    ## })
+                                    ## menu$append(menuitem)
+                                    ## ## fix?
+                                    ## if(length(out) == 1) {
+                                    ##   menuitem <- gtkMenuItemNewWithLabel(gettext("fix"))
+                                    ##   gSignalConnect(menuitem, "activate", function(data) {
+                                    ##     fix(obj)
+                                    ##   })
+                                    ## }
+                                    ## menu$append(menuitem)
                                     
                                     ## popup menu                                    
                                     menu$popup(NULL, NULL, NULL, NULL,
@@ -347,4 +352,89 @@ GVarBrowser <- setRefClass("GVarBrowser",
                                 
                               }
                               ))
+## work with context menu
+add_rm <- function(x, nm, menu) {
+  menuitem <- gtkMenuItemNewWithLabel(gettext("rm"))
+  gSignalConnect(menuitem, "activate", function(data) {
+    rm(list=nm, envir=.GlobalEnv)
+  })
+  menu$append(menuitem)
+}
 
+view_vector <- function(x, nm, menu) {
+  menuitem <- gtkMenuItemNewWithLabel(gettext("view"))
+  gSignalConnect(menuitem, "activate", function(data) {
+    w1 <- gbasicdialog(gettext("View a vector"), height=400)
+    gtable(x, cont=w1)
+    w1$set_visible(TRUE)
+  })
+  menu$append(menuitem)
+}
+
+
+edit_vector <- function(x, nm, menu) {
+  menuitem <- gtkMenuItemNewWithLabel(gettext("edit"))
+  gSignalConnect(menuitem, "activate", function(data) {
+    w1 <- gbasicdialog(gettext("Edit a vector"),
+                       height=400,
+                       handler=function(h,...) {
+                         val <- tbl[,1]
+                         assign(nm, val, .GlobalEnv)
+                       })
+    tbl <- gdf(x, cont=w1)
+    w1$set_visible(TRUE)
+  })
+  menu$append(menuitem)
+}
+
+
+view_rect <- function(x, nm, menu) {
+  menuitem <- gtkMenuItemNewWithLabel(gettext("view"))
+  gSignalConnect(menuitem, "activate", function(data) {
+    w1 <- gbasicdialog(gettext("View rectangular data"))
+    gtable(x, cont=w1)
+    w1$set_visible(TRUE)
+  })
+  menu$append(menuitem)
+}
+
+
+edit_vector <- function(x, nm, menu) {
+  menuitem <- gtkMenuItemNewWithLabel(gettext("edit"))
+  gSignalConnect(menuitem, "activate", function(data) {
+    w1 <- gbasicdialog(gettext("Edit rectangular data"), handler=function(h,...) {
+      val <- tbl[,]
+      assign(nm, val, .GlobalEnv)
+    })
+    tbl <- gdf(x, cont=w1)
+    w1$set_visible(TRUE)
+  })
+  menu$append(menuitem)
+}
+
+
+##' Add action to popup menu based on x
+popup_actions <- function(x, nm, menu) UseMethod("popup_actions")
+
+popup_actions.default <- function(x, nm, menu) {
+  if(!grepl("\\$", nm))
+    add_rm(x, nm, menu)
+}
+
+pop_actions.logical <- popup_actions.character <- popup_actions.numeric <- function(x, nm, menu) {
+  NextMethod()
+  ## others
+  view_vector(x, nm, menu)
+  if(!grepl("\\$", nm))
+    edit_vector(x, nm, menu)
+}
+
+popup_actions.data.frame <- function(x, nm, menu) {
+  NextMethod()
+  view_rect(x, nm, menu)
+  if(!grepl("\\$", nm))
+    edit_rect(x, nm, menu)
+
+
+}
+  
