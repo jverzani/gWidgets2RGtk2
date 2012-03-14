@@ -255,6 +255,7 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       ## these wrap the handler to satisfy or fill the h object or return value
                                       event_decorator=function(handler) {
                                         "Decorator for basic event"
+                                        force(handler)
                                         f <- function(h, ...) {
                                           out <- handler(h, ...)
                                           if(is.atomic(out) && is.logical(out) && out[1])
@@ -265,10 +266,12 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         f
                                       },
                                       key_release_decorator=function(handler) {
+                                        force(handler)
                                         f <- function(d, widget, event,...) {
                                           h <- list(obj=d$obj,action=d$action)
+
                                           h$key <- event$getString() # XXX This is bad -- no locale, ...
-                                          state <- event$getState()
+                                          state <- gdkEventKeyGetState(event)
                                           if(state == 0)
                                             h$modifier <- NULL
                                           else
@@ -279,6 +282,7 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       },
                                       button_press_decorator = function(handler) {
                                         "Add in position information to 'h' component"
+                                        force(handler)
                                         f <- function(h, widget, event, ...) {
                                           ## stuff in some event information
                                           h$x <- event$getX(); h$X <- event$getXRoot()
@@ -396,7 +400,7 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         add_handler("focus-in-event", handler, action, .self$event_decorator, ...)
                                       },
                                       add_handler_blur=function(handler, action=NULL, ...) {
-                                        add_handler("focus-out-event", handler, action, event_decorator, ...)
+                                        add_handler("focus-out-event", handler, action, .self$event_decorator, ...)
                                       },
                                       ## XXX add stibs for others
                                       ##
