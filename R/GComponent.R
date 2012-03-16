@@ -52,7 +52,7 @@ GComponent <- setRefClass("GComponent",
                                    callSuper(...)
                                  },
                                  show = function() {
-                                   cat(sprintf("Object of class %s", class(.self)[1]))
+                                   cat(sprintf("Object of class %s\n", class(.self)[1]))
                                  },
                                  ## length
                                  get_length = function(...) {

@@ -62,7 +62,10 @@ GLayout <- setRefClass("GLayout",
                                child_positions[[ii]]$child
                            })
                            widgets <- matrix(widgets, ncol=d[2])
-                           widgets[i,j, drop=drop]
+                           out <- widgets[i,j, drop=drop]
+                           if(length(out) == 1 && drop)
+                             out <- out[[1]]
+                           out
                          },
                          set_items = function(value, i, j, expand=FALSE, fill=FALSE, anchor=NULL) {
                            "Main method to add children"
@@ -143,6 +146,11 @@ GLayout <- setRefClass("GLayout",
                            l <- child_positions
                            l[[as.character(length(l) + 1)]] <- list(x=i, y=j, child=value)
                            child_positions <<- l
+                         },
+                         remove_child=function(child) {
+                           ## we call destroy method on child -- not being reused
+                           children <<- Filter(function(i) !identical(i, child), children)
+                           getBlock(child)$destroy()
                          }
                          ))
 

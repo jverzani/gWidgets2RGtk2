@@ -142,7 +142,8 @@ GGroup <- setRefClass("GGroup",
                                  widget <<- gtkHBox(homogeneous=FALSE, spacing=spacing)
                                else
                                  widget <<- gtkVBox(homogeneous=FALSE, spacing=spacing)
-                               widget$SetBorderWidth(0L)
+
+                               widget$set_value(spacing)
                                
                                if(use.scrollwindow) {
                                  block <<- gtkScrolledWindowNew()
