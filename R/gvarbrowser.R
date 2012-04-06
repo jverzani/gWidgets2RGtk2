@@ -153,7 +153,7 @@ GVarBrowser <- setRefClass("GVarBrowser",
                                         if(key %in% out_names) {
                                           ## "Alread there did it change?"
                                           dgest <- model$getValue(child_iter$iter, column=4L)$value
-                                          print(list("modify children", dgest, digest(get(key, .GlobalEnv))))
+##                                          print(list("modify children", dgest, digest(get(key, .GlobalEnv))))
                                           if(dgest != digest(get(key, .GlobalEnv))) {
                                             replace_key <- TRUE
                                           } else {
@@ -399,7 +399,7 @@ view_rect <- function(x, nm, menu) {
 }
 
 
-edit_vector <- function(x, nm, menu) {
+edit_rect <- function(x, nm, menu) {
   menuitem <- gtkMenuItemNewWithLabel(gettext("edit"))
   gSignalConnect(menuitem, "activate", function(data) {
     w1 <- gbasicdialog(gettext("Edit rectangular data"), handler=function(h,...) {
@@ -413,7 +413,7 @@ edit_vector <- function(x, nm, menu) {
 }
 
 
-##' Add action to popup menu based on x
+## Add action to popup menu based on x
 popup_actions <- function(x, nm, menu) UseMethod("popup_actions")
 
 popup_actions.default <- function(x, nm, menu) {
