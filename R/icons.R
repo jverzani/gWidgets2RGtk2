@@ -25,6 +25,7 @@ NULL
 
 ##' return stock id
 ##'
+##' @param name name of icon
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .getStockIconByName guiWidgetsToolkitRGtk2
@@ -117,6 +118,7 @@ load_gwidget_icons <- function() {
 
 ##' return stock id from object
 ##'
+##' @param obj R object to get icon from
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .stockIconFromObject guiWidgetsToolkitRGtk2
