@@ -3,7 +3,11 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::ggraphics
+##' @param width width of device (pixels)
+##' @param height height of device (pixels)
+##' @param dpi dots per inch
+##' @param ps pointsize
+##' @inheritParams gWidgets2::gwidget
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .ggraphics guiWidgetsToolkitRGtk2
