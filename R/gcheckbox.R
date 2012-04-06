@@ -72,7 +72,7 @@ GToggleButton <- setRefClass("GToggleButton",
 
                                  set_value(checked)
                                  
-                                 initFields(toolkit=toolkit,
+                                 initFields(
                                             block=widget,
                                             change_signal="toggled"
                                            )
@@ -81,12 +81,12 @@ GToggleButton <- setRefClass("GToggleButton",
                                  
                                  handler_id <<- add_handler_changed(handler, action)
                                  
-                                 .self
+                                 callSuper(toolkit)
                               },
                               get_items = function(i, j, ..., drop=TRUE) {
                                 widget$getLabel()
                               },
-                              set_items = function(i, j, ..., value) {
+                              set_items = function(value, i, j, ...) {
                                 ## use UseStock if in stock icon
                                 widget$setLabel(value)
                               }
