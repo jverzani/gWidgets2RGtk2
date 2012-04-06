@@ -256,8 +256,8 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       event_decorator=function(handler) {
                                         "Decorator for basic event"
                                         force(handler)
-                                        f <- function(h, ...) {
-                                          out <- handler(h, ...)
+                                        f <- function(.self, ...) {
+                                          out <- handler(.self, ...)
                                           if(is.atomic(out) && is.logical(out) && out[1])
                                             out[1]
                                           else
@@ -267,29 +267,28 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       },
                                       key_release_decorator=function(handler) {
                                         force(handler)
-                                        f <- function(d, widget, event,...) {
-                                          h <- list(obj=d$obj,action=d$action)
-
-                                          h$key <- event$getString() # XXX This is bad -- no locale, ...
+                                        f <- function(.self, widget, event,...) {
+                                          
+                                          key <- event$getString() # XXX This is bad -- no locale, ...
                                           state <- gdkEventKeyGetState(event)
                                           if(state == 0)
-                                            h$modifier <- NULL
+                                            modifier <- NULL
                                           else
-                                            h$modifier <- gsub("-mask", "", names(which(state == GdkModifierType)))
-                                          handler(h,widget, event,...)
+                                            modifier <- gsub("-mask", "", names(which(state == GdkModifierType)))
+                                          handler(.self, key=key, modifier=modifier, state=state)
                                         }
                                         event_decorator(f)
                                       },
                                       button_press_decorator = function(handler) {
                                         "Add in position information to 'h' component"
                                         force(handler)
-                                        f <- function(h, widget, event, ...) {
+                                        f <- function(.self, widget, event, ...) {
                                           ## stuff in some event information
-                                          h$x <- event$getX(); h$X <- event$getXRoot()
-                                          h$y <- event$getY(); h$Y <- event$getYRoot()
-                                          h$state <- gsub("-mask", "", names(which(event$getState() == GdkModifierType)))
-                                          h$button <- event$getButton()
-                                          handler(h, widget, event, ...)
+                                          x <- event$getX(); X <- event$getXRoot()
+                                          y <- event$getY(); Y <- event$getYRoot()
+                                          state <- gsub("-mask", "", names(which(event$getState() == GdkModifierType)))
+                                          button <- event$getButton()
+                                          handler(.self, x=x,X=X, y=y, Y=Y, state=state, button=button, ...)
                                         }
                                         event_decorator(f)
                                       },
@@ -310,11 +309,9 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       add_handler=function(signal, handler, action=NULL, decorator, emitter) {
                                         "Uses Observable framework for events. Adds observer, then call connect signal method. Override last if done elsewhere"
                                         if(is_handler(handler)) {
-                                          if(!missing(decorator))
-                                            handler <- decorator(handler)
                                           o <- gWidgets2:::observer(.self, handler, action)
                                           invisible(add_observer(o, signal))
-                                          connect_to_toolkit_signal(signal, emitter=emitter)
+                                          connect_to_toolkit_signal(signal, decorator, emitter=emitter)
                                         }
                                       },
                                       add_event_handler=function(handler, action=NULL, ..., decorator) {
@@ -324,14 +321,17 @@ GComponentObservable <- setRefClass("GComponentObservable",
 
                                       connect_to_toolkit_signal=function(
                                         signal, # which signal (gSignalConnect)
-                                        f=function(self, ...) { # notify observer in Gtk callback
-                                          self$notify_observers(signal=signal, ...)
-                                        },
+                                        decorator,
                                         emitter=.self$handler_widget() # can override here
                                         ) {
                                         "Connect signal of toolkit to notify observer"
+                                        f=function(self, ...) { # notify observer in Gtk callback
+                                          self$notify_observers(signal=signal, ...)
+                                        }
+                                        if(!missing(decorator))
+                                          f <- decorator(f)
+                                        
                                         ## only connect once
-                                        message("connect to toolkit")
                                         if(is.null(connected_signals[[signal, exact=TRUE]]))
                                           gSignalConnect(handler_widget(), signal, f, data=.self, user.data.first=TRUE)
                                         connected_signals[[signal]] <<- TRUE
@@ -413,8 +413,8 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                           stop("Pass in popupmenu or list defining one")
 
                                         f <- function(w, e, ...) {
-                                          ## XXX count is wrong! (Fixed count in newest RGtk2)
-                                          if(e$button == 1 && e$type == GdkEventType['button-press'] -1L) {
+                                          ## Fixed count in newest RGtk2
+                                          if(e$button == 1 && e$type == GdkEventType['button-press']) {
                                             mb$widget$popup(button=e$button, activate.time=e$time)
                                           }
                                           FALSE
