@@ -64,7 +64,9 @@ GEdit <- setRefClass("GEdit",
 
                                 
                                 handler_id <<- add_handler_changed(handler, action)
-
+                                ## change handler on focus out event
+                                add_handler_blur(function(...) invoke_change_handler())
+                                
                                 callSuper(toolkit)
                               },
                               set_value=function(value, index=TRUE, drop=TRUE, ...) {
@@ -168,11 +170,18 @@ GEdit <- setRefClass("GEdit",
                                 else 
                                   validator(get_value())
                               },
+                              set_invalid=function(value, msg=NULL) {
+                                "Set invalid state with message"
+                                if(value)
+                                  set_error(msg)
+                                else
+                                  clear_error()
+                              },
                               set_error = function(msg) {
                                 "Add error state and message to widget"
                                 widget$setIconFromStock("primary", "gtk-no")
-                                if(!missing(msg))
-                                  widget$setIconTooltipText("primary", "asdfasf")
+                                if(!missing(msg) && !is.null(msg))
+                                  widget$setIconTooltipText("primary", msg)
                               },
                               clear_error = function() {
                                 "Clear error message"
