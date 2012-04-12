@@ -202,16 +202,18 @@ GVarBrowser <- setRefClass("GVarBrowser",
                                   ## Compute names of objects at this level. (From wsmodel)
                                   klasses <- icon_classes[[i]]
                                   out <- ws_model$get_by_function(function(y)  length(Filter(function(x) is(y, x), klasses) > 0))
-                                  out_names <- sort(names(out))
+                                  out_names <- names(out)
+                                  idx <- order(out_names)
                                   parent_iter <- model$getIterFromString(as.character(match(i, names(icon_classes)) - 1L))
-                                  modify_children(out_names, out, parent_iter)
+                                  modify_children(out_names[idx], out[idx], parent_iter)
                                 }
                                 ## now do others
                                 klasses <- unlist(icon_classes)
                                 out <- ws_model$get_by_function(function(y)  !(length(Filter(function(x) is(y, x), klasses) > 0)))
-                                out_names <- sort(names(out))
+                                out_names <- names(out)
+                                idx <- order(out_names)
                                 parent_iter <- model$getIterFromString(as.character(length(icon_classes)))
-                                modify_children(out_names, out, parent_iter)
+                                modify_children(out_names[idx], out[idx], parent_iter)
                                 ##
                                 start_timer()
                               },
