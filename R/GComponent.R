@@ -143,6 +143,7 @@ GComponent <- setRefClass("GComponent",
                                    }
                                    getBlock(.self)$SetSizeRequest(width,height)
                                  },
+                                 set_invalid=function(value, msg) {},
                                  ##
                                  ## Work with containers
                                  ##
