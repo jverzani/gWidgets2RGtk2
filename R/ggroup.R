@@ -94,13 +94,18 @@ GGroupBase <- setRefClass("GGroupBase",
                             out
                         },
 
-                        ## svalue (borderwidth, spacing -- which is it...)
+                        ## svalue spacing (not borderWidth
                         get_value=function(...) {
-                          widget$getBorderWidth()
+                          widget$getSpacing()
                         },
-                        set_value=function(value, ...) {
-                          widget$setBorderWidth(as.numeric(value)[1])
-                        },
+                            set_value=function(value, ...) {
+                              widget$setSpacing(as.numeric(value)[1])
+                            },
+                            set_borderwidth=function(value, ...) {
+                              "Sets borderwidth -- space around frame of container. not spacing between children"
+                              widget$setBorderWidth(as.numeric(value)[1])
+                            },
+
 
                         ## size
                         get_size=function() {
