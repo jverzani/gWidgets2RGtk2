@@ -67,7 +67,7 @@ GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
                                     handler, action, container, ...) {
 
                                     if(ncol(items) >=2)
-                                      items$icons <- sapply(items$icons, getStockIconByName)
+                                      items[[2]] <- sapply(items[[2]], getStockIconByName)
                                     
                                     store <- rGtkDataFrame(items)
                                     ## drop down list, not combo
@@ -82,7 +82,7 @@ GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
                                       widget$AddAttribute(cellrenderer, "stock-id", 1)
                                       
                                       if(ncol(items) >= 3) {
-                                        message("tooltips are not implemented")
+                                        message("tooltips are not implemented for gcombobox and gWidgets2RGtk2")
                                       }
                                     }
                                     
