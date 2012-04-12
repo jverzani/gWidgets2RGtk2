@@ -1,6 +1,8 @@
 ##' @include GWidget.R
 NULL
 
+## sapcing is in need of fixing
+
 ##' Toolkit constructor
 ##'
 ##' @inheritParams gWidgets2::gformlayout
@@ -43,11 +45,16 @@ GFormLayout <- setRefClass("GFormLayout",
                              },
                              make_widget=function() {
                                widget <<- gtkTableNew(homogeneous=FALSE)
-                               widget$setColSpacings(spacing)
+                               set_spacings(spacing)
                                block <<- widget
                              },
                              finalize=function() {
                                ## some cases one needs to call finalize to write table (gWidgetsWWW2)
+                             },
+                             set_spacings=function(row, col=row) {
+                               "Method to adjust row and column space"
+                               widget$setRowSpacings(row)
+                               widget$setColSpacings(col)
                              },
                              add_child=function(child, label="", ...) {
                                add_row(label, child, ...)
