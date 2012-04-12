@@ -9,8 +9,8 @@
 \alias{GTable}
 \alias{GTimer}
 \alias{GWidget}
-\alias{GWidgetWithItems}
 \alias{gWidgets2RGtk2-package}
+\alias{GWidgetWithItems}
 \title{gWidgets2Rtk2}
 \description{
   The \pkg{gWidgets2} package provides a programming

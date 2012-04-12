@@ -17,6 +17,7 @@
 \alias{.gexpandgroup.guiWidgetsToolkitRGtk2}
 \alias{.gfile.guiWidgetsToolkitRGtk2}
 \alias{.gfilebrowse.guiWidgetsToolkitRGtk2}
+\alias{.gformlayout.guiWidgetsToolkitRGtk2}
 \alias{.gframe.guiWidgetsToolkitRGtk2}
 \alias{.ggraphics.guiWidgetsToolkitRGtk2}
 \alias{.ggraphicsnotebook.guiWidgetsToolkitRGtk2}
@@ -58,13 +59,11 @@
   \method{.getStockIcons}{guiWidgetsToolkitRGtk2} (toolkit,
   ...)
 
-  \method{.getStockIconByName}{guiWidgetsToolkitRGtk2}
-  (toolkit, name, ...)
+  \method{.getStockIconByName}{guiWidgetsToolkitRGtk2}(toolkit, name, ...)
 
   addToGtkStockIcons(iconNames, iconFiles)
 
-  \method{.stockIconFromObject}{guiWidgetsToolkitRGtk2}
-  (toolkit, obj, ...)
+  \method{.stockIconFromObject}{guiWidgetsToolkitRGtk2}(toolkit, obj, ...)
 
   \method{.gbutton}{guiWidgetsToolkitRGtk2} (toolkit, text,
   handler, action, container, ...)
@@ -74,7 +73,8 @@
   container = NULL, ...)
 
   \method{.gframe}{guiWidgetsToolkitRGtk2} (toolkit, text,
-  markup, pos, horizontal = TRUE, container = NULL, ...)
+  markup, pos, horizontal = TRUE, spacing = 5, container =
+  NULL, ...)
 
   \method{.gexpandgroup}{guiWidgetsToolkitRGtk2} (toolkit,
   text, markup, horizontal = TRUE, handler = NULL, action =
@@ -176,9 +176,6 @@
   width = dpi * 6, height = dpi * 6, dpi = 75, ps = 12,
   handler = NULL, action = NULL, container = NULL, ...)
 
-  \method{.ggraphicsnotebook}{guiWidgetsToolkitRGtk2}
-  (toolkit, width, height, dpi, container, ...)
-
   \method{.gtable}{guiWidgetsToolkitRGtk2} (toolkit, items,
   multiple = FALSE, chosen.col = 1, icon.col = NULL,
   tooltip.col = NULL, handler = NULL, action = NULL,
@@ -221,15 +218,30 @@
   "", width = 25, coerce.with = NULL, initial.msg =
   initial.msg, handler = NULL, action = NULL, container =
   NULL, ...)
+
+  \method{.ggraphicsnotebook}{guiWidgetsToolkitRGtk2}(toolkit, width, height, dpi, container, ...)
+
+  \method{.gformlayout}{guiWidgetsToolkitRGtk2} (toolkit,
+  align = "left", spacing = 5, container = NULL, ...)
 }
 \arguments{
+  \item{name}{name of icon}
+
+  \item{obj}{R object to get icon from}
+
   \item{digits}{digits}
 
   \item{delay}{delay}
 
-  \item{initial.msg}{initial.msg}
+  \item{width}{width of device (pixels)}
 
-  \item{obj}{an R object}
+  \item{height}{height of device (pixels)}
+
+  \item{dpi}{dots per inch}
+
+  \item{ps}{pointsize}
+
+  \item{initial.msg}{initial.msg}
 
   \item{toolkit}{used to dispatch into toolkit if a
   separate implementation is made}
@@ -239,8 +251,6 @@
   \item{iconFiles}{path of icons}
 
   \item{...}{ignored}
-
-  \item{name}{of stock icon}
 
   \item{text}{label text. If text matches a stock icon
   name, that is used as well}
@@ -317,11 +327,6 @@
   \code{ggraphics} widget can like to be added to an
   undrawn widget as this avoids sizing issue.}
 
-  \item{width}{initial width of window}
-
-  \item{height}{initial height of window. This sets height
-  before window manager manages the window}
-
   \item{parent}{If non-NULL, can be used to suggest default
   location of window. The argument name was changed from
   location to parent. This can be a coordinate pair (x,y)
@@ -393,10 +398,6 @@
 
   \item{quote}{quote output}
 
-  \item{dpi}{dots per inch}
-
-  \item{ps}{pointsize}
-
   \item{multiple}{logical allow multiple selectino}
 
   \item{chosen.col}{which value from the row is returned by
@@ -458,6 +459,9 @@
   \item{offspring.col}{integer or column name. Points to
   column containing logical values indicating if a row has
   offspring.}
+
+  \item{align}{alignment of label. Left justify or center
+  balance.}
 }
 \value{
   NULL
@@ -535,8 +539,6 @@
 
   Toolkit constructor
 
-  toolkit implementation
-
   Toolkit constructor
 
   Toolkit constructor
@@ -556,6 +558,10 @@
   Toolkit constructor
 
   Toolkit gedit constructor
+
+  toolkit implementation
+
+  Toolkit constructor
 }
 \seealso{
   The documentation for this is found at
