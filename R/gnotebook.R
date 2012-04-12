@@ -108,7 +108,7 @@ GNotebook <- setRefClass("GNotebook",
                               add_child=function(child, label="", index=NULL, close.button=FALSE, ...) {
                                 label_widget <- make_label(child, label, close.button, ...) ## XXX
                                 
-                                if(is.null(index))
+                                if(is.null(index) || !is.numeric(index))
                                   page_no <- widget$appendPage(getBlock(child), label_widget)
                                 else if(index < 1)
                                   page_no <- widget$prependPage(getBlock(child), label_widget)
