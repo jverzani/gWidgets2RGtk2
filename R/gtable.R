@@ -68,7 +68,7 @@ GTable <- setRefClass("GTable",
                         ),
                       methods=list(
                               initialize=function(toolkit=NULL,
-                                items="data.frame",
+                                items=NULL,
                                 multiple = FALSE,
                                 chosen.col = 1,
                                 icon.col = NULL,
@@ -87,7 +87,7 @@ GTable <- setRefClass("GTable",
                                   set_selection_mode("multiple")
                               
                                 
-                                if(missing(items) || ncol(items) > 1)
+                                if(missing(items) || length(items) > 1)
                                   widget$SetRulesHint(TRUE)
                                 widget$SetEnableSearch(TRUE)
                                 widget$setSearchColumn(1 + is.null(icon.col) - 1L)
