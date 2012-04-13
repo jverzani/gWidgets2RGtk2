@@ -30,6 +30,8 @@ GRadio <- setRefClass("GRadio",
                             block <<- gtkHBox()
                           else
                             block <<- gtkVBox()
+
+                          change_signal <<- "toggled"
                           
                           set_items(value=items)
                           set_index(selected)
@@ -73,8 +75,6 @@ GRadio <- setRefClass("GRadio",
                           }, data=.self, user.data.first=TRUE)
                           invisible()
                         },
-                        add_handler_changed=function(handler, action=NULL, ...) {
-                          add_handler("toggled", handler, action=action, ...)
-                        }
+                        get_length=function(...) length(get_items())
                         ))
 
