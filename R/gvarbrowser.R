@@ -367,7 +367,7 @@ view_vector <- function(x, nm, menu) {
   menuitem <- gtkMenuItemNewWithLabel(gettext("view"))
   gSignalConnect(menuitem, "activate", function(data) {
     w1 <- gbasicdialog(gettext("View a vector"), height=400)
-    gtable(x, cont=w1)
+    gtable(x, container=w1)
     w1$set_visible(TRUE)
   })
   menu$append(menuitem)
@@ -383,7 +383,7 @@ edit_vector <- function(x, nm, menu) {
                          val <- tbl[,1]
                          assign(nm, val, .GlobalEnv)
                        })
-    tbl <- gdf(x, cont=w1)
+    tbl <- gdf(x, container=w1)
     w1$set_visible(TRUE)
   })
   menu$append(menuitem)
@@ -394,7 +394,7 @@ view_rect <- function(x, nm, menu) {
   menuitem <- gtkMenuItemNewWithLabel(gettext("view"))
   gSignalConnect(menuitem, "activate", function(data) {
     w1 <- gbasicdialog(gettext("View rectangular data"))
-    gtable(x, cont=w1)
+    gtable(x, container=w1)
     w1$set_visible(TRUE)
   })
   menu$append(menuitem)
@@ -408,7 +408,7 @@ edit_rect <- function(x, nm, menu) {
       val <- tbl[,]
       assign(nm, val, .GlobalEnv)
     })
-    tbl <- gdf(x, cont=w1)
+    tbl <- gdf(x, container=w1)
     w1$set_visible(TRUE)
   })
   menu$append(menuitem)
