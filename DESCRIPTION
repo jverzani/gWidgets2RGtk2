@@ -12,7 +12,8 @@ Depends:
     memoise,
     RGtk2,
     cairoDevice,
-    gWidgets2
+    gWidgets2,
+    testthat
 LazyLoad: yes
 Collate:
     'gWidgets2RGtk2-package.R'

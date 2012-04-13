@@ -1,6 +1,5 @@
 \docType{package}
 \name{gWidgets2RGtk2-package}
-\alias{"gWidgets2RGtk2-package"}
 \alias{GButton}
 \alias{GComponent}
 \alias{GContainer}
