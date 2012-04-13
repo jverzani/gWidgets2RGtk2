@@ -36,8 +36,12 @@ GCheckboxGroup <- setRefClass("GCheckboxGroup",
                                 else
                                   block <<- gtkVBox()
                                 widget <<- NULL
-                                widgets <<- list()
-                                
+
+                                initFields(widgets = list(),
+                                           change_signal="toggled"
+                                           )
+
+
                                 set_items(value=items)
                                 set_index(checked)
                                 add_to_parent(container, .self, ...)
@@ -51,9 +55,14 @@ GCheckboxGroup <- setRefClass("GCheckboxGroup",
                                 items[get_index()]
                               },
                               set_value=function(value, drop=TRUE, ...) {
+                                ## value may be logical
                                 items <- get_items()
-                                ind <- pmatch(value, items)
-                                set_index(ind)
+                                if(is.logical(value) && !is.logical(items)) {
+                                  set_index(value)
+                                } else {
+                                  ind <- pmatch(value, items)
+                                  set_index(ind)                                
+                                }
                               },
                               get_index = function(...) {
                                 "Return indices, not logical"
@@ -89,10 +98,6 @@ GCheckboxGroup <- setRefClass("GCheckboxGroup",
                               },
                               get_length = function() {
                                 length(widgets)
-                              },
-                              ## Handler: changed -> clicked
-                              add_handler_changed=function(handler, action=NULL, ...) {
-                                add_handler("toggled", handler, action=action, ...)
                               }
                               ))
 
