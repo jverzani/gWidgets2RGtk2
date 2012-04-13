@@ -54,7 +54,7 @@ GGroupBase <- setRefClass("GGroupBase",
                         
                         ## fill one of NULL, TRUE, FALSE, "", both, "x", "y"
                         if(expand) {
-                          fill <- getWithDefault(fill, getWithDefault(child$default_fill, ""))
+                          fill <- getWithDefault(fill, getWithDefault(child$default_fill, "both"))
                           fill <- set_child_fill(toolkit_child, fill, horizontal)
                         }
 
