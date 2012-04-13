@@ -74,13 +74,15 @@ GCalendar <- setRefClass("GCalendar",
                              
                              callSuper(toolkit)
                            },
-                           get_value=function( ...) {
+                           get_value=function(drop=TRUE, ...) {
                              val <- widget$getText()
                              cur_date <- try(as.Date(val, format=format))
-                             if(inherits(cur_date,"try-error"))
-                               val <- NA
+                             if(is.na(cur_date)) 
+                               cur_date <- as.Date(NA)
+                             if(missing(drop) || is.null(drop) || drop)
+                               format(cur_date, format=format)
                              else
-                               val <- as.character(cur_date)
+                               cur_date
                            },
                            set_value=function(value, ...) {
                              widget$setText(value)
