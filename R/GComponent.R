@@ -175,6 +175,7 @@ GComponent <- setRefClass("GComponent",
                                  ##
                                  ## Drag and drop
                                  ##
+                                 handler_widget = function() widget, # allow override for block (e.g., glabel)
                                  add_drop_source=function(handler, action=NULL, data.type="text", ...) {
                                    "Specify widget is a drag source"
                                   gtkDragSourceSet(handler_widget(),
@@ -185,7 +186,7 @@ GComponent <- setRefClass("GComponent",
                                    if(data.type == "text") {
                                      f <- function(h, widget, context, sel, tType, eTime) {
                                        val <- handler(h) # returns text
-                                       sel$setText(val) 
+                                       sel$setText(val, -1) 
                                      }
                                    }
                                    else if(data.type == "object") {
@@ -218,17 +219,18 @@ GComponent <- setRefClass("GComponent",
                                    gSignalConnect(handler_widget(), "drag-data-received",
                                                   function(h, widget, context, x, y, sel, data.type, event.time) {
                                                     target <- context$getTargets()[[3]] # GdkAtom instance
-                                                    target <- as.integer(attr(target, "name"))
+                                                    target <- attr(target, "name")
+
                                                     ## do different things depending on context
-                                                    if(target == TARGET.TYPE.TEXT) {
+                                                    if(target == "TEXT") {
                                                       h$dropdata <- rawToChar(sel$getText())
-                                                    } else if(target == TARGET.TYPE.OBJECT) {
+                                                    } else if(as.integer(target) == TARGET.TYPE.TEXT) {
+                                                      h$dropdata <- rawToChar(sel$getText())
+                                                    } else if(as.integer(target) == TARGET.TYPE.OBJECT) {
                                                       key <- rawToChar(sel$getText())
                                                       h$dropdata <- .dnd.env[[key]]; 
                                                     }
-                                                    ## call handler
                                                     handler(h)
-                                                    ## all donw
                                                     gtkDragFinish(context, TRUE, FALSE, time=event.time)
                                                   }, data=list(obj=.self, action=action), user.data.first=TRUE)
                                  },
@@ -293,7 +295,6 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         event_decorator(f)
                                       },
                                       ## code for integrating observable interface with RGtk2
-                                      handler_widget = function() widget, # allow override for block (e.g., glabel)
                                       is_handler=function(handler) {
                                         "Helper to see if handler is a handler"
                                         !missing(handler) && !is.null(handler) && is.function(handler)
