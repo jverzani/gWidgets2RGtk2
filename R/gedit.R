@@ -62,6 +62,11 @@ GEdit <- setRefClass("GEdit",
                                 
                                 add_to_parent(container, .self, ...)
 
+
+                                ## hard code drop handler
+                                ## otherwise we have problems with doubling up (Can't
+                                ## avoid the default call)
+                                add_drop_target(function(h,...) h$obj$set_value(""))
                                 
                                 handler_id <<- add_handler_changed(handler, action)
                                 ## change handler on focus out event
@@ -71,6 +76,7 @@ GEdit <- setRefClass("GEdit",
                               },
                               set_value=function(value, index=TRUE, drop=TRUE, ...) {
                                 clear_init_txt()
+                                widget$selectRegion(0, -1) # select then replace
                                 widget$setText(value)
                                 widget$activate() # emit signal
                               },
