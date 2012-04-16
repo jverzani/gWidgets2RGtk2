@@ -65,14 +65,21 @@ GFormLayout <- setRefClass("GFormLayout",
                                
                                child_widget <- getBlock(child)
 
-                               ## implement alignment and 
-                               ifelse(align == "left", "", "") # fill style
+                               ## implement alignment and
+                               align_amt <- switch(align,
+                                                   "default"=1,
+                                                   "right"=1,
+                                                   "left"=0,
+                                                   1)
 
                                opts <- c("fill", "expand", "shrink")
-                               widget$attach(gtkLabelNew(label),
+                               
+                               l <- gtkLabelNew(label); l$setAlignment(align_amt, 0.5)
+                               widget$attach(l,
                                              0, 1, row, row + 1,
                                              xoptions=opts, yoptions="fill"
                                              )
+                               
                                widget$attach(child_widget,
                                              1, 2, row, row + 1,
                                              xoptions=opts, yoptions="fill"
