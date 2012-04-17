@@ -31,7 +31,9 @@ GComponent <- setRefClass("GComponent",
                                contains="BasicToolkitInterface",
                                fields=list(
                                  handler_id="ANY",
-                                 .e="environment" # for tag
+                                 .e="environment", # for tag
+                                 ..invalid="logical",
+                                 ..invalid_reason="character"
                                  ),
                                methods=list(
                                  initialize=function(toolkit=guiToolkit(), ...,
@@ -142,6 +144,22 @@ GComponent <- setRefClass("GComponent",
                                      width <- value; height <- -1
                                    }
                                    getBlock(.self)$SetSizeRequest(width,height)
+                                 },
+                                 set_invalid=function(value, msg) {
+                                   "Set widget as invalid or not"
+                                   if(as.logical(value)) {
+                                     ..invalid <<- TRUE
+                                     ..invalid_reason <<- msg
+                                   } else {
+                                     ..invalid <<- FALSE
+                                     ..invalid_reason <<- ""
+                                   }
+                                 },
+                                 is_invalid=function(...) {
+                                   "Is widget in an invalid state"
+                                   if(length(..invalid) == 0)
+                                     ..invalid <<- FALSE
+                                   ..invalid
                                  },
                                  ##
                                  ## Work with containers

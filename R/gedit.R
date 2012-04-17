@@ -182,6 +182,7 @@ GEdit <- setRefClass("GEdit",
                                   set_error(msg)
                                 else
                                   clear_error()
+                                callSuper(value, msg)
                               },
                               set_error = function(msg) {
                                 "Add error state and message to widget"
