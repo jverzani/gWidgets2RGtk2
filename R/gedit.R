@@ -66,7 +66,11 @@ GEdit <- setRefClass("GEdit",
                                 ## hard code drop handler
                                 ## otherwise we have problems with doubling up (Can't
                                 ## avoid the default call)
-                                add_drop_target(function(h,...) h$obj$set_value(""))
+                                add_drop_target(function(h,...) {
+                                  h$obj$set_value("")
+                                  focus(h$obj) <- TRUE
+                                  invoke_change_handler()
+                                })
                                 
                                 handler_id <<- add_handler_changed(handler, action)
                                 ## change handler on focus out event
