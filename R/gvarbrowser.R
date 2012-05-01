@@ -19,16 +19,19 @@ NULL
 GVarBrowser <- setRefClass("GVarBrowser",
                             contains="GWidget",
                           fields=list(
-                             "model"="ANY",
-                             "ws_model"="ANY",
-                             "icon_classes"="list",
-                             "timer"= "ANY"
+                            "model"="ANY",
+                            "ws_model"="ANY",
+                            "filter_classes"="list",
+                            "filter_name"="character",
+                            "other_label"="character",
+                            "timer"= "ANY",
+                            "use_timer"="logical"
                              ),
                             methods=list(
                               initialize=function(toolkit=NULL,
                                 handler=NULL, action=NULL, container=NULL, ...) {
 
-                                ws_model <<- gWidgets2:::WSWatcherModel$new(toolkit=guiToolkit())
+                                ws_model <<- gWidgets2:::WSWatcherModel$new()
                                 o = gWidgets2:::Observer$new(function(self) {self$update_view()}, obj=.self)
                                 ws_model$add_observer(o)
 
@@ -46,8 +49,12 @@ GVarBrowser <- setRefClass("GVarBrowser",
                                 block$setPolicy("GTK_POLICY_AUTOMATIC","GTK_POLICY_AUTOMATIC")
                                 block$add(widget)
 
-                                icon_classes <<- getWithDefault(getOption("gwidgets2:gvarbrowser_classes"),
-                                                               gWidgets2:::gvarbrowser_default_classes)
+                                initFields(
+                                           filter_classes=gWidgets2:::gvarbrowser_default_classes,
+                                           filter_name="",
+                                           other_label="Others",
+                                           use_timer=TRUE
+                                           )
                                 
                                 add_view_columns()
                                 init_model()
@@ -66,8 +73,6 @@ GVarBrowser <- setRefClass("GVarBrowser",
 
                                 handler_id <<- add_handler_changed(handler, action)
 
-                                ## this gives a problem, not sure why. Try our own timer.
-                                ## ws_model$start_timer() # start me up
 
                                 ## Try our oown timer. Need to check in update view the size and slow down if too large
                                 timer <<- gtimer(1000, function(...) .self$ws_model$update_state())
@@ -77,7 +82,7 @@ GVarBrowser <- setRefClass("GVarBrowser",
                                 
                                 callSuper(toolkit)
                               },
-                              start_timer=function() timer$start_timer(),
+                              start_timer=function() if(use_timer) timer$start_timer(),
                               stop_timer=function() timer$stop_timer(),
                               adjust_timer=function(ms) {
                                 "Adjust interval to size of workspace"
@@ -87,6 +92,16 @@ GVarBrowser <- setRefClass("GVarBrowser",
                                 }
                                 timer$set_interval(ms)
                               },
+                              set_filter_name=function(value) {
+                                filter_name <<- value
+                                update_view()
+                              },
+                              set_filter_classes=function(value) {
+                                filter_classes <<- value
+                                update_view()
+                              },
+                              
+                              
                               add_view_columns=function() {
                                 "Add view columns"
                                 view.col <- gtkTreeViewColumnNew()
@@ -115,7 +130,7 @@ GVarBrowser <- setRefClass("GVarBrowser",
                               },
                               init_model=function() {
                                 "Put in headings Data, Data sets, ..."
-                                for(i in c(names(icon_classes), gettext("Others"))) {
+                                for(i in c(names(filter_classes), gettext(other_label))) {
                                   parent_iter <- model$append(NULL)      # toplevel item
                                   model$setValue(parent_iter$iter, column=0, value=i)
                                   model$setValue(parent_iter$iter, column=3L, value="bold")
@@ -196,23 +211,23 @@ GVarBrowser <- setRefClass("GVarBrowser",
                                   }
                                 }
                                 
-                                ## Now loop over icon_classes and modify each child
-                                for(i in names(icon_classes)) {
+                                ## Now loop over filter_classes and modify each child
+                                for(i in names(filter_classes)) {
                                   
                                   ## Compute names of objects at this level. (From wsmodel)
-                                  klasses <- icon_classes[[i]]
+                                  klasses <- filter_classes[[i]]
                                   out <- ws_model$get_by_function(function(y)  length(Filter(function(x) is(y, x), klasses) > 0))
                                   out_names <- names(out)
                                   idx <- order(out_names)
-                                  parent_iter <- model$getIterFromString(as.character(match(i, names(icon_classes)) - 1L))
+                                  parent_iter <- model$getIterFromString(as.character(match(i, names(filter_classes)) - 1L))
                                   modify_children(out_names[idx], out[idx], parent_iter)
                                 }
                                 ## now do others
-                                klasses <- unlist(icon_classes)
+                                klasses <- unlist(filter_classes)
                                 out <- ws_model$get_by_function(function(y)  !(length(Filter(function(x) is(y, x), klasses) > 0)))
                                 out_names <- names(out)
                                 idx <- order(out_names)
-                                parent_iter <- model$getIterFromString(as.character(length(icon_classes)))
+                                parent_iter <- model$getIterFromString(as.character(length(filter_classes)))
                                 modify_children(out_names[idx], out[idx], parent_iter)
                                 ##
                                 start_timer()
@@ -244,13 +259,18 @@ GVarBrowser <- setRefClass("GVarBrowser",
                                 "Get selected values as names. A value may be 'name' or 'lst$name1$name2'"
                                 out <- get_items(drop=FALSE)
                                 drop <- getWithDefault(drop, TRUE) # may be NULL
-                                if(drop) {
+                                if(is.null(drop) || drop) {
+                                  out <- lapply(out, function(x) {
+                                    sapply(x, function(i) ifelse(grepl("\\s", i),
+                                                                 sprintf("'%s'", i),
+                                                                 i))
+                                  })
                                   out <- lapply(out, function(i) paste(i, collapse="$"))
                                   if(length(out) == 1)
                                     out <- out[[1]]
                                 } else {
                                   ## return objects, not values
-                                  out <- sapply(out, gWidgets2:::get_object_from_string)
+                                  out <- lapply(out, gWidgets2:::get_object_from_string)
                                 }
                                 out
                               },
@@ -292,6 +312,10 @@ GVarBrowser <- setRefClass("GVarBrowser",
                               },
                               add_handler_changed=function(handler, action=NULL, ...) {
                                 add_handler("row-activated", handler, action=action, ...)
+                              },
+                              add_handler_selection_changed=function(handler, action=NULL, ...) {
+                                ## not perfect
+                                add_handler("select-cursor-row", handler, action=action, ...)
                               },
                               ## context menu popup
                               add_context_menu=function() {
