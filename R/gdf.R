@@ -687,7 +687,7 @@ GDfBase <- setRefClass("GDfBase",
                              cmds <- list(cmd_replace_column(value, j))
                            else
                              cmds <- lapply(seq_along(j), function(i) cmd_replace_column(value[i], j[i], add=FALSE))
-                           cmd_stack$add(gWidgets2:::CommandList(lst=cmds))
+                           cmd_stack$add(gWidgets2:::CommandList$new(lst=cmds))
                          } else if(missing(j)) {
                            ## XXX need to add this row by row!
                            
