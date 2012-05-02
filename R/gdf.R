@@ -690,7 +690,8 @@ GDfBase <- setRefClass("GDfBase",
                            cmd_stack$add(gWidgets2:::CommandList$new(lst=cmds))
                          } else if(missing(j)) {
                            ## XXX need to add this row by row!
-                           
+                           value <- as.data.frame(value)
+                           sapply(seq_along(value), function(col) .self$set_items(value[,row], i, col))
                          } else {
                            if(length(i) == 1) {
                              value <- rep(value, length=length(j)) # recyle
@@ -700,7 +701,7 @@ GDfBase <- setRefClass("GDfBase",
                              cmd_list <- lapply(seq_along(i), function(ii) cmd_set_cell(i[ii], j, value[ii], add=FALSE))                                             } else {
                                ## no recycling
                                if(length(i) != nrow(value) || length(j) != ncol(value))
-                                 stop(gettext("value not correct dimensions for indices"))
+                                 stop(gettext("value is not of correct dimensions for indices"))
                                cmd_list <- lapply(seq_len(length(i) * length(j)), function(x) NULL)
                                ctr <- 1
                                for(ii in seq_along(i))
