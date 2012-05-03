@@ -1,0 +1,16 @@
+\name{isFirstMouseClick}
+\alias{isFirstMouseClick}
+\title{Return TRUE if first mouse click}
+\usage{
+  isFirstMouseClick(e)
+}
+\arguments{
+  \item{e}{event for mouse press}
+}
+\value{
+  TRUE or FALSE
+}
+\description{
+  To be called from key-press|release-event
+}
+
