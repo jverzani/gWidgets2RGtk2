@@ -93,6 +93,15 @@ GFormLayout <- setRefClass("GFormLayout",
                                names(children) <<- c(nms, label)
                              },
                              get_value=function(...) sapply(children, svalue, simplify=FALSE),
+                              set_value=function(value, ...) {
+                               "value a named list matching children"
+                               value <- as.list(value)
+                               nms <- Filter(function(i) !is.na(match(i, names(children))), names(value))
+                               sapply(nms, function(nm) {
+                                 obj <- children[[nm]]
+                                 svalue(obj) <- value[[nm]]
+                               })
+                             },
                              no_rows=function() widget$getNrows()
                              ))
                              
