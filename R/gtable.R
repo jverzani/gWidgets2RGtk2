@@ -269,6 +269,7 @@ GTable <- setRefClass("GTable",
                           sel_model = widget$getSelection()
                           block_handlers()
                           sel_model$unselectAll()
+                       
                           lapply(ind, function(i) sel_model$selectPath(gtkTreePathNewFromString(i)))
                           unblock_handlers()
                           if ((length(ind) != length(old_ind)) ||
@@ -287,7 +288,12 @@ GTable <- setRefClass("GTable",
                         ## implement basic methods
                         get_value=function(drop=TRUE, ...) {
                           "Get selected values by value (or character(0))"
-                          vals <- get_items(drop=FALSE)[get_selected(), , drop=FALSE]
+
+                          idx <- get_selected()
+                          idx <- which(get_visible())[idx]
+
+                          
+                          vals <- get_items(drop=FALSE)[idx, , drop=FALSE]
                           if(getWithDefault(drop, TRUE))
                             vals[, chosen_col, drop=TRUE]
                           else
@@ -296,26 +302,32 @@ GTable <- setRefClass("GTable",
                         set_value=function(value, ...) {
                           "Set selected values by vector matching chosen.col, unless an integer"
                           block_handlers()
-                          vals <- get_value(drop=TRUE)
+                          vals <- get_items(drop=TRUE)
                           if(is.numeric(value) && !is.numeric(vals))
                             ind <- value
                           else
-                            ind <- match(value, get_value(drop=TRUE))
-                          if(length(ind) == 1 && is.na(ind))
+                            ind <- match(value, vals)
+                          ind <- ind[!is.na(ind)]
+                          if(length(ind) == 0)
                             return() ## no match
                           set_index(ind)
                           unblock_handlers()                          
                         },
                         get_index = function(...) {
                           "Get index of selected rows or integer(0)"
-                          get_selected()
+                          idx <- get_selected()
+                          idx <- which(get_visible())[idx]
                         },
                         set_index = function(value,...) {
                           "set selected values in value. integer(0) or 0L clears selection"
                           if(length(value) == 0 || value < 1)
                             widget$getSelection()$unselectAll() # clear selection if not >= 1
-                          else
+                          else {
+                            ## selected wants actual for filtered
+                            value <- match(value, which(get_visible()))
+                            value <- value[!is.na(value)]
                             set_selected(as.integer(value) - 1L)
+                          }
                         },
                         get_items = function(i, j, ..., drop=TRUE) {
                           DF <- get_model()[]
@@ -401,6 +413,9 @@ GTable <- setRefClass("GTable",
                         },
                         ## Handlers
                         add_handler_changed=function(handler, action=NULL, ...) {
+                          add_handler("row-activated", handler, action, ...)
+                        },
+                        add_handler_selection_changed=function(handler, action=NULL, ...) {
                           ## selection changed
                           if(is_handler(handler)) {
                             o <- gWidgets2:::observer(.self, handler, action)
