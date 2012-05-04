@@ -75,6 +75,10 @@ GRadio <- setRefClass("GRadio",
                           }, data=.self, user.data.first=TRUE)
                           invisible()
                         },
-                        get_length=function(...) length(get_items())
+                        get_length=function(...) length(get_items()),
+                        get_enabled=function() {block$getSensitive()},
+                        set_enabled=function(value) {block$setSensitive(value)},
+                        get_visible = function() block$getVisible(),
+                        set_visible = function(value) block$setVisible(as.logical(value))
                         ))
 
