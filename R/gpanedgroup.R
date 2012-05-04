@@ -74,9 +74,9 @@ GPanedGroup <- setRefClass("GPanedGroup",
                                 }
                                 
                                 if(n == 0) {
-                                  widget$pack1(getBlock(child))
+                                  widget$pack1(getBlock(child), resize=TRUE, shrink=FALSE)
                                 } else if(n == 1) {
-                                  widget$pack2(getBlock(child))
+                                  widget$pack2(getBlock(child), TRUE, FALSE)
                                 }
 
                                 child_bookkeeping(child)
