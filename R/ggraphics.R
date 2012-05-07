@@ -203,6 +203,7 @@ GGraphics <- setRefClass("GGraphics",
                              "Save figure to file specfied by value"
                              XXX("Complete, code is a hack")
                            },
+                           ##
                            drawable_to_ndc = function() {
                              ## convert to normalized device coordinates
                              e <- rubber_band
@@ -219,41 +220,86 @@ GGraphics <- setRefClass("GGraphics",
                            add_handler_changed=function(handler, action=NULL, ...) {
                              "Change handler is called after rubber band selection is updated"
                              if(!is_handler(handler)) return()
-                             f <- function(h, w, e, ...) {
-                               if(!isFirstMouseClick(e))
-                                 return(FALSE)
-                               coords <- drawable_to_ndc()
-                               h$x <- grconvertX(coords$x, from="ndc", to="user")
-                               h$y <- grconvertY(coords$y, from="ndc", to="user")
-                               handler(h, w, e, ...)
-                               return(FALSE)             # propagate
+                             decorator <- function(FUN) {
+                               force(FUN)
+                               f <- function(self, w, e, ...) {
+                                 if(!isFirstMouseClick(e))
+                                   return(FALSE)
+                                 coords <- drawable_to_ndc()
+                                 FUN(self,
+                                     x=grconvertX(coords$x, from="ndc", to="user"),
+                                     y=grconvertY(coords$y, from="ndc", to="user")
+                                     )
+                                 return(FALSE)             # propagate
+                               }
+                               f
                              }
-                             add_handler("button-release-event", f, action=action)
+                             add_handler("button-release-event", handler, action=action, decorator=decorator)
+                           },
+                           add_handler_selection_changed=function(handler, action=NULL, ...) {
+                             add_handler_changed(handler, action, ...)
                            },
                            add_handler_clicked=function(handler, action=NULL, ...) {
                              if(!is_handler(handler)) return()
-                              f = function(h, w, e,...) {
-                                if(!isFirstMouseClick(e))
-                                  return(FALSE)
-                                
-                                ## changes to allocation storage with newer RGtk2
-                                xclick <- e$GetX()
-                                yclick <- e$GetY()
-                                da.w <- w$getAllocation()$allocation$width
-                                da.h <- w$getAllocation()$allocation$height 
-                                
-                                
-                                x <- xclick/width
-                                y <- (height - yclick)/height
-                                
-                                ## put into usr coordinates
-                                h$x <- grconvertX(x, from="ndc", to="user")
-                                h$y <- grconvertY(y, from="ndc", to="user")
-                                
-                                handler(h, w, e, ...)
-                                return(FALSE)
+                             decorator <- function(FUN) {
+                               force(FUN)
+                               f = function(self, w, e,...) {
+                                 if(!isFirstMouseClick(e))
+                                   return(FALSE)
+                                 
+                                 ## changes to allocation storage with newer RGtk2
+                                 xclick <- e$GetX()
+                                 yclick <- e$GetY()
+                                 da.w <- w$getAllocation()$allocation$width
+                                 da.h <- w$getAllocation()$allocation$height 
+                                 
+                                 
+                                 x <- xclick/da.w
+                                 y <- (da.h - yclick)/da.h
+                                 
+                                 ## put into usr coordinates
+                                 FUN(self,
+                                     x=grconvertX(x, from="ndc", to="user"),
+                                     y=grconvertY(y, from="ndc", to="user"),
+                                     width=da.w,
+                                     height=da.h,
+                                     xclick=xclick,
+                                     yclick=yclick)
+                                 return(FALSE)
+                               }
+                               f
                               }
-                              add_handler("button-press-event", f, action=action, ...)
-                            }
+                              add_handler("button-press-event", handler, action=action, decorator=decorator, ...)
+                            },
+                           add_handler_mouse_motion=function(handler, action=NULL, ...) {
+                             decorator <- function(FUN) {
+                               if(!is_handler(handler)) return()
+                               ## need motion decorator
+                               force(FUN)
+                               f <- function(self, w, e, ...) {
+                                 
+                                 xclick <- e$GetX()
+                                 yclick <- e$GetY()
+                                 da.w <- w$getAllocation()$allocation$width
+                                 da.h <- w$getAllocation()$allocation$height 
+                                 
+                                 
+                                 x <- xclick/da.w
+                                 y <- (da.h - yclick)/da.h
+
+                                 ## put into usr coordinates
+                                 FUN(self,
+                                     x=grconvertX(x, from="ndc", to="user"),
+                                     y=grconvertY(y, from="ndc", to="user"),
+                                     width=da.w,
+                                     height=da.h,
+                                     xclick=xclick,
+                                     yclick=yclick)
+                                 FALSE
+                               }
+                               f
+                             }
+                             add_handler("motion-notify-event", handler, action=NULL, decorator=decorator)
+                           }
                            ))
 
