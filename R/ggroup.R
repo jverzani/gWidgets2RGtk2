@@ -48,7 +48,7 @@ GGroupBase <- setRefClass("GGroupBase",
                         if(!is.null(anchor)) {       # put in [0,1]^2
                           anchor <- (anchor+1)/2      # [0,1]
                           anchor[2] <- 1 - anchor[2]     # flip yalign
-                          set_child_align(toolkit_child, getWidget(child), anchor)
+                          set_child_align(toolkit_child, getBlock(child), anchor)
                         }
 
                         
