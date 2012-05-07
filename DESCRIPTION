@@ -52,7 +52,6 @@ Collate:
     'ggraphics.R'
     'gtable.R'
     'gdf.R'
-    'gdfnotebook.R'
     'gtext.R'
     'gimage.R'
     'glabel.R'
