@@ -421,6 +421,9 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       add_handler_blur=function(handler, action=NULL, ...) {
                                         add_handler("focus-out-event", handler, action, .self$event_decorator, ...)
                                       },
+#                                      add_handler_mouse_motion=function(handler, action=NULL, ...) {
+#                                        add_handler("motion-notify-event", handler, action, .self$event_decorator, ...)
+#                                      },
                                       ## XXX add stibs for others
                                       ##
                                       add_popup_menu = function(menulist, action=NULL, ...) {
