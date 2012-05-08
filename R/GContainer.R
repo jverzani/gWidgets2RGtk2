@@ -26,6 +26,7 @@ GContainer <- setRefClass("GContainer",
                               ## yalign : the vertical position of the child, 0.0 is top aligned, 1.0 is bottom aligned
                               ## depends on many things.
                               is_candidate <- function(child) is(child,"GtkMisc") || is(child,"GtkAlignment")
+                              
                               if(!(is_candidate(child)))
                                 child <- alt_child
                               if(is_candidate(child)) {
