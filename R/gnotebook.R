@@ -135,12 +135,14 @@ GNotebook <- setRefClass("GNotebook",
                               ## handlers
                               add_handler_changed=function(handler, action=NULL, ...) {
                                 "A tab changed"
-                                if(!is_handler(handler)) return()
-                                f <- function(h, nb, pageref, i, ...) {
-                                  h$page.no <- i + 1L
-                                  handler(h, nb, i, ...)
+                                decorator <- function(FUN) {
+                                  force(FUN)
+                                  f <- function(self, w, pageref, i, ...) {
+                                    FUN(self, page.no= i + 1L)
+                                  }
+                                  f
                                 }
-                                add_handler("switch-page", event_decorator(f), action=action, ...)
+                                add_handler("switch-page", handler, action=action, decorator=decorator, ...)
                               }
                               ))
 
