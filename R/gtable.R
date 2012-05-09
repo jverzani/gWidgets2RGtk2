@@ -331,6 +331,9 @@ GTable <- setRefClass("GTable",
                         },
                         get_items = function(i, j, ..., drop=TRUE) {
                           DF <- get_model()[]
+                          if(!is.data.frame(DF) && is.list(DF))
+                            DF <- as.data.frame(DF, stringsAsFactors=FALSE)
+                          
                           DF <- DF[, get_valid_columns(), drop=FALSE]
                           names(DF) <- get_names()
                           ## we possibly drop out some stuff
@@ -341,7 +344,7 @@ GTable <- setRefClass("GTable",
                             ## set a new data frame model
                             ## we shove in ..visible for the last column q
                             if(!is(value, "data.frame"))
-                              value <- as.data.frame(value)
+                              value <- as.data.frame(value, stringsAsFactors=FALSE)
                             ## icons
                             if(!is.null(icon_col)) 
                               value[[icon_col]] <-  getStockIconByName(value[[icon_col]])
@@ -438,20 +441,27 @@ GTable <- setRefClass("GTable",
                              return()
                            o <- gWidgets2:::observer(.self, handler, action)
                            add_observer(o, "button-press-event")
-                           add_observer(o, "key-release-event") 
-                           double_click_handler <- function(self, w, e, ...) {
-                             ## XXX this shouldn't need -1L here.
-                             if(e$getButton() == 1 && e$getType() == GdkEventType['2button-press'] ) # XXX ???
-                               self$notify_observers(signal="button-press-event")
-                             FALSE
+                           add_observer(o, "key-release-event")
+                           double_click_decorator <- function(FUN) {
+                             force(FUN)
+                             f <- function(self, w, e, ...) {
+                               if(e$getButton() == 1 && e$getType() == GdkEventType['2button-press'] )
+                                 self$notify_observers(signal="button-press-event")
+                               FALSE
+                             }
+                             f
                            }
-                           enter_key_handler <- function(self, w, e, ...) {
-                             if(e$getKeyval() == GDK_Return)
-                               self$notify_observers(signal="key-release-event")
-                             FALSE
+                           enter_key_decorator <- function(FUN) {
+                             force(FUN)
+                             f <- function(self, w, e, ...) {
+                               if(e$getKeyval() == GDK_Return)
+                                 self$notify_observers(signal="key-release-event")
+                               FALSE
+                             }
+                             f
                            }
-                           connect_to_toolkit_signal("button-press-event", double_click_handler)
-                           connect_to_toolkit_signal("key-release-event", enter_key_handler)
+                           connect_to_toolkit_signal("button-press-event", double_click_decorator)
+                           connect_to_toolkit_signal("key-release-event", enter_key_decorator)
                         },
                         ##
                         hide_names=function(value) {
