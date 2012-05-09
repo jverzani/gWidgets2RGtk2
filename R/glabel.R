@@ -41,7 +41,8 @@ GLabel <- setRefClass("GLabel",
                                 ## we put in an event box to catch events for the handler and editable stuff.
                                 ## Likely that should just be done away with, but here it is.
                                 block <<- gtkEventBoxNew()
-                                block$SetVisibleWindow(FALSE)
+                                block$setVisibleWindow(FALSE)
+                                block$addEvents(GdkEventMask["all-events-mask"])
                                 block$add(widget)
 
                                 initFields(
@@ -52,7 +53,6 @@ GLabel <- setRefClass("GLabel",
                                 add_to_parent(container, .self, ...)
 
                                 set_value(text)
-
                                 if(editable) {
                                   ## Set up widget to toggle between
                                   state <<- "label"
@@ -114,7 +114,7 @@ GLabel <- setRefClass("GLabel",
                               },
                               add_handler_clicked=function(handler, action=NULL, ...) {
                                 widget$setSelectable(FALSE)
-                                add_event_handler("button-press-event", handler, action, ...)
+                                add_event_handler("button-press-event", handler, action, decorator=.self$event_decorator(), ...)
                               },
 
 
