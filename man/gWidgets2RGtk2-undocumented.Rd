@@ -19,7 +19,6 @@
 \alias{.gformlayout.guiWidgetsToolkitRGtk2}
 \alias{.gframe.guiWidgetsToolkitRGtk2}
 \alias{.ggraphics.guiWidgetsToolkitRGtk2}
-\alias{.ggraphicsnotebook.guiWidgetsToolkitRGtk2}
 \alias{.ggroup.guiWidgetsToolkitRGtk2}
 \alias{.gimage.guiWidgetsToolkitRGtk2}
 \alias{.ginput.guiWidgetsToolkitRGtk2}
@@ -224,9 +223,6 @@
     text = "", width = 25, coerce.with = NULL,
     initial.msg = initial.msg, handler = NULL,
     action = NULL, container = NULL, ...)
-
-  \method{.ggraphicsnotebook}{guiWidgetsToolkitRGtk2}
-    (toolkit, width, height, dpi, container, ...)
 
   \method{.gformlayout}{guiWidgetsToolkitRGtk2} (toolkit,
     align = "left", spacing = 5, container = NULL, ...)
@@ -564,8 +560,6 @@
   Toolkit constructor
 
   Toolkit gedit constructor
-
-  toolkit implementation
 
   Toolkit constructor
 }
