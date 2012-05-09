@@ -25,7 +25,6 @@ Collate:
     'GWidget.R'
     'icons.R'
     'startup.R'
-    'notebook-widgets.R'
     'gbutton.R'
     'ggroup.R'
     'gframe.R'
