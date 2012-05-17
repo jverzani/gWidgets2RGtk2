@@ -56,10 +56,10 @@ GFormLayout <- setRefClass("GFormLayout",
                                widget$setRowSpacings(row)
                                widget$setColSpacings(col)
                              },
-                             add_child=function(child, label="", ...) {
-                               add_row(label, child, ...)
+                             add_child=function(child,  expand=NULL, fill=NULL, anchor=NULL, ..., label="") {
+                               add_row(label, child, expand, fill, anchor, ...)
                              },
-                             add_row=function(label, child, ...) {
+                             add_row=function(label, child, expand=NULL, fill=NULL, anchor=NULL, ...) {
                                "Add a row at end"
                                row <- no_rows()
                                
@@ -71,18 +71,47 @@ GFormLayout <- setRefClass("GFormLayout",
                                                    "right"=1,
                                                    "left"=0,
                                                    1)
+                             
+                               print(list(expand, fill, anchor))
+                               
+                               xopts <- yopts <- c("shrink")
+                               if(is.null(expand) || expand)
+                                 xopts <- yopts <- c("expand", "shrink")
+                               
+                               if(is.null(fill)) fill <- TRUE
+                               if(is.logical(fill) && fill)
+                                 xopts <- yopts <- c("expand", "shrink", "fill")
+                               if(is.character(fill)) {
+                                 if(fill == "both") {
+                                   xopts <- yopts <- c("expand", "shrink", "fill")
+                                 } else if(fill == "x") {
+                                   xopts <- c("expand", "shrink", "fill")
+                                 } else if(fill == "y") {
+                                   yopts <- c("expand", "shrink", "fill")
+                                 }
+                               }
 
-                               opts <- c("fill", "expand", "shrink")
+                               ## 0,0 = top, 0.5 center. We center, as
+                               ## otherwise widgets in boxes look
+                               ## funny, as the boxes have some
+                               ## padding.
                                
                                l <- gtkLabelNew(label); l$setAlignment(align_amt, 0.5)
                                widget$attach(l,
                                              0, 1, row, row + 1,
-                                             xoptions=opts, yoptions="fill"
+                                             xoptions=c("expand", "fill"),
+                                             yoptions="fill"
                                              )
-                               
+
+                               ## child alignment ...
+                               if(!is.na(match("xalign", names(child_widget))))
+                                 child_widget['xalign'] <- ifelse(is.null(anchor),
+                                                                  0,
+                                                                  (1 + anchor[1])/1)
+
                                widget$attach(child_widget,
                                              1, 2, row, row + 1,
-                                             xoptions=opts, yoptions="fill"
+                                             xoptions=xopts, yoptions=yopts
                                              )
                                ## bookkeeping
                                if(is(child, "GComponent"))
