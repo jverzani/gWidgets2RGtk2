@@ -44,8 +44,8 @@ GDialog <- setRefClass("GDialog",
 
                           widget$hide()
                           
-                          if(length(message) > 1)
-                            widget$setSecondaryText(paste(msg[-1], collapse = "\n"))
+                          if(length(msg) > 1)
+                            widget["secondary-text"] <<- paste(msg[-1], collapse = "\n")
 
                           modify_widget()
 
