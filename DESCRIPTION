@@ -1,7 +1,7 @@
 Package: gWidgets2RGtk2
 Type: Package
 Title: Implementation of gWidgets2 for RGtk2 package
-Version: 1.0
+Version: 1.0-1
 Date: 2011-09-18
 Author: John Verzani
 Maintainer: John Verzani <jverzani@gmail.com>
