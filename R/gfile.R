@@ -111,6 +111,9 @@ NULL
 ## XXX
 GFileBrowse <- setRefClass("GFileBrowse",
                            contains="GWidgetWithItems",
+                           fields=list(
+                             button="ANY"
+                             ),
                            methods=list(
                               initialize=function(
                                 toolkit=NULL,
@@ -127,7 +130,7 @@ GFileBrowse <- setRefClass("GFileBrowse",
                                 block <<- gtkHBox()
                                 widget <<- gtkEntry()
                                 widget$setText(text)
-                                button <- gtkButtonNewFromStock("gtk-open") # gtk-file isn't working
+                                button <<- gtkButtonNewFromStock("gtk-open") # gtk-file isn't working
 
                                 block$packStart(widget, expand=TRUE, fill=TRUE)
                                 block$packStart(button)
