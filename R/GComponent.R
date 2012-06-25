@@ -33,7 +33,8 @@ GComponent <- setRefClass("GComponent",
                                  handler_id="ANY",
                                  .e="environment", # for tag
                                  ..invalid="logical",
-                                 ..invalid_reason="character"
+                                 ..invalid_reason="character",
+                                 coerce_with="ANY"
                                  ),
                                methods=list(
                                  initialize=function(toolkit=guiToolkit(), ...,
