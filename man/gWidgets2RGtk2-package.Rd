@@ -5,11 +5,12 @@
 \alias{GContainer}
 \alias{GDf}
 \alias{GLabel}
+\alias{GProgressBar}
 \alias{GTable}
 \alias{GTimer}
 \alias{GWidget}
-\alias{gWidgets2RGtk2-package}
 \alias{GWidgetWithItems}
+\alias{gWidgets2RGtk2-package}
 \title{gWidgets2Rtk2}
 \description{
   The \pkg{gWidgets2} package provides a programming
@@ -67,6 +68,10 @@
 
   The main reference methods \code{GTimer} are
   \code{start_timer} and \code{stop_timer}
+
+  For RGtk2, the Gprogressbar class has the extra reference
+  method \code{set_border}. The \code{border} argument has
+  been deprecated.
 }
 \author{
   John Verzani \email{jverzani@gmail.com}

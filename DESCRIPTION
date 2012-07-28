@@ -59,3 +59,4 @@ Collate:
     'gvarbrowser.R'
     'gedit.R'
     'gformlayout.R'
+    'gprogressbar.R'

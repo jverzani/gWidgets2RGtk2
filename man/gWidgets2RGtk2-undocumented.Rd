@@ -28,6 +28,7 @@
 \alias{.gmessage.guiWidgetsToolkitRGtk2}
 \alias{.gnotebook.guiWidgetsToolkitRGtk2}
 \alias{.gpanedgroup.guiWidgetsToolkitRGtk2}
+\alias{.gprogressbar.guiWidgetsToolkitRGtk2}
 \alias{.gradio.guiWidgetsToolkitRGtk2}
 \alias{.gseparator.guiWidgetsToolkitRGtk2}
 \alias{.gslider.guiWidgetsToolkitRGtk2}
@@ -226,6 +227,9 @@
 
   \method{.gformlayout}{guiWidgetsToolkitRGtk2}(toolkit,
     align = "left", spacing = 5, container = NULL, ...)
+
+  \method{.gprogressbar}{guiWidgetsToolkitRGtk2}(toolkit,
+    value, container, ...)
 }
 \arguments{
   \item{name}{name of icon}
@@ -562,9 +566,14 @@
   Toolkit gedit constructor
 
   Toolkit constructor
+
+  Toolkit constructor
 }
 \seealso{
   The documentation for this is found at
   \code{\link{gbutton}}.
+
+  The documentation for this is found at
+  \code{\link{gprogressbar}}.
 }
 
