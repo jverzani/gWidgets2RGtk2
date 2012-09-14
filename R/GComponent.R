@@ -242,7 +242,7 @@ GComponent <- setRefClass("GComponent",
 
                                                     ## do different things depending on context
 
-                                                    ##gSignalStopEmission(widget, "drag-data-received")
+                                                    try(gSignalStopEmission(widget, "drag-data-received"), silent=TRUE)
                                                     if(target == "TEXT") {
                                                       h$dropdata <- rawToChar(sel$getText())
                                                     } else if(as.integer(target) == TARGET.TYPE.TEXT) {
