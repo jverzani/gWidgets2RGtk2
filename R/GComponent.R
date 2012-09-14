@@ -242,7 +242,6 @@ GComponent <- setRefClass("GComponent",
 
                                                     ## do different things depending on context
 
-                                                    try(gSignalStopEmission(widget, "drag-data-received"), silent=TRUE)
                                                     if(target == "TEXT") {
                                                       h$dropdata <- rawToChar(sel$getText())
                                                     } else if(as.integer(target) == TARGET.TYPE.TEXT) {
@@ -252,7 +251,11 @@ GComponent <- setRefClass("GComponent",
                                                       h$dropdata <- .dnd.env[[key]]; 
                                                     }
                                                     handler(h)
+
                                                     gtkDragFinish(context, TRUE, FALSE, time=event.time)
+                                                    message("stop emissiong")
+                                                    print(widget)
+                                                    try(gSignalStopEmission(widget, "drag-data-received"), silent=TRUE)
                                                   }, data=list(obj=.self, action=action), user.data.first=TRUE)
                                  },
                                  add_drag_motion=function(handler, action=NULL, ...) {
