@@ -253,8 +253,9 @@ GComponent <- setRefClass("GComponent",
                                                     handler(h)
 
                                                     gtkDragFinish(context, TRUE, FALSE, time=event.time)
-                                                    message("stop emissiong")
+                                                    message("stop emission")
                                                     print(widget)
+                                                    print(signal)
                                                     try(gSignalStopEmission(widget, "drag-data-received"), silent=TRUE)
                                                   }, data=list(obj=.self, action=action), user.data.first=TRUE)
                                  },
