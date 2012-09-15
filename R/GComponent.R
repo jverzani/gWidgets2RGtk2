@@ -204,14 +204,16 @@ GComponent <- setRefClass("GComponent",
 
                                    if(data.type == "text") {
                                      f <- function(h, widget, context, sel, tType, eTime) {
+                                       message("get drag data")
                                        val <- handler(h) # returns text
                                        sel$setText(val, -1) 
                                      }
                                    }
                                    else if(data.type == "object") {
-                                     print("Set object")
+                                     
                                      key <- digest(.self)
                                      f <- function(h, widget, context, sel, tType, eTime) {
+                                       message("get drag data object")                                       
                                        val <- handler(h) ## returns an object
                                        .dnd.env[[key]] <- val
                                        sel$setText(key) 
@@ -224,6 +226,7 @@ GComponent <- setRefClass("GComponent",
                                    
                                    if(data.type == "object") {
                                      gSignalConnect(handler_widget(), "drag-end", f=function(key, ...) {
+                                       message("drag end")
                                        .dnd.env[[key]] <- NULL # clean up
                                      }, data=digest(.self), user.data.first=TRUE)
                                    }
@@ -237,11 +240,27 @@ GComponent <- setRefClass("GComponent",
 
                                    gSignalConnect(handler_widget(), "drag-data-received",
                                                   function(h, widget, context, x, y, sel, data.type, event.time) {
+                                                    last_time <- .dnd.env[['last.time']]
+                                                    print(list("last time",
+                                                               last_time=last_time,
+                                                               class = class(last_time),
+                                                               event.time=event.time))
+                                                    
+                                                    if(!is.null(last_time) && last_time == event.time) return()
+                                                    .dnd.env[['last.time']] <- event.time
+                                                    
                                                     target <- context$getTargets()[[3]] # GdkAtom instance
                                                     target <- attr(target, "name")
 
                                                     ## do different things depending on context
-
+                                                    message("drag data received")
+                                                    print(list(context=context,
+                                                               x=x,
+                                                               y=y,
+                                                               sel=sel,
+                                                               data.type=data.type,
+                                                               event.time=event.time)
+                                                          )
                                                     if(target == "TEXT") {
                                                       h$dropdata <- rawToChar(sel$getText())
                                                     } else if(as.integer(target) == TARGET.TYPE.TEXT) {
@@ -454,7 +473,7 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                           mb <- gmenu(menulist, popup=TRUE)
                                         else
                                           mb <- menulist
-                                        print(mb)
+
                                         if(!is(mb, "GMenuPopup"))
                                           stop("Pass in popupmenu or list defining one")
                                         

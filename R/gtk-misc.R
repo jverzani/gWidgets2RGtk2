@@ -114,9 +114,9 @@ widgetTargetTypes <-
        object = gtkTargetEntry("text/plain", 0, 
          TARGET.TYPE.OBJECT))
 
-## an environment to store objects when dragging and dropping
+## an environment to store objects and times when dragging and dropping
 .dnd.env <- new.env()
-
+.dnd.env[['last_time']] <- 0
 
 ###
 ##################################################
