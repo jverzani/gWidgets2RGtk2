@@ -253,10 +253,9 @@ GComponent <- setRefClass("GComponent",
                                                     handler(h)
 
                                                     gtkDragFinish(context, TRUE, FALSE, time=event.time)
-                                                    message("stop emission")
-                                                    print(class(widget))
-                                                    print(context)
+                                                    ## This fails when dropping onto gedit!!! (gets called twice)
                                                     try(gSignalStopEmission(widget, "drag-data-received"), silent=TRUE)
+                                                    return(TRUE)
                                                   }, data=list(obj=.self, action=action), user.data.first=TRUE)
                                  },
                                  add_drag_motion=function(handler, action=NULL, ...) {
