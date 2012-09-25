@@ -180,6 +180,8 @@ GDfBase <- setRefClass("GDfBase",
                          clear_stack()
                          clear_view_columns()
 
+                                    
+                         
                          mod_items <- cbind(`_visible`=rep(TRUE, nrow(items)),
                                             `_deleted`=rep(FALSE, nrow(items)),
                                             `_rownames`=I(rownames(items)),
@@ -206,12 +208,13 @@ GDfBase <- setRefClass("GDfBase",
                        add_view_columns=function() {
                          "Add view columns to treeview widget"
                          DF <- as.data.frame(model)
+
                          ## add row names column
                          view_col<- add_editable_cell_renderer(as.character(DF[[3]]), self=.self, model_idx=3)
                          cr <- view_col$getCellRenderers()[[1]]; cr['font'] <- "Bold"
                          widget$insertColumn(view_col, -1L)
                          ## add remaining columns
-                         sapply(seq_along(DF[,-(1:3)]), function(i) {
+                         sapply(seq_along(DF[,-(1:3), drop=FALSE]), function(i) {
                            view_col <- add_editable_cell_renderer(DF[[i + 3L]], self=.self, model_idx=i + 3L)
                            widget$insertColumn(view_col, -1L)
                            add_popup_to_view_col(view_col)
@@ -226,7 +229,7 @@ GDfBase <- setRefClass("GDfBase",
                          "Get data frame from columns. Skips deleted rows, but returns non-visible ones"
                          columns <- widget$getColumns()[-1] # drop rownames
                          cols <- sapply(columns, function(vc) vc$getData("n"))
-                         out <- model[not_deleted(),cols]
+                         out <- model[not_deleted(),cols, drop=FALSE]
                          names(out) <- get_names()
                          rownames(out) <- make.unique(get_rownames())
                          out
@@ -509,7 +512,7 @@ GDfBase <- setRefClass("GDfBase",
                                              w <- gbasicdialog("Collapse factor levels", parent = parent,
                                                                handler = function(h,...) {
                                                                  new_f <- relf$get_value()
-                                                                 assign(out, factor(new_f), inherits=TRUE)
+                                                                 assign("out", factor(new_f), inherits=TRUE)
                                                                })
                                              g <- ggroup(cont = w)
                                              relf <- CollapseFactor$new(f, cont = g)
@@ -673,13 +676,15 @@ GDfBase <- setRefClass("GDfBase",
                        },
                        get_items=function(i,j, ...,drop=TRUE) {
                          x <- get_frame()
-                         x[i,j, ..., drop=TRUE]
+                         x[i,j, ..., drop=drop]
                        },
                        set_items=function(value, i, j, ...) {
                          "Replace part of data: whole thing, by column, by cell. By row?"
 ### XXX Need checks on i,j bounds not exceeding. Need to call insert_column, insert_row otherwise
                          
                          if(missing(i) && missing(j)) {
+                           if(!is.data.frame(value))
+                             value <- data.frame(value, stringsAsFactors=FALSE)
                            set_frame(value)
                          } else if(missing(i)) {
                            ## replace column by column
@@ -955,6 +960,9 @@ GDf <- setRefClass("GDf",
                        initFields(default_expand=TRUE,
                                   default_fill=TRUE,
                                   change_signal="row-changed")
+
+                       if(!is.data.frame(items))
+                         items <- data.frame(items, stringsAsFactors=FALSE)
                        set_frame(items)
 
                        ## menus only good once realized
