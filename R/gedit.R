@@ -151,66 +151,6 @@ GEdit <- setRefClass("GEdit",
                               set_editable = function(value, j) {
                                 widget$setEditable(as.logical(value))
                               },
-                              add_drop_target=function(handler, action=NULL, ...) {
-                                ## Override default handling here, as we don't know how to bypass
-                                ## the default event from happening (should be by gSignalStopEmission)
-                                "Specify that widget is a drop target"
-                                   gtkDragDestSet(handler_widget(),
-                                                  flags="all", 
-                                                  targets=widgetTargetTypes,
-                                                  actions="copy")
-
-                                ## we connect twice! Once to store current value, once to set
-                                gSignalConnect(handler_widget(), "drag-data-received", function(...) {
-                                  set_attr('..predropvalue', get_value())
-                                }, after=FALSE)
-                                      
-                                
-                                gSignalConnect(handler_widget(), "drag-data-received",
-                                               function(h, widget, context, x, y, sel, data.type, event.time) {
-                                                 last_time <- .dnd.env[['last.time']]
-                                                 print(list("last time",
-                                                            last_time=last_time,
-                                                            class = class(last_time),
-                                                            event.time=event.time))
-                                                 
-                                                 if(!is.null(last_time) && last_time == event.time) return()
-                                                 .dnd.env[['last.time']] <- event.time
-
-                                                 ## our hack
-                                                 set_value(get_attr('..predropvalue'))
-                                                 set_attr('..predropvalue', "")
-
-                                                 
-                                                 target <- context$getTargets()[[3]] # GdkAtom instance
-                                                 target <- attr(target, "name")
-
-                                                    ## do different things depending on context
-                                                    message("drag data received")
-                                                    print(list(context=context,
-                                                               x=x,
-                                                               y=y,
-                                                               sel=sel,
-                                                               data.type=data.type,
-                                                               event.time=event.time)
-                                                          )
-                                                    if(target == "TEXT") {
-                                                      h$dropdata <- rawToChar(sel$getText())
-                                                    } else if(as.integer(target) == TARGET.TYPE.TEXT) {
-                                                      h$dropdata <- rawToChar(sel$getText())
-                                                    } else if(as.integer(target) == TARGET.TYPE.OBJECT) {
-                                                      key <- rawToChar(sel$getText())
-                                                      h$dropdata <- .dnd.env[[key]]; 
-                                                    }
-                                                    handler(h)
-
-                                                    gtkDragFinish(context, TRUE, FALSE, time=event.time)
-                                                    ## This fails when dropping onto gedit!!! (gets called twice)
-                                                 message("stop emission for insert text")
-                                                    try(gSignalStopEmission(widget, "insert-text"), silent=TRUE)
-                                                    return(TRUE)
-                                                  }, data=list(obj=.self, action=action), after=TRUE, user.data.first=TRUE)
-                                 },
                               ## Handler: changed -> clicked
                               ## add_handler_changed = function(handler, action=NULL, ...) {
                               ##   if(missing(handler) || is.null(handler))

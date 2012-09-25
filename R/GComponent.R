@@ -240,27 +240,15 @@ GComponent <- setRefClass("GComponent",
 
                                    gSignalConnect(handler_widget(), "drag-data-received",
                                                   function(h, widget, context, x, y, sel, data.type, event.time) {
-                                                    last_time <- .dnd.env[['last.time']]
-                                                    print(list("last time",
-                                                               last_time=last_time,
-                                                               class = class(last_time),
-                                                               event.time=event.time))
-                                                    
-                                                    if(!is.null(last_time) && last_time == event.time) return()
-                                                    .dnd.env[['last.time']] <- event.time
+                                                   
+
+                                                    try(gSignalStopEmission(widget, "drag-data-received"), silent=TRUE)
+                                                    gtkDragFinish(context, TRUE, FALSE, time=event.time)                                                 
                                                     
                                                     target <- context$getTargets()[[3]] # GdkAtom instance
                                                     target <- attr(target, "name")
 
                                                     ## do different things depending on context
-                                                    message("drag data received")
-                                                    print(list(context=context,
-                                                               x=x,
-                                                               y=y,
-                                                               sel=sel,
-                                                               data.type=data.type,
-                                                               event.time=event.time)
-                                                          )
                                                     if(target == "TEXT") {
                                                       h$dropdata <- rawToChar(sel$getText())
                                                     } else if(as.integer(target) == TARGET.TYPE.TEXT) {
@@ -271,9 +259,7 @@ GComponent <- setRefClass("GComponent",
                                                     }
                                                     handler(h)
 
-                                                    gtkDragFinish(context, TRUE, FALSE, time=event.time)
-                                                    ## This fails when dropping onto gedit!!! (gets called twice)
-                                                    try(gSignalStopEmission(widget, "drag-data-received"), silent=TRUE)
+                                                    
                                                     return(TRUE)
                                                   }, data=list(obj=.self, action=action), user.data.first=TRUE)
                                  },
