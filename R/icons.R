@@ -27,6 +27,7 @@ NULL
 ##'
 ##' @param name name of icon
 ##' @export
+##' @usage \method{.getStockIconByName}{guiWidgetsToolkitRGtk2}(toolkit,name, ...)
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .getStockIconByName guiWidgetsToolkitRGtk2
 ##' @S3method .getStockIconByName guiWidgetsToolkitRGtk2
@@ -120,6 +121,7 @@ load_gwidget_icons <- function() {
 ##'
 ##' @param obj R object to get icon from
 ##' @export
+##' @usage \method{.stockIconFromObject}{guiWidgetsToolkitRGtk2}(toolkit,obj, ...)
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .stockIconFromObject guiWidgetsToolkitRGtk2
 ##' @S3method .stockIconFromObject guiWidgetsToolkitRGtk2
