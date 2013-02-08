@@ -1,5 +1,9 @@
 DONE * gtable -- wrong index when filtering
 
+* drag and drop onto tables, from tables isn't right. (Bob Aranoff email)
+
+* font<- command and size isn't quite right.
+
 * gvarbrowser -- right click hsould be context sensitive
 
 

@@ -241,7 +241,7 @@ GComponent <- setRefClass("GComponent",
                                    gSignalConnect(handler_widget(), "drag-data-received",
                                                   function(h, widget, context, x, y, sel, data.type, event.time) {
                                                    
-
+                                                    ## this call fixed in recent RGtk2 versions so we wrap in try()
                                                     try(gSignalStopEmission(widget, "drag-data-received"), silent=TRUE)
                                                     gtkDragFinish(context, TRUE, FALSE, time=event.time)                                                 
                                                     

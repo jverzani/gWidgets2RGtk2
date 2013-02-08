@@ -42,8 +42,17 @@ NULL
   for(i in which_buttons) 
     filechooser$AddButton(button_with_id[[i]][1],button_with_id[[i]][2])
             
-  ## Add fileter
+  ## Add filter
   if(length(filter) && type %in% c("open","save")) {
+    if(is.character(filter)) {
+      ## make alist
+      filter <- sapply(names(filter), function(nm) {
+        list(patterns=paste("*.", filter[nm], sep=""))
+      }, simplify=FALSE)
+    }
+    
+  
+    
     for(i in names(filter)) {
       filefilter <- gtkFileFilterNew()
       filefilter$SetName(i)
