@@ -190,8 +190,8 @@ GDfBase <- setRefClass("GDfBase",
                          model$setFrame(mod_items)
                          add_view_columns()
                        },
-                       save_data=function(nm) {
-                         assign(nm, get_frame(), .GlobalEnv)
+                       save_data=function(nm, where) {
+                         assign(nm, get_frame(), where)
                          cmd_stack$clear()
                        },
                        ##

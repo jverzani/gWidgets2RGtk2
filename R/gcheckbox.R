@@ -51,6 +51,11 @@ GCheckbox <- setRefClass("GCheckbox",
                            },
                            set_items = function(value, i, j, ...) {
                              widget[[1]]$setLabel(value)
+                           },
+                           set_font = function(value) {
+                             ## need to set font on label
+                             label_widget <- getWidget(widget)$getChildren()[[1]]
+                             set_rgtk2_font(label_widget, value)
                            }
                            ## ,
                            ## add_handler_changed=function(handler, action=NULL, ...) {

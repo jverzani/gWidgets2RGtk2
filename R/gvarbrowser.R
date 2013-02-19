@@ -405,7 +405,8 @@ edit_vector <- function(x, nm, menu) {
                        height=400,
                        handler=function(h,...) {
                          val <- tbl[,1]
-                         assign(nm, val, .GlobalEnv)
+                         where <- .GlobalEnv
+                         assign(nm, val, where)
                        })
     tbl <- gdf(x, container=w1)
     w1$set_visible(TRUE)
@@ -430,7 +431,8 @@ edit_rect <- function(x, nm, menu) {
   gSignalConnect(menuitem, "activate", function(data) {
     w1 <- gbasicdialog(gettext("Edit rectangular data"), handler=function(h,...) {
       val <- tbl[,]
-      assign(nm, val, .GlobalEnv)
+      where <- .GlobalEnv
+      assign(nm, val, where)
     })
     tbl <- gdf(x, container=w1)
     w1$set_visible(TRUE)

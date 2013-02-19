@@ -12,6 +12,7 @@ NULL
                                           text = "",
                                           type = c("open","save","selectdir"),
                                           initial.filename = NULL,
+                                          initial.dir = getwd(),
                                           filter = list(),
                                           multi=FALSE,
                                           ...) {
@@ -67,14 +68,20 @@ NULL
       filechooser$AddFilter(filefilter)
     }
   }
-            
-  if(!is.null(initial.filename)) {
-    if(type == "open") {
-      filechooser$SetFilename(paste(getwd(),initial.filename, sep=.Platform$file.sep))
-    } else if(type == "save") {
-      filechooser$setCurrentFolder(getwd())
-      filechooser$setCurrentName(initial.filename)
-    }
+
+  ## boy this could be tidied up, but is it correct?
+  if(type == "open") {
+    if(!is.null(initial.filename))
+      filechooser$SetFilename(initial.filename)
+    filechooser$setCurrentFolder(initial.dir)
+  } else if(type == "open") {
+    if(!is.null(initial.filename))
+      filechooser$SetFilename(initial.filename)
+    filechooser$setCurrentFolder(initial.dir)
+  } else if(type == "save") {
+    if(!is.null(initial.filename))
+      filechooser$SetFilename(initial.filename)
+    filechooser$setCurrentFolder(initial.dir)
   }
   
   ## this makes it modal
@@ -105,6 +112,7 @@ NULL
                                                  text = "",
                                                  type = c("open","save","selectdir"),
                                                  initial.filename = NULL,
+                                                 initial.dir = getwd(),
                                                  filter = list(),
                                                  quote=TRUE,
                                                  handler=NULL,
@@ -112,7 +120,7 @@ NULL
                                                  container = NULL,
                                                  ... ) {
   GFileBrowse$new(toolkit,
-            text=text, type=type, initial.filename=initial.filename,
+            text=text, type=type, initial.filename=initial.filename, initial.dir = initial.dir,
             filter=filter, quote=quote, handler=handler, action=action, container=container, ...)
 }
 
@@ -129,6 +137,7 @@ GFileBrowse <- setRefClass("GFileBrowse",
                                 text = "",
                                 type = c("open", "save", "selectdir"),
                                 initial.filename = NULL,
+                                initial.dir = getwd(),
                                 filter = list(),
                                 quote=TRUE,
                                 handler=NULL,
@@ -144,7 +153,9 @@ GFileBrowse <- setRefClass("GFileBrowse",
                                 block$packStart(widget, expand=TRUE, fill=TRUE)
                                 block$packStart(button)
                                 gSignalConnect(button, "clicked", f=function(...) {
-                                 ret <- gfile(text=text, type=type, initial.filename=initial.filename,filter=filter, toolkit=toolkit)
+                                 ret <- gfile(text=text, type=type,
+                                              initial.filename=initial.filename, initial.dir = initial.dir,
+                                              filter=filter, toolkit=toolkit)
                                  if(length(ret))
                                    set_value(ret)
                                 })
