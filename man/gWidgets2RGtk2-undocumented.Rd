@@ -414,7 +414,7 @@
 
   \item{quote}{quote output}
 
-  \item{multiple}{logical allow multiple selectino}
+  \item{multiple}{logical allow multiple selection}
 
   \item{chosen.col}{which value from the row is returned by
   selection}

@@ -31,3 +31,6 @@ GWidgetWithItems <- setRefClass("GWidgetWithItems",
                                 ))
 
 
+getWidget.GWidgetWithItems <- function(obj) getWidget(obj$block)
+
+
