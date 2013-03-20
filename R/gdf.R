@@ -606,10 +606,10 @@ GDfBase <- setRefClass("GDfBase",
                                              }),
                                              gaction("Delete row", handler=function(...) {
                                                self$cmd_remove_row(i)
-                                             }),
-                                             gaction("Hide row", handler=function(...) {
-                                               self$cmd_hide_row(i)
-                                             })
+                                             })#,
+                                             ## gaction("Hide row", handler=function(...) {
+                                             ##   self$cmd_hide_row(i)
+                                             ## })
                                              )
                            } else {
                              ## No idea what to put here...
