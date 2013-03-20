@@ -461,6 +461,10 @@ GDfBase <- setRefClass("GDfBase",
                          
                          unblock_handlers()
                        },
+                         set_selectmode=function(mode=c("none", "single", "browse", "multiple")) {
+                           sel = widget$getSelection()
+                           sel$setMode(match.arg(mode))
+                         },
                        ##
                        ## Popup menu methods. From gtable (should be a subclass)
                        ##
