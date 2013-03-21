@@ -60,18 +60,22 @@ GButton <- setRefClass("GButton",
                                 if(!is_empty(old_value) && !is_empty(value) &&
                                    value == old_value)
                                   return()
-                                icon <- getStockIconByName(value, toolkit=toolkit)
-                                if(!is.null(icon)) {
-                                  image <- gtkImageNew()
-                                  image$SetFromStock(icon, size="button")
-                                  widget$setImage(image)
-                                }
+                                set_icon(value)
                                 widget$setLabel(value)
                                 ## signal change, not done by widget
                                 invoke_change_handler()
                               },
                               get_value=function(index=TRUE, drop=TRUE, ...) {
                                 widget$getLabel()
+                              },
+                              set_icon = function(nm) {
+                                ## Set icon using a stock icon
+                                icon <- getStockIconByName(value, toolkit=toolkit)
+                                if(!is.null(icon)) {
+                                  image <- gtkImageNew()
+                                  image$SetFromStock(icon, size="button")
+                                  widget$setImage(image)
+                                }
                               },
                               set_font = function(value) {
                                 object <- getWidget(widget)[[1]] # label is first child or something
