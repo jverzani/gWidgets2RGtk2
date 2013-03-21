@@ -68,7 +68,7 @@ GButton <- setRefClass("GButton",
                               get_value=function(index=TRUE, drop=TRUE, ...) {
                                 widget$getLabel()
                               },
-                              set_icon = function(nm) {
+                              set_icon = function(value) {
                                 ## Set icon using a stock icon
                                 icon <- getStockIconByName(value, toolkit=toolkit)
                                 if(!is.null(icon)) {
