@@ -499,9 +499,9 @@ GDfBase <- setRefClass("GDfBase",
                                          gaction("Delete column", handler=function(h,...) {
                                            cmd_remove_column(j)
                                          }),
-                                         gaction("Hide column", handler=function(h,...) {
-                                           cmd_hide_column(j)
-                                         }),
+                                         ## gaction("Hide column", handler=function(h,...) {
+                                         ##   cmd_hide_column(j)
+                                         ## }),
                                          gseparator(),
                                          ## Coerce class of object
                                          gradio(types, selected=getWithDefault(match(tmp(x), types), 1L), handler=function(h,...) {
