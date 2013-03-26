@@ -306,7 +306,7 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                             modifier <- NULL
                                           else
                                             modifier <- gsub("-mask", "", names(which(state == GdkModifierType)))
-                                          handler(.self, key=key, modifier=modifier, state=state)
+                                          handler(.self, key=key, modifier=modifier, state=state, event=event)
                                         }
                                         event_decorator(f)
                                       },
