@@ -171,6 +171,7 @@ GDfBase <- setRefClass("GDfBase",
                        fields=list(
                          model="ANY",
                          store="ANY",
+                         freeze_attributes="logical",
                          cmd_stack="ANY",
                          cell_popup_id="ANY"
                          ),
@@ -550,7 +551,7 @@ GDfBase <- setRefClass("GDfBase",
                                            visible(w, TRUE)
                                          })
                                          )
-                         enabled(actions[[9]]) <- is.factor(x)
+                         enabled(actions[[8]]) <- is.factor(x)
                          actions
                        },
                        add_popup_menu=function(menulist) {
@@ -566,6 +567,9 @@ GDfBase <- setRefClass("GDfBase",
                          })
                        },
                        add_popup_to_view_col=function(view.col, menu_fun) {
+                         if(freeze_attributes) {
+                           return()     # no popup menu if frozen
+                         }
                          if(missing(menu_fun))
                            menu_fun <- .self$default_popup_menu
 
@@ -933,6 +937,11 @@ GDfBase <- setRefClass("GDfBase",
 ##' can be removed (\code{remove_popup_menu}) and customized
 ##' (\code{add_popup}); similarly the cell popup can be
 ##' (\code{remove_cell_popup} and \code{add_cell_popup}).
+##'
+##' Passing in a value \code{freeze_attributes = TRUE} will make it so
+##' there are no meny items to resize frame, change variable types,
+##' relabel factors, ...
+##' 
 ##' @rdname gWidgets2RGtk2-package
 GDf <- setRefClass("GDf",
                    contains="GDfBase",
@@ -963,14 +972,21 @@ GDf <- setRefClass("GDf",
                        ## initialize fields
                        initFields(default_expand=TRUE,
                                   default_fill=TRUE,
-                                  change_signal="row-changed")
+                                  change_signal="row-changed",
+                                  freeze_attributes = getWithDefault(list(...)$freeze_attributes, FALSE)
+                                  )
 
                        if(!is.data.frame(items))
                          items <- data.frame(items, stringsAsFactors=FALSE)
                        set_frame(items)
 
-                       ## menus only good once realized
-                       gSignalConnect(widget, "realize", f=function(...) .self$add_cell_popup())
+                       ## adjust if we should freeze attributes
+                       if(freeze_attributes) {
+                         hide_row_names(TRUE)
+                       } else {
+                         ## menus only good once realized
+                         gSignalConnect(widget, "realize", f=function(...) .self$add_cell_popup())
+                       }
 
                        
                        add_to_parent(container, .self, ...)
