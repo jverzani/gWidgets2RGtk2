@@ -633,6 +633,8 @@ GDfBase <- setRefClass("GDfBase",
                          id <- gSignalConnect(widget, "button-press-event", f=function(w, e, self) {
                            if(isRightMouseClick(e)) {
                              path <- w$getPathAtPos(e$x, e$y)
+                             if(!path$retval) # no path
+                               return(FALSE)
                              i <- visible <- self$get_visible()
                              i <- which(visible)[as.numeric(path$path$toString()) + 1]
                              j <- self$get_column_index(path$column)
