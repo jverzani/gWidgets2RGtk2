@@ -171,7 +171,7 @@ GDfBase <- setRefClass("GDfBase",
                        fields=list(
                          model="ANY",
                          store="ANY",
-                         freeze_attributes="logical",
+                         freeze_attributes="character", # one of FALSE, TRUE, "row", or "column"
                          cmd_stack="ANY",
                          cell_popup_id="ANY"
                          ),
@@ -218,7 +218,8 @@ GDfBase <- setRefClass("GDfBase",
                          sapply(seq_along(DF[,-(1:3), drop=FALSE]), function(i) {
                            view_col <- add_editable_cell_renderer(DF[[i + 3L]], self=.self, model_idx=i + 3L)
                            widget$insertColumn(view_col, -1L)
-                           add_popup_to_view_col(view_col)
+                           if(!freeze_attributes %in% c("TRUE", "column"))
+                             add_popup_to_view_col(view_col)
                          })
                          ## set names
                          set_names(names(DF)[-(1:3)]) # remove first 3!
@@ -567,7 +568,7 @@ GDfBase <- setRefClass("GDfBase",
                          })
                        },
                        add_popup_to_view_col=function(view.col, menu_fun) {
-                         if(freeze_attributes) {
+                         if(freeze_attributes %in% c("TRUE", "column")) {
                            return()     # no popup menu if frozen
                          }
                          if(missing(menu_fun))
@@ -939,8 +940,9 @@ GDfBase <- setRefClass("GDfBase",
 ##' (\code{remove_cell_popup} and \code{add_cell_popup}).
 ##'
 ##' Passing in a value \code{freeze_attributes = TRUE} will make it so
-##' there are no meny items to resize frame, change variable types,
-##' relabel factors, ...
+##' there are no menu items to resize frame, change variable types,
+##' relabel factors, .... Values of \code{"row"} or \code{"column"}
+##' will remove popup menus just for the row or columns.
 ##' 
 ##' @rdname gWidgets2RGtk2-package
 GDf <- setRefClass("GDf",
@@ -973,7 +975,7 @@ GDf <- setRefClass("GDf",
                        initFields(default_expand=TRUE,
                                   default_fill=TRUE,
                                   change_signal="row-changed",
-                                  freeze_attributes = getWithDefault(list(...)$freeze_attributes, FALSE)
+                                  freeze_attributes = as.character(getWithDefault(list(...)$freeze_attributes, FALSE))
                                   )
 
                        if(!is.data.frame(items))
@@ -981,12 +983,15 @@ GDf <- setRefClass("GDf",
                        set_frame(items)
 
                        ## adjust if we should freeze attributes
-                       if(freeze_attributes) {
-                         hide_row_names(TRUE)
-                       } else {
+                       if(freeze_attributes %in% c("TRUE", "row")) {
+                         set_editable(FALSE, 0) # don't edit row names
+                       }
+                       if(!freeze_attributes %in% c("TRUE", "row")) {
                          ## menus only good once realized
                          gSignalConnect(widget, "realize", f=function(...) .self$add_cell_popup())
                        }
+
+                       
 
                        
                        add_to_parent(container, .self, ...)
