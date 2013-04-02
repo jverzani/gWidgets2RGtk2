@@ -108,9 +108,9 @@ GGroupBase <- setRefClass("GGroupBase",
 
 
                         ## size
-                        get_size=function() {
-                          getBlock(widget)$sizeRequest()
-                        },
+                        ## get_size=function() {
+                        ##   getBlock(widget)$sizeRequest()
+                        ## },
                         set_size=function(value) {
                           tmp <- getBlock(widget) # size of block, if scrolled window
                           value <- as.integer(value)
