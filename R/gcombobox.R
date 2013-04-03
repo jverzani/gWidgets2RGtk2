@@ -73,7 +73,9 @@ GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
                                     ## drop down list, not combo
                                     widget <<- gtkComboBoxNewWithModel(store)
                                     cellrenderer <- gtkCellRendererTextNew()
+                                    cellrenderer['ellipsize'] <- PangoEllipsizeMode[3]
                                     widget$PackStart(cellrenderer, expand=TRUE)
+                                    
                                     widget$AddAttribute(cellrenderer,"text", 0)
                                     ## icons
                                     if(ncol(items) >= 2) {
