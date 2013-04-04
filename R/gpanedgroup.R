@@ -69,7 +69,7 @@ GPanedGroup <- setRefClass("GPanedGroup",
                               get_length = function() {
                                 length(children)
                               },
-                              add_child=function(child, expand=NULL, fill=NULL, anchor=NULL) {
+                              add_child=function(child, expand=NULL, fill=NULL, anchor=NULL, resize=TRUE, shrink=FALSE) {
                                 "Add one of two possible children"
                                 n <- get_length()
                                 if(n >= 2) {
@@ -78,9 +78,9 @@ GPanedGroup <- setRefClass("GPanedGroup",
                                 }
                                 
                                 if(n == 0) {
-                                  widget$pack1(getBlock(child), resize=TRUE, shrink=FALSE)
+                                  widget$pack1(getBlock(child), resize=resize, shrink=shrink)
                                 } else if(n == 1) {
-                                  widget$pack2(getBlock(child), TRUE, FALSE)
+                                  widget$pack2(getBlock(child), resize, shrink)
                                 }
 
                                 child_bookkeeping(child)
