@@ -115,7 +115,7 @@ GEdit <- setRefClass("GEdit",
                               set_items=function(value, i, j, ...) {
                                 if(is.null(completion)) {
                                   completion <<- gtkEntryCompletionNew()
-                                   model <- rGtkDataFrame(data.frame(character(1000),stringsAsFactors=FALSE))
+                                   model <- rGtkDataFrame(data.frame(character(50000),stringsAsFactors=FALSE))
                                   completion$SetModel(model)
                                   completion$SetTextColumn(0)           # Columns count from 0 -- not 1
 
@@ -130,7 +130,7 @@ GEdit <- setRefClass("GEdit",
                                 nrows <- dim(store)[1]
                                 n <- length(value)
                                 if(n > nrows)
-                                  values <- values[1:nrows]            # truncate
+                                  value <- value[1:nrows]            # truncate
                                 if(missing(i))
                                   i <- 1:n
                                 store[i , ] <- value
