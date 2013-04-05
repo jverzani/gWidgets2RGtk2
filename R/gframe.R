@@ -20,17 +20,18 @@ GFrame <- setRefClass("GFrame",
                         spacing="numeric"
                         ),
                       methods=list(
-                        initialize=function(toolkit=NULL, text="", markup=FALSE, pos=0, horizontal=TRUE, spacing=5, container=NULL,use.scrollwindow=FALSE, ...) {
+                        initialize=function(toolkit=NULL, text="", markup=FALSE, pos=0, horizontal=TRUE, spacing=5, container=NULL,
+                          ...) {
 
                           horizontal <<- horizontal
                           spacing <<- spacing
-                          make_widget(text, markup, pos, use.scrollwindow)
+                          make_widget(text, markup, pos)
                           
                           add_to_parent(container, .self, ...)
                           
                           callSuper(toolkit, horizontal=horizontal, ...)
                         },
-                        make_widget = function(text, markup, pos, use.scrollwindow) {
+                        make_widget = function(text, markup, pos) {
                           if(horizontal)
                             widget <<- gtkHBox()
                           else
@@ -43,15 +44,7 @@ GFrame <- setRefClass("GFrame",
                           label <- gtkLabelNew()
                           block$setLabelWidget(label)
                           set_names(text)
-                          
-                          if(use.scrollwindow) {
-                            sw <- gtkScrolledWindowNew()
-                            sw$SetPolicy("GTK_POLICY_AUTOMATIC","GTK_POLICY_AUTOMATIC")
-                            sw$AddWithViewport(widget)
-                            block$add(sw)
-                          } else {
-                            block$add(widget)
-                          }
+                          block$add(widget)
                         },
                         get_names=function(...) {
                           label <- block$getLabelWidget()

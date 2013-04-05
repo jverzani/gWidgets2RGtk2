@@ -149,10 +149,17 @@ GGroup <- setRefClass("GGroup",
                                  widget <<- gtkVBox(homogeneous=FALSE, spacing=spacing)
 
                                set_value(spacing)
+
+                               use.scrollwindow <- as.character(use.scrollwindow)
                                
-                               if(use.scrollwindow) {
+                               if(use.scrollwindow != "FALSE") {
                                  block <<- gtkScrolledWindowNew()
-                                 block$SetPolicy("GTK_POLICY_AUTOMATIC","GTK_POLICY_AUTOMATIC")
+                                 if(use.scrollwindow == "x")
+                                   block$SetPolicy("GTK_POLICY_AUTOMATIC","GTK_POLICY_NEVER")
+                                 else if(use.scrollwindow == "y")
+                                   block$SetPolicy("GTK_POLICY_NEVER","GTK_POLICY_AUTOMATIC")
+                                 else
+                                   block$SetPolicy("GTK_POLICY_AUTOMATIC","GTK_POLICY_AUTOMATIC")
                                  block$AddWithViewport(widget)
                                } else {
                                  block <<- widget
