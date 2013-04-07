@@ -212,6 +212,8 @@ GCheckboxGroupTable <-  setRefClass("GCheckboxGroupTable",
                                 }
                                 store <- widget$getModel()
                                 store[,2] <- value
+
+                                invoke_change_handler()
                                 ## how to get view of model to update? (toggle signal of cell renderer?)
                               },
                               get_items = function(i, ...) {
