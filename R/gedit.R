@@ -169,6 +169,15 @@ GEdit <- setRefClass("GEdit",
                              
 
                               ## Extra methods
+                              set_icon = function(stock, where="start") { ## or end
+                                where = GtkEntryIconPosition[ifelse(where == "end", "secondary", "primary")]
+                                widget$setIconFromStock(where, getStockIconByName(stock))
+                              },
+                              set_icon_handler = function(callback, where="start") {
+                                where = GtkEntryIconPosition[ifelse(where == "end", "secondary", "primary")]
+                                widget$setIconActivatable(where, TRUE)
+                                gSignalConnect(widget, "icon-press", callback)
+                              },
                               set_validator = function(FUN) {
                                 "Set a function to do the validation"
                                 validator <<- FUN

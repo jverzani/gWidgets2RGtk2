@@ -1,3 +1,5 @@
+* expose buttons in gbasic dialog so one can visible<-, enable<-, ...
+
 DONE * gtable -- wrong index when filtering
 
 * drag and drop onto tables, from tables isn't right. (Bob Aranoff email)
