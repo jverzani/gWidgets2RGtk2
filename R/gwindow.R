@@ -120,6 +120,11 @@ GWindow <- setRefClass("GWindow",
                               is_extant=function() {
                                 !is(widget, "<invalid>")
                               },
+                              set_icon=function(stock) {
+                                iconfile <- .GWidgetsRGtk2Icons$icons[[stock]]
+                                if(!is.null(iconfile))
+                                  widget$setIconFromFile(iconfile)
+                              },
                               ##
                               ## add methods
                               add_child=function(child, ...) {
