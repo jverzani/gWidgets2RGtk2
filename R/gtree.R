@@ -103,7 +103,7 @@ GTreeBase <- setRefClass("GTreeBase",
                              
                              ## now add columns,
                              f <- function(x, i) {
-                               treeview_col <- make_treeview_column(x, i - 1)
+                               treeview_col <- make_treeview_column(x, i - 1, .self)
                                widget$insertColumn(treeview_col, pos = -1) # at end
                              }
                              mapply(f, items, seq_len(ncol(items)))
@@ -361,7 +361,7 @@ GTree <- setRefClass("GTree",
                          not_these <- unlist(list(chosen_col, icon_col, tooltip_col, offspring_col))
                          these <- setdiff(seq_along(items), not_these)
                          sapply(these, function(col) {
-                           treeview_col <- make_treeview_column(items[,col], col - 1L)
+                           treeview_col <- make_treeview_column(items[,col], col - 1L, .self)
                            widget$insertColumn(treeview_col, pos = -1) # at end
                           })
                         },

@@ -30,8 +30,8 @@ NULL
 
 ## helper to make treeview columns based on type of data
 ## Need S3 methods defined outside of reference class method, not sure why
-make_treeview_column <- function(x, col_no) UseMethod("make_treeview_column")
-make_treeview_column.default <- function(x, col_no) {
+make_treeview_column <- function(x, col_no, self) UseMethod("make_treeview_column")
+make_treeview_column.default <- function(x, col_no, self) {
   ## Return a tree view column instance to render x, located in 0-based col in model
   cellrenderer <- gtkCellRendererText()
   view_col <- gtkTreeViewColumnNew()
@@ -50,6 +50,36 @@ make_treeview_column.default <- function(x, col_no) {
   view_col$setWidget(event_box)
   view_col
 }
+
+## need to format value for Dates
+make_treeview_column.Date <- function(x, col_no, self) {
+  ## Return a tree view column instance to render x, located in 0-based col in model
+  cellrenderer <- gtkCellRendererText()
+  view_col <- gtkTreeViewColumnNew()
+  view_col$setResizable(TRUE)
+  view_col$PackStart(cellrenderer, TRUE)
+  view_col$AddAttribute(cellrenderer, "text", col_no)
+
+  view_col$setCellDataFunc(cellrenderer, function(vc, cr, model, iter, ...) {
+    ## set cell value by formatting
+    col <- self$find_col_no(vc)
+    row <- as.numeric(model$getPath(iter)$toString()) + 1L
+    model <- self$get_model()
+    val <- model[row, col]
+    cr["text"] <- format(val)
+  })
+  ## we override built in label
+  event_box <- gtkEventBox()
+  event_box$SetVisibleWindow(FALSE)
+  label <- gtkLabel()
+##  event_box$addEvents('all-events-mask')
+  event_box$add(label)
+  event_box$setAboveChild(TRUE)         # gets events to box
+  
+  view_col$setWidget(event_box)
+  view_col
+}
+make_treeview_column.POSIXt <- make_treeview_column.Date
 
 ##' Class for gtable widget
 ##'
@@ -140,7 +170,7 @@ GTable <- setRefClass("GTable",
                           ## now add columns, one by one
                           DF <- get_model()
                           sapply(get_valid_columns(), function(col) {
-                            treeview_col <- make_treeview_column(DF[,col], col - 1L)
+                            treeview_col <- make_treeview_column(DF[,col], col - 1L, .self)
                             widget$insertColumn(treeview_col, pos = -1) # at end
                           })
                           add_popup()
@@ -187,16 +217,17 @@ GTable <- setRefClass("GTable",
                           f <- function(...) menulist
                           add_popup(f)
                         },
+                        ## perhaps needs optimization, loops over all columns so n^2 stuff here.
+                        find_col_no = function(view.col) {
+                          ind <- which(sapply(widget$getColumns(), function(i) identical(i, view.col)))
+                          ind - !is.null(icon_col)
+                        },                        
                         add_popup=function(menu_fun=NULL) {
                           "Add a popup menu to the columns. Function should generate list of actions, ..."
                           if(is.null(menu_fun))
                             menu_fun <- .self$default_popup_menu
                           
-                          ## perhaps needs optimization, loops over all columns so n^2 stuff here.
-                          find_col_no <- function(view.col) {
-                            ind <- which(sapply(widget$getColumns(), function(i) identical(i, view.col)))
-                            ind - !is.null(icon_col)
-                          }
+                          
                           sapply(get_view_columns(), function(view.col) {
                             view.col$setClickable(TRUE)
                             col_no <- find_col_no(view.col)

@@ -154,6 +154,41 @@ make_editable_cell_renderer.logical <- function(x, self, model_idx, view_col) {
 }
 
 
+
+make_editable_cell_renderer.Date <- function(x, self, model_idx, view_col) {
+  cr <- gtkCellRendererText()
+  cr['editable'] <- TRUE
+  cr$setData("editable", "editable")
+  cr$setData("view_col", view_col)      # no lookup otherwise
+  view_col$setResizable(TRUE)
+  view_col$packStart(cr, TRUE)
+  view_col$addAttribute(cr, "text", model_idx - 1L)
+  view_col$setCellDataFunc(cr, function(vc, cr, model, iter, ...) {
+    ## set cell value by formatting
+    col <- self$get_column_index(cr$getData("view_col"))
+    row <- as.numeric(model$getPath(iter)$toString()) + 1L
+    val <- self$get_cell(row, col)
+    cr["text"] <- format(val)
+    
+  })
+  ## make editable
+  id <- gSignalConnect(cr,
+                       signal="edited",
+                       f=function(cr, path, newtext) {
+                         visible <- self$get_visible()
+                         i <- which(visible)[as.numeric(path) + 1]
+
+                         view_col <- cr$getData("view_col")
+                         j <- self$get_column_index(view_col)
+                         ## calls ensure_type to format
+                         self$cmd_set_cell(i, j, newtext)
+                       })
+  view_col$setData("n", model_idx)      # map to model
+  view_col$setData("edit.id", id)       # use this to disable editing
+}
+
+make_editable_cell_renderer.POSIXt <- make_editable_cell_renderer.Date
+
 ## This is a bit convoluted due to the command framework. To do
 ## something, say set a cell value we have 3 methods! One is a
 ## gWidgets methods (\code{set_items(i,j,value)}), this in turn calls
