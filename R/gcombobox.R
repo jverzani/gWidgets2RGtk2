@@ -141,6 +141,7 @@ GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
 ## use a convenience function and manipulate the values with that.
 ## This method is deprecated as of 2.24, but that isn't what I have
 ## installed
+## we intercept the argument use_completion=TRUE to add completion to entry
 GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                 contains="GComboBox",
                                   fields=list(
@@ -168,6 +169,9 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                                  coerce_with=coerce.with,
                                                  change_signal="changed"
                                                  )
+
+                                      if(getWithDefault(list(...)[["use_completion"]], FALSE))
+                                        use_completion()
                                       
                                       add_to_parent(container, .self, ...)
 
@@ -197,6 +201,20 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                     },
                                     get_length = function(...) {
                                       widget$getModel()$iterNChildren(NULL)
+                                    },
+                                    use_completion=function(...) {
+                                      "put completion code onto combo"
+                                      completion <- gtkEntryCompletionNew()
+                                      completion$SetModel(widget$getModel()) # reuse model
+
+                                      ## customize
+                                      completion$SetTextColumn(0)           # Columns count from 0 -- not 1
+                                      completion$setInlineCompletion(TRUE)
+                                      completion$setInlineSelection(TRUE)
+
+                                      entry <- widget$getChildren()[[1]] # HACKY!!
+                                      entry$SetCompletion(completion)
+
                                     },
                                     add_handler_edited = function(handler, action=NULL, ...) {
                                       "For editing -- need a better name XXX"
