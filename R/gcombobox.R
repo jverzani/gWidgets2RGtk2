@@ -215,11 +215,11 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                       entry <- widget$getChildren()[[1]] # HACKY!!
                                       entry$SetCompletion(completion)
                                       ## add search/clear icon
-                                      e$setIconFromStock("primary", getStockIconByName("ed-search"))
+                                      entry$setIconFromStock("primary", getStockIconByName("ed-search"))
                                       where <- "secondary"
-                                      e$setIconFromStock(where, getStockIconByName("ed-remove"))
-                                      e$setIconActivatable(where, TRUE)
-                                      gSignalConnect(e, "icon-press", function(e, ...) e$setText(""))
+                                      entry$setIconFromStock(where, getStockIconByName("ed-remove"))
+                                      entry$setIconActivatable(where, TRUE)
+                                      gSignalConnect(entry, "icon-press", function(e, ...) e$setText(""))
                                     },
                                     add_handler_edited = function(handler, action=NULL, ...) {
                                       "For editing -- need a better name XXX"
