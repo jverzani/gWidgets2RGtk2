@@ -58,6 +58,10 @@ GExpandGroup <- setRefClass("GExpandGroup",
                               set_visible = function(value) {
                                 block$setExpanded(as.logical(value))
                               },
+                              set_font = function(value) {
+                                label <- block[[2]] # dig it out!
+                                 set_rgtk2_font(label, value)
+                              },
                               add_handler_changed=function(handler, action, ...) {
                                 add_handler("activate", handler, action, ...)
                               }

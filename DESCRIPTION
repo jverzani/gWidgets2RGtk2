@@ -12,10 +12,9 @@ Depends:
     methods,
     memoise,
     RGtk2,
-    cairoDevice,
     gWidgets2
 Suggests:
-    testthat
+    testthat,     cairoDevice
 LazyLoad: yes
 Collate:
     'gWidgets2RGtk2-package.R'

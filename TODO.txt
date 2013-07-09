@@ -1,3 +1,4 @@
+* menus: would be nice if radio and checkbuttons could be disabled somehow.
 * expose buttons in gbasic dialog so one can visible<-, enable<-, ...
 
 DONE * gtable -- wrong index when filtering
