@@ -555,7 +555,7 @@ GDfBase <- setRefClass("GDfBase",
                                          gaction("Edit factor levels...", handler=function(h, ...) {
                                            collapseFactor <- function(f, parent = NULL) {
                                              out <- character()
-                                             w <- gbasicdialog("Collapse factor levels", parent = parent,
+                                             w <- gbasicdialog("Rename or collapse factor levels", parent = parent,
                                                                handler = function(h,...) {
                                                                  new_f <- relf$get_value()
                                                                  assign("out", factor(new_f), inherits=TRUE)
@@ -1170,31 +1170,35 @@ CollapseFactor <- setRefClass("CollapseFactor",
                                  size(tbl) <- c(300, 200)
                                         #
                                  nested_group <- ggroup(cont = group, horizontal = FALSE)
-                                 instructions <- gettext("Select levels, then\n 
-enter a new combined level\n
-by typing or selecting a level and then enter")
+                                 instructions <- gettext(paste(
+                                   "Select a one or more levels.",
+                                   "Enter a new label in the text box.",
+                                   "If there is one level selected, it will be renamed.",
+                                   "If more, they will be collapsed and renamed.",
+                                   sep="\n"))
                                         #
                                  glabel(instructions, cont = nested_group)
 #                                 factor_edit <- gcombobox(levs, selected = 0, editable = TRUE, 
 #                                                        cont = nested_group)
                                  factor_edit <- gedit("", cont=nested_group)
-                                 factor_edit[] <- levs
+#                                 factor_edit[] <- levs
                                  enabled(factor_edit) <- FALSE
                                         #
-                                 addHandlerClicked(widget, function(h,...) {
+                                 addHandlerSelectionChanged(widget, function(h,...) {
                                    ind <- svalue(widget, index = TRUE)
                                    enabled(factor_edit) <- (length(ind) > 0)
                                  })
                                  ##
                                  addHandlerChanged(factor_edit, handler = function(h,...) {
                                    ind <- svalue(tbl, index = TRUE)
-                                   if(length(ind) == 0 || ind == 0L) 
+                                   if(length(ind) == 0 || ind == 0L)  {
                                      return()
+                                   }
                                         #
                                    tbl[ind,2] <- svalue(factor_edit)
                                    svalue(tbl, index = TRUE) <- 0
                                    blockHandler(factor_edit)
-                                   factor_edit[] <- sort(unique(tbl[,2]))
+#                                   factor_edit[] <- sort(unique(tbl[,2]))
                                    svalue(factor_edit) <- ""
                                    unblockHandler(factor_edit)
                                  })
