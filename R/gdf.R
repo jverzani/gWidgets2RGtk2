@@ -1189,18 +1189,23 @@ CollapseFactor <- setRefClass("CollapseFactor",
                                    enabled(factor_edit) <- (length(ind) > 0)
                                  })
                                  ##
-                                 addHandlerChanged(factor_edit, handler = function(h,...) {
+                                 factor_edit_change_handler =  function(h,...) {
                                    ind <- svalue(tbl, index = TRUE)
                                    if(length(ind) == 0 || ind == 0L)  {
                                      return()
                                    }
                                         #
                                    tbl[ind,2] <- svalue(factor_edit)
-                                   svalue(tbl, index = TRUE) <- 0
+#                                   svalue(tbl, index = TRUE) <- 0
                                    blockHandler(factor_edit)
 #                                   factor_edit[] <- sort(unique(tbl[,2]))
-                                   svalue(factor_edit) <- ""
+#                                   svalue(factor_edit) <- ""
                                    unblockHandler(factor_edit)
+                                 }
+                                 addHandlerKeystroke(factor_edit, handler =factor_edit_change_handler)
+                                 addHandlerBlur(factor_edit, handler=function(h,...) {
+                                   svalue(tbl, index = TRUE) <- 0
+                                   svalue(h$obj) <- ""
                                  })
                                },
                                get_value = function() {
