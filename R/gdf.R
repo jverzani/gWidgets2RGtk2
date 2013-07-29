@@ -1187,6 +1187,11 @@ CollapseFactor <- setRefClass("CollapseFactor",
                                  addHandlerSelectionChanged(widget, function(h,...) {
                                    ind <- svalue(widget, index = TRUE)
                                    enabled(factor_edit) <- (length(ind) > 0)
+                                   if (length(ind) > 0) {
+                                     blockHandler(factor_edit)
+                                     svalue(factor_edit) <- svalue(widget)
+                                     unblockHandler(factor_edit)
+                                   }
                                  })
                                  ##
                                  factor_edit_change_handler =  function(h,...) {
@@ -1202,6 +1207,13 @@ CollapseFactor <- setRefClass("CollapseFactor",
 #                                   svalue(factor_edit) <- ""
                                    unblockHandler(factor_edit)
                                  }
+                                 addHandlerChanged(factor_edit, handler=function(h,...) {
+                                   blockHandler(factor_edit)
+                                   factor_edit_change_handler(h,...)
+                                   svalue(tbl, index=TRUE) <- 0
+                                   focus(tbl) <- TRUE
+                                   unblockHandler(factor_edit)
+                                 })
                                  addHandlerKeystroke(factor_edit, handler =factor_edit_change_handler)
                                  addHandlerBlur(factor_edit, handler=function(h,...) {
                                    svalue(tbl, index = TRUE) <- 0
