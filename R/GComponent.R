@@ -66,7 +66,7 @@ GComponent <- setRefClass("GComponent",
                                  get_visible = function() widget$getVisible(),
                                  set_visible = function(value) widget$setVisible(as.logical(value)),
                                  ## focus
-                                 get_focus = function() wiget$hasFocus(),
+                                 get_focus = function() widget$hasFocus(),
                                  set_focus = function(value) {
                                    "If we can focus, do so, then raise"
                                    if(value) {

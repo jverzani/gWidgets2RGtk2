@@ -393,6 +393,13 @@ GTable <- setRefClass("GTable",
                             df_model[i,j] <- value ## hope case matches
                           }
                         },
+                        set_focus = function(value) {
+                          "If we can focus, do so, then raise"
+                          if(value) {
+                            widget$grabFocus()
+                            widget$getWindow()$raise()
+                          }
+                        },
                         ## data store methods
                         get_length=function() {
                           get_dim()[2]
