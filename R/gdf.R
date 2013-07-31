@@ -555,11 +555,13 @@ GDfBase <- setRefClass("GDfBase",
                                          gaction("Edit factor levels...", handler=function(h, ...) {
                                            collapseFactor <- function(f, parent = NULL) {
                                              out <- character()
-                                             w <- gbasicdialog("Rename or collapse factor levels", parent = parent,
+                                             w <- gbasicdialog("Edit factor levels", parent = parent,
                                                                handler = function(h,...) {
                                                                  new_f <- relf$get_value()
                                                                  assign("out", factor(new_f), inherits=TRUE)
                                                                })
+                                             size(w) <- c(600, 400)
+                                             
                                              g <- ggroup(cont = w)
                                              relf <- CollapseFactor$new(f, cont = g)
                                              visible(w, set = TRUE)
@@ -1147,86 +1149,352 @@ RemoveRow <- setRefClass("RemoveRow",
                            ))
 
 
-### Factor editor
+## ### Factor editor
+
+## CollapseFactor <- setRefClass("CollapseFactor",
+##                               fields = list(
+##                                old = "ANY",
+##                                widget = "ANY"
+##                                ),
+##                              methods = list(
+##                                initialize = function(fac, cont = gwindow(), ...) {
+##                                  old <<- as.character(fac)
+##                                  make_gui(cont)
+##                                  callSuper()
+##                                },
+##                                make_gui =  function(cont) {
+##                                  group <- gpanedgroup(cont = cont)
+##                                  levs <- sort(unique(as.character(old)))
+##                                  DF <- data.frame(original = levs,
+##                                                   new = levs, stringsAsFactors = FALSE)
+##                                         #
+##                                  widget <<- tbl <- gtable(DF, cont = group,  multiple = TRUE)
+##                                  size(tbl) <- c(300, 200)
+##                                         #
+##                                  nested_group <- ggroup(cont = group, horizontal = FALSE)
+##                                  instructions <- gettext(paste(
+##                                    "Select a one or more levels.",
+##                                    "Enter a new label in the text box.",
+##                                    "If there is one level selected, it will be renamed.",
+##                                    "If more, they will be collapsed and renamed.",
+##                                    sep="\n"))
+##                                         #
+##                                  glabel(instructions, cont = nested_group)
+## #                                 factor_edit <- gcombobox(levs, selected = 0, editable = TRUE, 
+## #                                                        cont = nested_group)
+##                                  factor_edit <- gedit("", cont=nested_group)
+## #                                 factor_edit[] <- levs
+##                                  enabled(factor_edit) <- FALSE
+##                                         #
+##                                  addHandlerSelectionChanged(widget, function(h,...) {
+##                                    ind <- svalue(widget, index = TRUE)
+##                                    enabled(factor_edit) <- (length(ind) > 0)
+##                                    if (length(ind) > 0) {
+##                                      blockHandler(factor_edit)
+##                                      svalue(factor_edit) <- svalue(widget)
+##                                      unblockHandler(factor_edit)
+##                                    }
+##                                  })
+##                                  ##
+##                                  factor_edit_change_handler =  function(h,...) {
+##                                    ind <- svalue(tbl, index = TRUE)
+##                                    if(length(ind) == 0 || ind == 0L)  {
+##                                      return()
+##                                    }
+##                                         #
+##                                    tbl[ind,2] <- svalue(factor_edit)
+## #                                   svalue(tbl, index = TRUE) <- 0
+##                                    blockHandler(factor_edit)
+## #                                   factor_edit[] <- sort(unique(tbl[,2]))
+## #                                   svalue(factor_edit) <- ""
+##                                    unblockHandler(factor_edit)
+##                                  }
+##                                  addHandlerChanged(factor_edit, handler=function(h,...) {
+##                                    blockHandler(factor_edit)
+##                                    factor_edit_change_handler(h,...)
+##                                    svalue(tbl, index=TRUE) <- 0
+##                                    focus(tbl) <- TRUE
+##                                    unblockHandler(factor_edit)
+##                                  })
+##                                  addHandlerKeystroke(factor_edit, handler =factor_edit_change_handler)
+##                                  addHandlerBlur(factor_edit, handler=function(h,...) {
+##                                    svalue(tbl, index = TRUE) <- 0
+##                                    svalue(h$obj) <- ""
+##                                  })
+##                                },
+##                                get_value = function() {
+##                                  "Return factor with new levels"
+##                                  old_levels <- widget[,1]
+##                                  new_levels <- widget[,2]
+##                                  new <- old
+##                                  for(i in seq_along(old_levels)) # one pass
+##                                    new[new == old_levels[i]] <- new_levels[i]
+##                                  factor(new)
+##                                }
+##                                ))
 
 CollapseFactor <- setRefClass("CollapseFactor",
                               fields = list(
-                               old = "ANY",
-                               widget = "ANY"
-                               ),
+                                old = "ANY",
+                                cur_reference_level="ANY",
+                                widget = "ANY",
+                                cur_child = "ANY"
+                                ),
                              methods = list(
                                initialize = function(fac, cont = gwindow(), ...) {
-                                 old <<- as.character(fac)
+                                 old <<- fac
+                                 cur_reference_level <<- levels(fac)[1]
+
                                  make_gui(cont)
                                  callSuper()
                                },
                                make_gui =  function(cont) {
-                                 group <- gpanedgroup(cont = cont)
-                                 levs <- sort(unique(as.character(old)))
-                                 DF <- data.frame(original = levs,
-                                                  new = levs, stringsAsFactors = FALSE)
-                                        #
-                                 widget <<- tbl <- gtable(DF, cont = group,  multiple = TRUE)
-                                 size(tbl) <- c(300, 200)
-                                        #
-                                 nested_group <- ggroup(cont = group, horizontal = FALSE)
-                                 instructions <- gettext(paste(
-                                   "Select a one or more levels.",
-                                   "Enter a new label in the text box.",
-                                   "If there is one level selected, it will be renamed.",
-                                   "If more, they will be collapsed and renamed.",
-                                   sep="\n"))
-                                        #
-                                 glabel(instructions, cont = nested_group)
-#                                 factor_edit <- gcombobox(levs, selected = 0, editable = TRUE, 
-#                                                        cont = nested_group)
-                                 factor_edit <- gedit("", cont=nested_group)
-#                                 factor_edit[] <- levs
-                                 enabled(factor_edit) <- FALSE
-                                        #
-                                 addHandlerSelectionChanged(widget, function(h,...) {
-                                   ind <- svalue(widget, index = TRUE)
-                                   enabled(factor_edit) <- (length(ind) > 0)
-                                   if (length(ind) > 0) {
-                                     blockHandler(factor_edit)
-                                     svalue(factor_edit) <- svalue(widget)
-                                     unblockHandler(factor_edit)
-                                   }
+                                 
+                                 directions <- "
+Adjust levels of a factor.
+
+One can add a level through the 'Add' button.
+Toggle if ordered with checkbox.
+Select level to rename, make reference level, or
+reorder, as appropriate.
+Select levels to collapse.
+"
+                                 
+
+                                 ## adjust these properties during dialog
+                                 
+
+
+                                 g <- gpanedgroup(container=cont, expand=TRUE)
+                                 
+                                 lg <- gvbox(container=g, fill="y")
+                                 rg <- ggroup(container=g, expand=TRUE, fill="both")
+                                 
+                                 ## fill left group with table
+                                 cur_levels <- gtable(levels(old), container=lg,
+                                                      multiple=TRUE,
+                                                      expand=TRUE, fill="y")
+                                 size(cur_levels) <- c(width=200, height=400)
+                                 names(cur_levels) <- "Levels"
+                                 cur_levels$remove_popup_menu()
+
+                                 bg <- ggroup(cont=lg)
+                                 add_level <- gbutton("add", cont=bg, handler=function(h,...) {
+                                   add_level_dialog(g)
                                  })
-                                 ##
-                                 factor_edit_change_handler =  function(h,...) {
-                                   ind <- svalue(tbl, index = TRUE)
-                                   if(length(ind) == 0 || ind == 0L)  {
-                                     return()
-                                   }
-                                        #
-                                   tbl[ind,2] <- svalue(factor_edit)
-#                                   svalue(tbl, index = TRUE) <- 0
-                                   blockHandler(factor_edit)
-#                                   factor_edit[] <- sort(unique(tbl[,2]))
-#                                   svalue(factor_edit) <- ""
-                                   unblockHandler(factor_edit)
+                                 tooltip(add_level) <- gettext("Add a new level to factor")
+                                 
+                                 is_ordered <- gcheckbox("Ordered", container=bg, checked=is.ordered(f))
+                                 tooltip(is_ordered) <- gettext("Toggle if factor is ordered")
+                                 
+                                 
+                                 ## Fill right group
+                                 cur_child <<- gvbox(container=rg, expand=TRUE)
+                                 glabel(directions, cont=cur_child, anchor=c(-1,0))
+                                 
+                                 ## adjust size after
+                                 addHandler(g, "map", function(...) {
+                                   svalue(g) <- 0.2
+                                 })
+                                 
+                                 
+                                 ## show different things based on selection...
+                                 none_selected <- function() {
+                                   delete(rg, cur_child)
+                                   cur_child <<- gvbox(container=rg, expand=TRUE)
+                                   glabel("Directions...", cont=cur_child, anchor=c(-1, 0))
                                  }
-                                 addHandlerChanged(factor_edit, handler=function(h,...) {
-                                   blockHandler(factor_edit)
-                                   factor_edit_change_handler(h,...)
-                                   svalue(tbl, index=TRUE) <- 0
-                                   focus(tbl) <- TRUE
-                                   unblockHandler(factor_edit)
+                                 
+                                 one_selected <- function() {
+                                   ## if one_is selected
+                                   delete(rg, cur_child)
+                                   cur_child <<- gvbox(container=rg, expand=TRUE)
+                                   
+                                   ## offer to relabel
+                                   glabel(gettext("Relabel:"), container=cur_child, anchor=c(-1,0))
+                                   rename_level <- gedit(svalue(cur_levels),
+                                                         container=cur_child)
+                                   gseparator(container=cur_child)
+                                   
+                                   ## give choice of making ordered, or adjusting order
+                                   if(svalue(is_ordered)) {
+                                     bg <- ggroup(cont=cur_child)
+                                     move_up <- gbutton("up", cont=bg, handler=function(h,...) {
+                                       ind <- svalue(cur_levels, ind=TRUE)
+                                       cur <- cur_levels[]
+                                       cur[c(ind-1,ind)] <- cur[c(ind, ind-1)]
+                                       ## adjust factor
+                                       old <<- factor(old, levels=cur)
+                                       ## adjust GUI
+                                       cur_levels[] <- cur
+                                       svalue(cur_levels) <- ind - 1
+
+                                       selection_changed()
+                                     })
+                                     move_down <- gbutton("down", cont=bg, handler=function(h,...) {
+                                       ind <- svalue(cur_levels, ind=TRUE)
+                                       cur <- cur_levels[]
+                                       cur[c(ind,ind + 1)] <- cur[c(ind+1, ind)]
+                                       ## adjust factor
+                                       old <<- factor(old, levels=cur)
+                                       ## adjust GUI
+                                       cur_levels[] <- cur
+                                       svalue(cur_levels) <- ind + 1
+
+                                       selection_changed()
+                                     })
+                                     tooltip(move_up) <- gettext("Move selected level up in the order")
+                                     tooltip(move_down) <- gettext("Move selected level down in the order")
+                                     
+                                     
+                                     cur_ind <- svalue(cur_levels, ind=TRUE)
+                                     nlevs <- length(cur_levels[])
+                                     
+                                     enabled(move_up) <- cur_ind > 1
+                                     enabled(move_down) <- cur_ind < nlevs
+                                   } else {
+                                     ## can make ordered *or* make reference level
+                                     bg <- ggroup(container=cur_child)
+                                     ref_button <- gbutton("Set as reference", cont=bg, handler=function(h,...) {
+
+                                       ind <- svalue(cur_levels, index=TRUE)
+                                       if (ind == 1) return()
+                                       cur_reference_level <<- svalue(cur_levels)
+                                       ## adjust old
+                                       relevel(old, cur_reference_level)
+                                       ## adjust GUI
+                                       blockHandler(cur_levels)
+                                       tmp <- cur_levels[]
+                                       tmp[c(1, ind)] <- tmp[c(ind, 1)]
+                                       cur_levels[] <- tmp
+                                       svalue(cur_levels, index=TRUE) <- 1
+                                       unblockHandler(cur_levels)
+                                     })
+                                     tooltip(ref_button) <- "
+For an unordered factor, the top most level is set
+as the reference level.Clicking this button will
+move the selected level to the top.
+"
+      
+                                   }
+                                   
+                                   addSpring(cur_child)
+                                   
+                                   addHandler(rename_level, "key-press-event", handler=function(h, w, e, ...) {
+                                     if(e$GetKeyval() != GDK_Return) {
+                                       return(FALSE)
+                                     }
+                                     ind <- svalue(cur_levels, index=TRUE)
+                                     new_name <- svalue(h$obj)
+                                     ## adjust old
+                                     tmp <- old
+                                     levels(tmp)[ind] <- new_name
+                                     old <<- tmp
+                                     ## adjust GUI
+                                     blockHandler(rename_level)
+                                     tmp <- cur_levels[]
+                                     tmp[ind] <- new_name
+                                     cur_levels[] <- tmp
+                                     svalue(cur_levels, index=TRUE) <- ind
+                                     svalue(rename_level) <- ""
+                                     unblockHandler(rename_level)
+                                     focus(cur_levels) <- TRUE
+                                     
+                                     return(TRUE)
+                                   })
+                                 }
+                                 
+                                 more_than_one_selected <- function() {
+                                   delete(rg, cur_child)
+                                   cur_child <<- gvbox(container=rg, expand=TRUE)
+                                   
+                                   glabel("Collapse selected levels to:", container=cur_child, anchor=c(-1,0))
+                                   collapse_levels <- gedit("", intial.msg="Collapse levels to...",
+                                                            container=cur_child)
+                                   addSpring(cur_child)
+                                   
+                                   addHandlerChanged(collapse_levels, handler=function(h,...) {
+
+                                     ind <- svalue(cur_levels, index=TRUE)
+                                     new_val <- svalue(collapse_levels)
+                                     
+                                     if (length(ind) < 2)
+                                       return()
+                                     ## adjust old
+                                     tmp <- old
+                                     levels(tmp)[ind] <- new_val
+                                     old <<- tmp
+                                     ## adjust GUI
+
+                                     blockHandler(cur_levels);
+                                     tmp <- cur_levels[]
+                                     tmp[ind] <- new_val
+                                     tmp <- tmp[-sort(ind)[-1]]
+                                     cur_levels[] <- tmp
+                                     unblockHandler(cur_levels)
+                                     
+                                     svalue(cur_levels, index=TRUE) <- sort(ind)[1]
+                                   })
+                                 }
+                                 
+                                 ##
+                                 selection_changed <- function(...) {
+                                   ind <- svalue(cur_levels, index=TRUE)
+                                   if(length(ind) == 0)
+                                     none_selected()
+                                   else if(length(ind) == 1)
+                                     one_selected()
+                                   else
+                                     more_than_one_selected()
+                                 }
+                                 
+                                 
+                                 addHandlerSelectionChanged(cur_levels, handler=function(h,...) {
+                                   blockHandler(cur_levels)
+                                   on.exit(unblockHandler(cur_levels))
+                                   selection_changed()
+
                                  })
-                                 addHandlerKeystroke(factor_edit, handler =factor_edit_change_handler)
-                                 addHandlerBlur(factor_edit, handler=function(h,...) {
-                                   svalue(tbl, index = TRUE) <- 0
-                                   svalue(h$obj) <- ""
+                                 addHandlerChanged(is_ordered, handler=function(h, ...) {
+                                   ## adjust factor
+                                   old <<- factor(old, ordered=svalue(h$obj))
+                                   ## adjust GUI
+                                   ind <- svalue(cur_levels, index=TRUE)
+                                   if (length(ind)==0 || ind < 1)
+                                     ind <- 1
+                                   svalue(cur_levels, index=TRUE) <- ind
                                  })
+                                 
+                                 ##
+                                 add_level_dialog <- function(parent) {
+                                   ## add a level to current levels
+                                   dlg <- gbasicdialog(parent=parent, handler=function(...) {
+                                     new_val <- svalue(e)
+                                     tmp <- cur_levels[]
+                                     if(nchar(new_val) > 0 && !(new_val %in% tmp)) {
+                                       ## adjust factor
+                                       levels(old) <<- c(levels(old), new_val)
+                                       ## add to GUI
+                                       blockHandler(cur_levels)
+                                       
+                                       tmp <- c(tmp, new_val)
+                                       cur_levels[] <- tmp
+                                       
+                                       unblockHandler(cur_levels)
+                                       svalue(cur_levels, index=TRUE) <- length(tmp)
+                                     }
+                                   })
+                                   g <- gvbox(cont=dlg)
+                                   glabel("Add a new level to factor ...", cont=g, anchor=c(-1,0))
+                                   e <- gedit("", container=g)
+                                   visible(dlg, TRUE)
+                                 }
+                                 
+                                 
+                                 
                                },
                                get_value = function() {
                                  "Return factor with new levels"
-                                 old_levels <- widget[,1]
-                                 new_levels <- widget[,2]
-                                 new <- old
-                                 for(i in seq_along(old_levels)) # one pass
-                                   new[new == old_levels[i]] <- new_levels[i]
-                                 factor(new)
+                                 old
                                }
                                ))
