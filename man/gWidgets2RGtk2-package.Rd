@@ -12,6 +12,30 @@
 \alias{GWidgetWithItems}
 \alias{gWidgets2RGtk2-package}
 \title{gWidgets2Rtk2}
+\usage{
+  GComponent(...)
+
+  GContainer(...)
+
+  GWidget(...)
+
+  GWidgetWithItems(...)
+
+  GButton(...)
+
+  GTable(...)
+
+  GDf(...)
+
+  GLabel(...)
+
+  GTimer(...)
+
+  GProgressBar(...)
+}
+\arguments{
+  \item{...}{passed to constructor}
+}
 \description{
   The \pkg{gWidgets2} package provides a programming
   interface for making graphical user interfaces within R.
@@ -48,19 +72,11 @@
   names; \code{remove_popup_menu} to remove the popup menu;
   \code{add_popup} to add a popup menu
 
-  For \code{RGtk2}, a GDf object has several methods
-  defined for it that are toolkit specific, but may be
-  useful. For example, the columns may be made editable or
-  non editable (\code{block_editable_column} and
-  \code{unblock_editable_column}) (accessed through
-  \code{editable<-}); the headers can be hidden/shown
-  through the method \code{hide_names(boolean)}; the
-  rownames can be hidden/shown through themethod
-  \code{hide_row_names(boolean)}; the popup menus for the
-  headers can be removed (\code{remove_popup_menu}) and
-  customized (\code{add_popup}); similarly the cell popup
-  can be (\code{remove_cell_popup} and
-  \code{add_cell_popup}).
+  Passing in a value \code{freeze_attributes = TRUE} will
+  make it so there are no menu items to resize frame,
+  change variable types, relabel factors, .... Values of
+  \code{"row"} or \code{"column"} will remove popup menus
+  just for the row or columns.
 
   The label class for RGtk2 has the extra method
   \code{set_angle} to set the angle for the text. A value

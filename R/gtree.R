@@ -29,6 +29,7 @@ NULL
 ##' For \code{GTree}, there are extra reference methods:
 ##' \code{set_multiple} to set whether multiple or single selection is
 ##' being used.
+##' @param ... passed to constructor
 GTreeBase <- setRefClass("GTreeBase",
                          contains="GWidget",
                          fields=list(
@@ -233,6 +234,7 @@ GTreeBase <- setRefClass("GTreeBase",
 ##' For \code{GTree}, there are extra reference methods:
 ##' \code{set_multiple} to set whether multiple or single selection is
 ##' being used.
+##' @param ... passed to constructor
 GTree <- setRefClass("GTree",
                      contains="GTreeBase",
                      fields=list(
