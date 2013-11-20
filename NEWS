@@ -1,12 +1,13 @@
 Version 1.0-3
 --------------
 
+* fix to glabel editable=TRUE
 
 
 Version 1.0-2
 --------------
 
-* no major different, just to get through CRAN policies
+* no major difference, just to get through CRAN policies
 
 Version 1.0-1
 --------------

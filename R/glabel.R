@@ -41,9 +41,9 @@ GLabel <- setRefClass("GLabel",
                                 ## we put in an event box to catch events for the handler and editable stuff.
                                 ## Likely that should just be done away with, but here it is.
                                 block <<- gtkEventBoxNew()
-                                block$setVisibleWindow(FALSE)
-                                block$addEvents(GdkEventMask["all-events-mask"])
-                                block$add(widget)
+                                gp <- gtkHBox()
+                                block$add(gp)
+                                gp$packStart(widget)
 
                                 initFields(
                                            markup=markup,
@@ -54,24 +54,30 @@ GLabel <- setRefClass("GLabel",
 
                                 set_value(text)
                                 if(editable) {
+                                  ## don't confuse mouse users
+                                  widget$setSelectable(FALSE)
+                                  
+                                  ## capture events at block
+                                  block$setAboveChild(TRUE)
+                                  block$setVisibleWindow(FALSE)
+                                  
                                   ## Set up widget to toggle between
                                   state <<- "label"
                                   edit_widget <<- gtkEntryNew()
+                                  edit_widget$hide()
+                                  gp$packStart(edit_widget)
                                   gSignalConnect(edit_widget, "activate", function(e) {
                                     show_label_widget()
                                   })
-                                  ## event box handler
-                                  handler <- function(h, ...) {
-                                    if(state == "label") {
-                                      show_edit_widget()
-                                    } else {
-                                      show_label_widget()
-                                    }
+
+                                  handler <- function(...) {
+                                    if(state == "label") show_edit_widget() else show_label_widget()
+                                    FALSE
                                   }
+                                  handler_id <<- gSignalConnect(block, "button-press-event", handler)
+                                  
                                 }
                                 
-                                handler_id <<- add_handler_changed(handler, action)
-
                                 callSuper(toolkit)
                               },
 
@@ -96,16 +102,18 @@ GLabel <- setRefClass("GLabel",
 
                               ## methods for editing
                               show_edit_widget = function() {
+                                edit_widget$grabFocus()
                                 edit_widget$setText(get_value())
-                                block$remove(widget)
-                                block$add(edit_widget)
+                                widget$hide()
+                                edit_widget$show()
                                 state <<- "edit"
                               },
                               show_label_widget = function() {
                                 set_value(edit_widget$getText())
-                                block$remove(edit_widget)
-                                block$add(widget)
+                                edit_widget$hide()
+                                widget$show()
                                 state <<- "label"
+                                
                               },
                               ## Handler
                               handler_widget = function() block, # put on block,not widget
@@ -113,8 +121,10 @@ GLabel <- setRefClass("GLabel",
                                 add_handler_clicked(handler, action=action, ...)
                               },
                               add_handler_clicked=function(handler, action=NULL, ...) {
-                                widget$setSelectable(FALSE)
-                                add_event_handler("button-press-event", handler, action, decorator=.self$event_decorator(), ...)
+
+                                block$addEvents(GdkEventMask["all-events-mask"])
+                                
+                                add_handler(block, "button-press-event", event_decorator(handler), action)
                               },
 
 
