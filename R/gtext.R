@@ -83,8 +83,18 @@ GText <- setRefClass("GText",
                        },
                        set_value=function(value, ...) {
                          "Replace all text, pasted together with newline"
-                         value <- paste(value, collapse="\n")
-                         buffer$setText(value)
+                         args <- list(...)
+                         drop <- getWithDefault(args$drop, FALSE)
+                         bounds <- buffer$GetSelectionBounds()
+                         if (drop && bounds$retval) {
+                           ## replace selection with new string
+                           buffer$insert(bounds$start, value, -1)
+                           new_bounds <- buffer$GetSelectionBounds()
+                           buffer$delete(new_bounds$start, new_bounds$end)
+                         } else {
+                           value <- paste(value, collapse="\n")
+                           buffer$setText(value)
+                         }
                        },
                        get_index = function(...) {
                          stop("Not defined")
