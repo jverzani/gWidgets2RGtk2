@@ -72,7 +72,7 @@ GFormLayout <- setRefClass("GFormLayout",
                                                    "left"=0,
                                                    1)
                              
-                               print(list(expand, fill, anchor))
+                               #print(list(expand, fill, anchor))
                                
                                xopts <- yopts <- c("shrink")
                                if(is.null(expand) || expand)
@@ -131,6 +131,18 @@ GFormLayout <- setRefClass("GFormLayout",
                                  svalue(obj) <- value[[nm]]
                                })
                              },
-                             no_rows=function() widget$getNrows()
+                             no_rows=function() widget$getNrows(),
+                             ## Hacky way to set fonts
+                             get_labels=function() {
+                               children <- Map(function(x) x$getWidget(), widget$getChildren())
+                               labels <- Filter(function(x) is(x, "GtkLabel"), children)
+                               names(labels) <- sapply(labels, function(x) x$getText())
+                               labels
+                             },
+                             set_font=function(label_value, value) {
+                               "set font for a label which is specified by its value"
+                               labels <- get_labels()
+                               set_rgtk2_font(labels[[label_value]], value)
+                             }
                              ))
                              
