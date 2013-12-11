@@ -173,6 +173,16 @@ GGraphics <- setRefClass("GGraphics",
                                return(FALSE)
                              })
                            },
+                           copyToClipboard = function() {
+                             da <- widget
+                             if(!is(da, "GtkDrawingArea"))
+                               da <- getWidget(da)                 # ggraphics object
+                             da.w <- da$getAllocation()$width
+                             da.h <- da$getAllocation()$height
+                             buf <- gdkPixbufGetFromDrawable(src=da$window, src.x=0, src.y=0,
+                                                             dest.x=0, dest.y=0, width=da.w, height=da.h)
+                             gtkClipboardGet("CLIPBOARD")$setImage(buf)
+                           },
                            add_right_mouse_menu = function() {
                              "Add menu to right mouse trigger"
                              l <- list()
