@@ -45,7 +45,8 @@ GGraphics <- setRefClass("GGraphics",
 
                              add_widget_events()
                              add_rubber_band()
-                             add_right_mouse_menu()
+                             if(!getWithDefault(list(...)[["no_popup"]], FALSE))
+                               add_right_mouse_menu()
                              add_to_parent(container, .self, ...)
                              
                              handler_id <<- add_handler_changed(handler, action)
