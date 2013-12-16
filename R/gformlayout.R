@@ -134,8 +134,8 @@ GFormLayout <- setRefClass("GFormLayout",
                              no_rows=function() widget$getNrows(),
                              ## Hacky way to set fonts
                              get_labels=function() {
-                               children <- Map(function(x) x$getWidget(), widget$getChildren())
-                               labels <- Filter(function(x) is(x, "GtkLabel"), children)
+                               kidz <- Map(function(x) x$getWidget(), widget$getChildren())
+                               labels <- Filter(function(x) is(x, "GtkLabel"), kidz)
                                names(labels) <- sapply(labels, function(x) x$getText())
                                labels
                              },
