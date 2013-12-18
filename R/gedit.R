@@ -51,11 +51,13 @@ GEdit <- setRefClass("GEdit",
                                 if(nchar(init_msg) > 0) {
                                   id <- gSignalConnect(widget, "focus-in-event", function(...) {
                                     clear_init_txt()
+                                    FALSE
                                   })
                                   gSignalConnect(widget, "focus-out-event", function(...) {
                                     if(nchar(widget$getText()) == 0) {
                                       set_init_txt()
                                     }
+                                    FALSE
                                   })
                                 }
                                 ## overwrite?
@@ -104,6 +106,7 @@ GEdit <- setRefClass("GEdit",
                                 if(init_msg_flag)
                                   widget$setText("")
                                 init_msg_flag <<- FALSE
+                                
                               },
                               get_items=function(i, j, ..., drop=TRUE) {
                                 "i for index"
