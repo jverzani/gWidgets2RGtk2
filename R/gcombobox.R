@@ -48,7 +48,8 @@ GComboBox <- setRefClass("GComboBox",
                              "Hack to make width under windows work better"
                              if(.Platform$OS == "windows") {
                                if(dim(items)[1] > 0) {
-                                 colChars <- max(sapply(items[,1,drop=TRUE],nchar))
+                                 n_char <- function(x) nchar(as.character(x))
+                                 colChars <- max(sapply(items[,1,drop=TRUE],n_char))
                                  if(colChars < 3)
                                    widget$setWidthRequest(15*(4 + colChars))
                                }
