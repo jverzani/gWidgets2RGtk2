@@ -45,6 +45,7 @@ GButton <- setRefClass("GButton",
                                   if(!is.null(icon)) {
                                     image <- gtkaction$createIcon(GtkIconSize[4]) # button size
                                     widget$setImage(image)
+                                    image$show()
                                   }
                                   ## tooltip
                                   tip <- gtkaction['tooltip']
