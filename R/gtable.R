@@ -147,6 +147,25 @@ GTable <- setRefClass("GTable",
                                 
                                 add_to_parent(container, .self, ...)
 
+                                ## hack in click events here
+                                click_decorator <- function(FUN) {
+                                  force(FUN)
+                                  f <- function(self, w, e, ...) {
+                                    if(e$getButton() == 1) {
+                                      if(e$getType() == GdkEventType['button-press']) {
+                                        self$notify_observers(signal="button-press-event")
+                                      }
+                                      if(e$getType() == GdkEventType['2button-press']) {
+                                        self$notify_observers(signal="2button-press-event")
+                                      }
+                                    }
+                                    FALSE
+                                  }
+                                  f
+                                }
+                                connect_to_toolkit_signal("button-press-event", click_decorator)
+
+                                
                                 handler_id <<- add_handler_changed(handler, action)
 
                                 callSuper(toolkit)
@@ -467,7 +486,10 @@ GTable <- setRefClass("GTable",
                           }
                         },
                         add_handler_clicked=function(handler, action, ...) {
-                          add_handler_changed(handler, action=action, ...)
+                          if(!is_handler(handler))
+                            return()
+                          o <- gWidgets2:::observer(.self, handler, action)
+                          invisible(add_observer(o, "button-press-event"))
                         },
                         add_handler_double_clicked=function(handler, action, ...) {
                           ## There is an oddity here. When using row-activated it does as desired unless
@@ -478,28 +500,7 @@ GTable <- setRefClass("GTable",
                            if(!is_handler(handler))
                              return()
                            o <- gWidgets2:::observer(.self, handler, action)
-                           add_observer(o, "button-press-event")
-                           add_observer(o, "key-release-event")
-                           double_click_decorator <- function(FUN) {
-                             force(FUN)
-                             f <- function(self, w, e, ...) {
-                               if(e$getButton() == 1 && e$getType() == GdkEventType['2button-press'] )
-                                 self$notify_observers(signal="button-press-event")
-                               FALSE
-                             }
-                             f
-                           }
-                           enter_key_decorator <- function(FUN) {
-                             force(FUN)
-                             f <- function(self, w, e, ...) {
-                               if(e$getKeyval() == GDK_Return)
-                                 self$notify_observers(signal="key-release-event")
-                               FALSE
-                             }
-                             f
-                           }
-                           connect_to_toolkit_signal("button-press-event", double_click_decorator)
-                           connect_to_toolkit_signal("key-release-event", enter_key_decorator)
+                           invisible(add_observer(o, "2button-press-event"))
                         },
                         ##
                         hide_names=function(value) {
