@@ -163,7 +163,7 @@ GTable <- setRefClass("GTable",
                                   }
                                   f
                                 }
-                                connect_to_toolkit_signal("button-press-event", click_decorator)
+                                connect_to_toolkit_signal("button-release-event", click_decorator)
 
                                 
                                 handler_id <<- add_handler_changed(handler, action)
