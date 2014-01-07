@@ -51,7 +51,7 @@ GComboBox <- setRefClass("GComboBox",
                                  n_char <- function(x) nchar(as.character(x))
                                  colChars <- max(sapply(items[,1,drop=TRUE],n_char))
                                  if(colChars < 3)
-                                   widget$setWidthRequest(15*(4 + colChars))
+                                   widget$setSizeRequest(15*(4 + colChars), -1L)
                                }
                              }
                            }
