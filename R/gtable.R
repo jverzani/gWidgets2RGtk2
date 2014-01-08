@@ -152,10 +152,10 @@ GTable <- setRefClass("GTable",
                                   force(FUN)
                                   f <- function(self, w, e, ...) {
                                     if(e$getButton() == 1) {
-                                      if(e$getType() == GdkEventType['button-press']) {
+                                      if(as.numeric(e$getType()) == GdkEventType['button-press']) {
                                         self$notify_observers(signal="button-press-event")
                                       }
-                                      if(e$getType() == GdkEventType['2button-press']) {
+                                      if(as.numeric(e$getType()) == GdkEventType['2button-press']) {
                                         self$notify_observers(signal="2button-press-event")
                                       }
                                     }
@@ -163,7 +163,7 @@ GTable <- setRefClass("GTable",
                                   }
                                   f
                                 }
-                                connect_to_toolkit_signal("button-release-event", click_decorator)
+                                connect_to_toolkit_signal("button-press-event", click_decorator)
 
                                 
                                 handler_id <<- add_handler_changed(handler, action)
