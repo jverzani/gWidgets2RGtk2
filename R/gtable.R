@@ -390,11 +390,17 @@ GTable <- setRefClass("GTable",
                           DF[i,j, drop=getWithDefault(drop, TRUE)]
                         },
                         set_items = function(value, i, j, ...) {
+                          block_handlers()
+                          on.exit(unblock_handlers())
                           if(missing(i) && missing(j)) {
                             ## set a new data frame model
                             ## we shove in ..visible for the last column q
-                            if(!is(value, "data.frame"))
-                              value <- as.data.frame(value, stringsAsFactors=FALSE)
+                            if(!is(value, "data.frame")) {
+                              if (is.vector(value))
+                                value <- data.frame(Values=value, stringsAsFactors=FALSE)
+                              else if(is.matrix(value))
+                                value <- data.frame(value, stringsAsFactors=FALSE)
+                            }
                             ## icons
                             if(!is.null(icon_col)) 
                               value[[icon_col]] <-  getStockIconByName(value[[icon_col]])
