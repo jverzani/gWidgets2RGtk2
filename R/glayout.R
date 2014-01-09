@@ -150,9 +150,7 @@ GLayout <- setRefClass("GLayout",
                          remove_child=function(child) {
                            ## we call destroy method on child -- not being reused
                            ## remove from child_positions
-                           pluck <- function(key) function(l) l[[key]]
-                           ind <- Filter(Negate(function(i) child_positions[[i]]$widget == child$widget), seq_along(child_positions))
-                           child_positions <<- child_positions[ind]
+                           child_positions <<- Filter(Negate(function(i) i$value$widget == child$widget), child_positions)
                            children <<- Filter(function(i) !identical(i, child), children)
                            getBlock(child)$destroy()
                          }
