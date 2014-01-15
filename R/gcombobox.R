@@ -119,9 +119,9 @@ GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
                                   get_items = function(i, j, ..., drop=TRUE) {
                                     store <- widget$getModel()
                                     if(drop)
-                                      store[,1, drop=TRUE]
+                                      store[i,1, drop=TRUE]
                                     else
-                                      store[,]
+                                      store[i,]
                                   },
                                   set_items = function(value, i, j, ...) {
                                     "Set items. Indexing is ignored"
