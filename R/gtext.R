@@ -30,7 +30,8 @@ GText <- setRefClass("GText",
                      contains="GWidget",
                      fields=list(
                        buffer="ANY",
-                       tag_table="ANY"
+                       tag_table="ANY",
+                       font_attr="list"
                        ),
                      methods=list(
                        initialize=function(toolkit=NULL,
@@ -56,8 +57,8 @@ GText <- setRefClass("GText",
                          block$add(widget)
                          widget$show()
 
-                         insert_text(text, where="beginning", font.attr=NULL, do.newline=FALSE)
-                         set_font(font.attr) # buffer font
+                         font_attr <<- getWithDefault(font.attr, list())
+                         insert_text(text, where="beginning",  do.newline=FALSE)
                          
                          add_to_parent(container, .self, ...)
                          
@@ -170,7 +171,13 @@ GText <- setRefClass("GText",
                          value <- paste(c(value,""), collapse=ifelse(do.newline, "\n", ""))
                          arg_list <- list(object=buffer, iter=iter, text=value)
 
-                         if(!is.null(font.attr) && length(font.attr)) {
+                         if(is.null(font.attr)) {
+                           font.attr <- font_attr
+                         } else {
+                           font.attr <- sapply(font.attr, identity, simplify=FALSE)
+                           font.attr <- gWidgets2:::merge.list(font_attr, font.attr)
+                         }
+                         if(length(font.attr) > 0) {
                            for(i in names(font.attr)) {
                              arg_list[[length(arg_list) + 1]] <- get_tag_name(i, font.attr[[i]])
                            }
