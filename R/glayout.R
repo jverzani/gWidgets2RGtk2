@@ -148,9 +148,13 @@ GLayout <- setRefClass("GLayout",
                            child_positions <<- l
                          },
                          remove_child=function(child) {
+                           if(!is(child, "GComponent"))
+                             return()
                            ## we call destroy method on child -- not being reused
                            ## remove from child_positions
-                           child_positions <<- Filter(Negate(function(i) i$value$widget == child$widget), child_positions)
+                           child_positions <<- Filter(Negate(function(i) {
+                             i$child$widget == child$widget
+                           }), child_positions)
                            children <<- Filter(function(i) !identical(i, child), children)
                            getBlock(child)$destroy()
                          }
