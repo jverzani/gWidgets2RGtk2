@@ -52,7 +52,7 @@ GText <- setRefClass("GText",
                          block <<- gtkScrolledWindowNew()
                          block$SetPolicy("GTK_POLICY_AUTOMATIC","GTK_POLICY_AUTOMATIC")
                          if(!is.null(width))
-                           sw$SetSizeRequest(width,height)
+                           block$SetSizeRequest(width,height)
                          
                          block$add(widget)
                          widget$show()
