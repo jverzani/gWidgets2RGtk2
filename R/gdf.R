@@ -498,7 +498,7 @@ GDfBase <- setRefClass("GDfBase",
                          block_handlers()
                          sel_model$unselectAll()
                          lapply(ind, function(i) {
-                           sel_model$selectPath(gtkTreePathNewFromString(i))
+                           sel_model$selectPath(gtkTreePathNewFromString(i-1))
                          })
                          
                          unblock_handlers()
