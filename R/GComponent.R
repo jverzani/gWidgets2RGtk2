@@ -27,6 +27,7 @@ NULL
 ##' inherits its primary interface from
 ##' gWidgets2::BasicToolkitInterface.
 ##' @rdname gWidgets2RGtk2-package
+##' @export GComponent
 GComponent <- setRefClass("GComponent",
                                contains="BasicToolkitInterface",
                                fields=list(

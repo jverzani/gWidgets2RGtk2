@@ -144,7 +144,8 @@ GLayout <- setRefClass("GLayout",
                            children <<- c(children, value)
                            ## store for [ method
                            l <- child_positions
-                           l[[as.character(length(l) + 1)]] <- list(x=i, y=j, child=value)
+#                           l[[as.character(length(l) + 1)]] <- list(x=i, y=j, child=value)
+                           l[[length(l) + 1]] <- list(x=i, y=j, child=value)
                            child_positions <<- l
                          },
                          remove_child=function(child) {
