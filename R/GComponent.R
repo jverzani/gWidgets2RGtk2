@@ -205,7 +205,7 @@ GComponent <- setRefClass("GComponent",
 
                                    if(data.type == "text") {
                                      f <- function(h, widget, context, sel, tType, eTime) {
-                                       message("get drag data")
+                                       #message("get drag data")
                                        val <- handler(h) # returns text
                                        sel$setText(val, -1) 
                                      }
@@ -214,7 +214,7 @@ GComponent <- setRefClass("GComponent",
                                      
                                      key <- digest(.self)
                                      f <- function(h, widget, context, sel, tType, eTime) {
-                                       message("get drag data object")                                       
+                                       #message("get drag data object")                                       
                                        val <- handler(h) ## returns an object
                                        .dnd.env[[key]] <- val
                                        sel$setText(key) 

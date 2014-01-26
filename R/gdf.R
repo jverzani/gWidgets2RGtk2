@@ -276,6 +276,26 @@ GDfBase <- setRefClass("GDfBase",
                          rownames(out) <- make.unique(get_rownames())
                          out
                        },
+                         ## DND
+                         ## XXX This needs fleshing out
+                         add_dnd_columns=function() {
+                           ## Hack to add in drag and drop to columns
+                           remove_popup_menu()
+                           add_dnd_to_vc <- function(vc) {
+                             vc$setClickable(TRUE)
+                             btn <- vc$getWidget()$getParent()$getParent()$getParent()
+                             label <- vc$getWidget()$getChild() 
+                             gtkDragSourceSet(btn,
+                                              start.button.mask=c("button1-mask", "button3-mask"),
+                                              targets=widgetTargetTypes[["text"]],
+                                              actions="copy")
+                             gSignalConnect(btn, "drag-data-get", function(data, widget, contet, sel, ty, tm, ...) {
+                               sel$setText(data$getLabel(), -1)
+                             }, label, user.data.first=TRUE)
+                           }
+
+                           QT <- Map(add_dnd_to_vc, widget$getColumns())
+                         },
                        ##
                        ## Column methods
                        ##
@@ -294,6 +314,8 @@ GDfBase <- setRefClass("GDfBase",
                          
                          j <- get_column_index(view_col)
                          set_name(j, nm)
+
+                         
                          model_n         # return
                        },
                        insert_column=function(j, model_idx, nm) {
