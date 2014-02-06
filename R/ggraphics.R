@@ -190,10 +190,10 @@ GGraphics <- setRefClass("GGraphics",
                                                      handler=function(h, ...) copyToClipboard(obj))
                              l$printAction <- gaction("Save", "Save current graph", icon="save",
                                                       handler=function(h,...) {
-                                                        fname <- gfile(gettext("Filename to save to"), type="save")
+                                                        fname <- gfile(gettext("Filename to save to (pdf)"), type="save")
                                                         if(nchar(fname)) {
                                                           if(!file.exists(fname) || gconfirm(gettext("Overwrite file?")))
-                                                            set_value(fname)
+                                                            dev.copy2pdf(file=fname)
                                                         }
                                                       })
                              add_3rd_mouse_popup_menu(l)
