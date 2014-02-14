@@ -99,7 +99,7 @@ isRightMouseClick <- function(e) {
     stop("Must pass in an event")
   
   e$GetButton() == 3 ||
-  (e$GetState() == GdkModifierType['control-mask'] && e$GetButton() == 1) 
+  (is_MacOSX() && e$GetState() == GdkModifierType['control-mask'] && e$GetButton() == 1) 
 }
 
 
