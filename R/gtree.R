@@ -220,6 +220,9 @@ GTreeBase <- setRefClass("GTreeBase",
                        add_handler_changed=function(handler, action=NULL, ...) {
                          add_handler("row-activated", handler, action=action, ...)
                        },
+                             add_handler_clicked=function(handler, action=NULL, ...) {
+                                 add_handler_button_press(handler, action=action, ...)
+                             },
                        ## Some extra methods
                        clear_selection=function() {
                          widget$getSelection()$unselectAll()
