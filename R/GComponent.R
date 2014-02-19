@@ -429,6 +429,9 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       add_handler_button_press=function(handler, action=NULL, ...) {
                                         add_handler("button-press-event", handler, action, .self$button_press_decorator, ...)
                                       },
+                                      add_handler_button_release=function(handler, action=NULL, ...) {
+                                        add_handler("button-release-event", handler, action, .self$button_press_decorator, ...)
+                                      },
                                       add_handler_focus=function(handler, action=NULL, ...) {
                                         add_handler("focus-in-event", handler, action, .self$event_decorator, ...)
                                       },
