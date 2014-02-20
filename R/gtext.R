@@ -159,14 +159,14 @@ GText <- setRefClass("GText",
                          }
                        },
                        insert_text=function(value, where, font.attr=NULL, do.newline,  ...) {
-                         "Insert text into buffer. Font.attr is a vector (or list) with named quantities" 
+                         "Insert text into buffer. Font.attr is a list with named quantities" 
                          if(is_empty(value))
                            return()
                          
                           iter <- switch(where,
                                          "end"=buffer$GetEndIter()$iter,
                                          "beginning"=buffer$GetStartIter()$iter,
-                                         buffer$getIterAtMark("insert"))
+                                         buffer$getIterAtMark(buffer$getInsert())$iter)
             
                          value <- paste(c(value,""), collapse=ifelse(do.newline, "\n", ""))
                          arg_list <- list(object=buffer, iter=iter, text=value)
