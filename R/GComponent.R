@@ -366,7 +366,7 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         
                                         ## only connect once
                                         if(is.null(connected_signals[[signal, exact=TRUE]]))
-                                          gSignalConnect(handler_widget(), signal, f, data=.self, user.data.first=TRUE)
+                                          gSignalConnect(handler_widget(), signal, f, data=.self, user.data.first=TRUE, after=FALSE)
                                         connected_signals[[signal]] <<- TRUE
                                       },
                                       ## initiate a handler (emit signal)

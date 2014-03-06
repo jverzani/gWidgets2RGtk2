@@ -203,7 +203,8 @@ GWindow <- setRefClass("GWindow",
                               },
                               add_handler_unrealize=function(handler, action, ...) {
                                 "Intercept window manager delete event"
-                                add_event_handler("delete-event", handler, action=action, ...)
+                                ## have to not use observable framework here...
+                                gSignalConnect(widget, "delete-event", Negate(handler), data=list(obj=.self, action=action), user.data.first=TRUE, after=FALSE)
                               }
                               ))
 
