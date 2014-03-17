@@ -53,7 +53,7 @@ GEdit <- setRefClass("GEdit",
                                     clear_init_txt()
                                     FALSE
                                   })
-                                  gSignalConnect(widget, "focus-out-event", function(...) {
+                                  id <- gSignalConnect(widget, "focus-out-event", function(...) {
                                     if(nchar(widget$getText()) == 0) {
                                       set_init_txt()
                                     }
