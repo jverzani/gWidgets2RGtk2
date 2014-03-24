@@ -195,6 +195,13 @@ GText <- setRefClass("GText",
                          }
                          
                        },
+                         ## editable
+                         get_editable=function(...) {
+                             widget$getEditable()
+                         },
+                         set_editable=function(value,...) {
+                             widget$setEditable(as.logical(value))
+                         },
                        add_handler_changed=function(handler, action=NULL, ...) {
                          add_handler_keystroke(handler, action=action, ...)
                        },
