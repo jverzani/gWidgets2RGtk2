@@ -227,7 +227,7 @@ GComponent <- setRefClass("GComponent",
                                    
                                    if(data.type == "object") {
                                      gSignalConnect(handler_widget(), "drag-end", f=function(key, ...) {
-                                       message("drag end")
+                                         ## message("drag end")
                                        .dnd.env[[key]] <- NULL # clean up
                                      }, data=digest(.self), user.data.first=TRUE)
                                    }
