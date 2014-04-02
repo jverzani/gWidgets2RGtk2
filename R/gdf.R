@@ -580,7 +580,9 @@ GDfBase <- setRefClass("GDfBase",
                                              w <- gbasicdialog("Edit factor levels", parent = parent,
                                                                handler = function(h,...) {
                                                                  new_f <- relf$get_value()
-                                                                 assign("out", factor(new_f), inherits=TRUE)
+                                                                 if(!is.factor(new_f))
+                                                                     new_f <- factor(new_f)
+                                                                 assign("out", new_f, inherits=TRUE)
                                                                })
                                              size(w) <- c(600, 400)
                                              
@@ -1494,16 +1496,18 @@ move the selected level to the top.
                                      new_val <- svalue(e)
                                      tmp <- cur_levels[]
                                      if(nchar(new_val) > 0 && !(new_val %in% tmp)) {
-                                       ## adjust factor
-                                       levels(old) <<- c(levels(old), new_val)
-                                       ## add to GUI
-                                       blockHandler(cur_levels)
+                                         tmp <- c(tmp, new_val)
+                                         ## adjust factor
+                                         xx <- old
+                                         levels(xx) <- tmp
+                                         old <<- xx
+                                         ## add to GUI
+                                         blockHandler(cur_levels)
+
+                                         cur_levels[] <- tmp
                                        
-                                       tmp <- c(tmp, new_val)
-                                       cur_levels[] <- tmp
-                                       
-                                       unblockHandler(cur_levels)
-                                       svalue(cur_levels, index=TRUE) <- length(tmp)
+                                         unblockHandler(cur_levels)
+                                         svalue(cur_levels, index=TRUE) <- length(tmp)
                                      }
                                    })
                                    g <- gvbox(cont=dlg)
