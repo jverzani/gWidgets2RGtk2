@@ -1306,7 +1306,7 @@ Select levels to collapse.
                                  })
                                  tooltip(add_level) <- gettext("Add a new level to factor")
                                  
-                                 is_ordered <- gcheckbox("Ordered", container=bg, checked=is.ordered(f))
+                                 is_ordered <- gcheckbox("Ordered", container=bg, checked=is.ordered(old))
                                  tooltip(is_ordered) <- gettext("Toggle if factor is ordered")
                                  
                                  

@@ -35,7 +35,7 @@ GLabel <- setRefClass("GLabel",
 
                                 widget <<- gtkLabel()
                                 widget$setSelectable(TRUE)
-                                widget["can-focus"] <- FALSE
+                                widget$setCanFocus(FALSE)
                                 if(markup)
                                   widget$setUseMarkup(TRUE)
 
