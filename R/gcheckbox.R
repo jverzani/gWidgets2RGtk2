@@ -26,17 +26,18 @@ GCheckbox <- setRefClass("GCheckbox",
                            initialize=function(toolkit=NULL,
                              text="", checked = FALSE,  handler = NULL, action = NULL,
                              container = NULL, ... ) {
-                             
-                             widget <<- gtkCheckButtonNewWithLabel(text)
-                             widget$setActive(checked)
-                             
-                             initFields(block=widget,
-                                        change_signal="toggled"
-                                        )
-                             add_to_parent(container, .self, ...)
-                             
-                             handler_id <<- add_handler_changed(handler, action)
-                             
+
+                               if(!is(widget, "GtkWidget")) {
+                                   widget <<- gtkCheckButtonNewWithLabel(text)
+                                   widget$setActive(checked)
+                                   
+                                   initFields(block=widget,
+                                              change_signal="toggled"
+                                              )
+                                   add_to_parent(container, .self, ...)
+                                   
+                                   handler_id <<- add_handler_changed(handler, action)
+                               }
                              callSuper(toolkit)
                            },
                            set_value=function(value, index=TRUE, drop=TRUE, ...) {
@@ -72,10 +73,10 @@ GToggleButton <- setRefClass("GToggleButton",
                                  text, checked = FALSE,  handler = NULL, action = NULL,
                                  container = NULL, ... ) {
 
-                                 widget <<- gtkToggleButtonNewWithLabel(text)
-                                 set_items(value=text)
-
+                                 widget <<- gtkToggleButton()
+                                 ## initialize widget
                                  set_value(checked)
+                                 set_items(value=text)
                                  
                                  initFields(
                                             block=widget,
@@ -85,15 +86,15 @@ GToggleButton <- setRefClass("GToggleButton",
                                  add_to_parent(container, .self, ...)
                                  
                                  handler_id <<- add_handler_changed(handler, action)
-                                 
                                  callSuper(toolkit)
+
                               },
                               get_items = function(i, j, ..., drop=TRUE) {
                                 widget$getLabel()
                               },
                               set_items = function(value, i, j, ...) {
                                 ## use UseStock if in stock icon
-                                widget$setLabel(value)
+                                widget$setLabel(value[1])
                               }
                               ##  ,
                               ## add_handler_changed=function(handler, action=NULL, ...) {
