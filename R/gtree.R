@@ -90,6 +90,7 @@ GTreeBase <- setRefClass("GTreeBase",
                              view_col <- gtkTreeViewColumnNew()
                              view_col$setResizable(TRUE)
                              cellrenderer <- gtkCellRendererText()
+                             view_col$setSortColumnId(0)
                              view_col$PackStart(cellrenderer, TRUE)
                              cellrenderer['xalign'] = 0
                              ##
@@ -105,6 +106,8 @@ GTreeBase <- setRefClass("GTreeBase",
                              ## now add columns,
                              f <- function(x, i) {
                                treeview_col <- make_treeview_column(x, i - 1, .self)
+                               treeview_col$setResizable(TRUE)
+                               treeview_col$setSortColumnId(i - 1)
                                widget$insertColumn(treeview_col, pos = -1) # at end
                              }
                              mapply(f, items, seq_len(ncol(items)))
@@ -367,6 +370,8 @@ GTree <- setRefClass("GTree",
                          these <- setdiff(seq_along(items), not_these)
                          sapply(these, function(col) {
                            treeview_col <- make_treeview_column(items[,col], col - 1L, .self)
+                           treeview_col$setResizable(TRUE)
+                           treeview_col$setSortColumnId(col - 1)
                            widget$insertColumn(treeview_col, pos = -1) # at end
                           })
                         },
@@ -374,6 +379,7 @@ GTree <- setRefClass("GTree",
                          "Make column for key and icons, if present"
                          view_col <- gtkTreeViewColumnNew()
                          view_col$setResizable(TRUE)
+                         view_col$setSortColumnId(0)                         
                          if(!is.null(icon_col)) {
                             cellrenderer <- gtkCellRendererPixbufNew()
                             view_col$PackStart(cellrenderer, FALSE)
