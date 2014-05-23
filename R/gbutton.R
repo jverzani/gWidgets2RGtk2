@@ -47,7 +47,7 @@ GButton <- setRefClass("GButton",
                                   if(!is.null(icon)) {
                                     image <- gtkaction$createIcon(GtkIconSize[4]) # button size
                                     widget$setImage(image)
-                                    image$show()
+                                    widget$image$show()
                                   }
                                   ## tooltip
                                   tip <- gtkaction['tooltip']
@@ -63,8 +63,8 @@ GButton <- setRefClass("GButton",
                                 if(!is_empty(old_value) && !is_empty(value) &&
                                    value == old_value)
                                   return()
-                                set_icon(value)
                                 widget$setLabel(value)
+                                set_icon(value)
                                 ## signal change, not done by widget
                                 invoke_change_handler()
                               },
@@ -78,6 +78,7 @@ GButton <- setRefClass("GButton",
                                   image <- gtkImageNew()
                                   image$SetFromStock(icon, size="button")
                                   widget$setImage(image)
+                                  widget$image$show()
                                 }
                               },
                               set_font = function(value) {
