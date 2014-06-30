@@ -186,6 +186,11 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                     set_value=function(value, ...) {
                                       widget$getChild()$setText(value)
                                     },
+                                      get_index=function(...) {
+                                          val <- get_value()
+                                          items <- get_items()
+                                          match(val, items)
+                                      },
                                     get_items = function(i, j, ..., drop=TRUE) {
                                       poss_items
                                     },
