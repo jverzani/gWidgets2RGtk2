@@ -177,6 +177,7 @@ GEdit <- setRefClass("GEdit",
                               set_icon = function(stock, where="start") { ## or end
                                 where = GtkEntryIconPosition[ifelse(where == "end", "secondary", "primary")]
                                 widget$setIconFromStock(where, getStockIconByName(stock))
+                                Map(function(x) widget$setIconActivatable(x, FALSE), c("secondary", "primary"))
                               },
                               set_icon_handler = function(callback, where="start") {
                                 where = GtkEntryIconPosition[ifelse(where == "end", "secondary", "primary")]
