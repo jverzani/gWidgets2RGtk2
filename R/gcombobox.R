@@ -222,6 +222,7 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                       entry$SetCompletion(completion)
                                       ## add search/clear icon
                                       entry$setIconFromStock("primary", getStockIconByName("ed-search"))
+                                      entry$setIconActivatable("primary", FALSE)
                                       where <- "secondary"
                                       entry$setIconFromStock(where, getStockIconByName("ed-remove"))
                                       entry$setIconActivatable(where, TRUE)
