@@ -226,7 +226,10 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                       where <- "secondary"
                                       entry$setIconFromStock(where, getStockIconByName("ed-remove"))
                                       entry$setIconActivatable(where, TRUE)
-                                      gSignalConnect(entry, "icon-press", function(e, ...) e$setText(""))
+                                      gSignalConnect(entry, "icon-press", function(e, ...) {
+                                          e$setText("")
+                                          e$grabFocus()
+                                      })
                                     },
                                     add_handler_edited = function(handler, action=NULL, ...) {
                                       "For editing -- need a better name XXX"
