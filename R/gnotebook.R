@@ -149,7 +149,6 @@ GNotebook <- setRefClass("GNotebook",
                                     child <- widget$getNthPage(page - 1L)
                                     box <- widget$getTabLabel(child)
                                     sapply(box$getChildren(), function(x) x$setTooltipText(tooltip))
-                                    evb$setTooltipText(tooltip)
                                 },
                               ## handlers
                               add_handler_changed=function(handler, action=NULL, ...) {
