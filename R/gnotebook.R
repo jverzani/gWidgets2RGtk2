@@ -143,7 +143,7 @@ GNotebook <- setRefClass("GNotebook",
                                     if (where == "left")
                                         box$reorderChild(evb, 0L)
                                     if (nchar(tooltip) > 0) {
-                                        sapply(function(x) x$setTooltipText(tooltip), box$getChildren())
+                                        sapply(box$getChildren(), function(x) x$setTooltipText(tooltip))
                                         evb$setTooltipText(tooltip)
                                     }
                                 },
