@@ -132,6 +132,16 @@ GNotebook <- setRefClass("GNotebook",
                               remove_current_page = function() {
                                 remove_page_by_index(get_index())
                               },
+                                add_tab_icon = function(page, stock.id, handler=NULL, where="left") {
+                                    "Add a stock icon to a tab (by index) with optional handler."
+                                    child <- widget$getNthPage(page - 1L)
+                                    box <- widget$getTabLabel(child)
+                                    icon <- gimage(stock.id=stock.id, handler=handler)
+                                    evb <- icon$widget$parent
+                                    box$packStart(evb)
+                                    if (where == "left")
+                                        box$reorderChild(evb, 0L)
+                                },
                               ## handlers
                               add_handler_changed=function(handler, action=NULL, ...) {
                                 "A tab changed"
