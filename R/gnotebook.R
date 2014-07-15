@@ -133,7 +133,7 @@ GNotebook <- setRefClass("GNotebook",
                               remove_current_page = function() {
                                 remove_page_by_index(get_index())
                               },
-                                add_tab_icon = function(page, stock.id, handler=NULL, tooltip="", where="left") {
+                                add_tab_icon = function(page, stock.id, handler=NULL, where="left") {
                                     "Add a stock icon to a tab (by index) with optional handler."
                                     child <- widget$getNthPage(page - 1L)
                                     box <- widget$getTabLabel(child)
@@ -142,10 +142,14 @@ GNotebook <- setRefClass("GNotebook",
                                     box$packStart(evb)
                                     if (where == "left")
                                         box$reorderChild(evb, 0L)
-                                    if (nchar(tooltip) > 0) {
-                                        sapply(box$getChildren(), function(x) x$setTooltipText(tooltip))
-                                        evb$setTooltipText(tooltip)
-                                    }
+                                  
+                                },
+                                add_tab_tooltip = function(page, tooltip) {
+                                    "Add a tooltip to a tab (by index)"
+                                    child <- widget$getNthPage(page - 1L)
+                                    box <- widget$getTabLabel(child)
+                                    sapply(box$getChildren(), function(x) x$setTooltipText(tooltip))
+                                    evb$setTooltipText(tooltip)
                                 },
                               ## handlers
                               add_handler_changed=function(handler, action=NULL, ...) {
