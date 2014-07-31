@@ -330,6 +330,10 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                             "call handler if Modifier type is correct"
                                             force(handler)
                                             f <- function(.self, widget, event, ...) {
+                                                print(list(state = event$getState(),
+                                                           type = modifier_type,
+                                                           code = GdkModifierType[[modifier_type]]))
+                                                
                                                 if(event$getState() == GdkModifierType[[modifier_type]]) {
                                                     handler(.self,...)
                                                 }
