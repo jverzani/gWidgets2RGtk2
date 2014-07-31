@@ -330,11 +330,8 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                             "call handler if Modifier type is correct"
                                             force(handler)
                                             f <- function(.self, widget, event, ...) {
-                                                print(list(state = event$getState(),
-                                                           type = modifier_type,
-                                                           code = GdkModifierType[[modifier_type]]))
-                                                
-                                                if(event$getState() == GdkModifierType[[modifier_type]]) {
+                                              
+                                                if(event$getState() == modifier_type) {
                                                     handler(.self,...)
                                                 }
                                         }
@@ -342,11 +339,11 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       },
                                         button_press_decorator_filter_shift = function(handler) {
                                             ## catch only shift masked events
-                                            button_press_decorator_filter(handler, "shift-mask")
+                                            button_press_decorator_filter(handler, GdkModifierType[["shift-mask"]])
                                         },
                                         button_press_decorator_filter_control = function(handler) {
                                             ## catch control masked events
-                                            button_press_decorator_filter(handler, "control-mask")
+                                            button_press_decorator_filter(handler, GdkModifierType[["shift-mask"]] + GdkModifierType[["control-mask"]])
                                         },
                                       ## code for integrating observable interface with RGtk2
                                       is_handler=function(handler) {
