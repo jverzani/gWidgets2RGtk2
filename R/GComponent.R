@@ -326,6 +326,24 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         }
                                         event_decorator(f)
                                       },
+                                        button_press_decorator_filter = function(handler, modifier_type) {
+                                            "call handler if Modifier type is correct"
+                                            force(handler)
+                                            f <- function(.self, widget, event, ...) {
+                                                if(event$getState() == GdkModifierType[[modifier_type]]) {
+                                                    handler(.self,...)
+                                                }
+                                        }
+                                        event_decorator(f)
+                                      },
+                                        button_press_decorator_filter_shift = function(handler) {
+                                            ## catch only shift masked events
+                                            button_press_decorator_filter(handler, "shift-mask")
+                                        },
+                                        button_press_decorator_filter_control = function(handler) {
+                                            ## catch control masked events
+                                            button_press_decorator_filter(handler, "control-mask")
+                                        },
                                       ## code for integrating observable interface with RGtk2
                                       is_handler=function(handler) {
                                         "Helper to see if handler is a handler"
@@ -426,8 +444,16 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       add_handler_clicked = function(handler, action=NULL, ...) {
                                         add_handler("clicked", handler, action, ...)
                                       },
+                                        add_handler_control_clicked = function(handler, action=NULL, ...) {
+                                            add_handler("button-press-event", handler, action,
+                                                        .self$button_press_decorator_filter_control, ...)
+                                        },
+                                        add_handler_shift_clicked = function(handler, action=NULL, ...) {
+                                             add_handler("button-press-event", handler, action,
+                                                         .self$button_press_decorator_filter_shift, ...)
+                                        },
                                       add_handler_button_press=function(handler, action=NULL, ...) {
-                                        add_handler("button-press-event", handler, action, .self$button_press_decorator, ...)
+                                          add_handler("button-press-event", handler, action, .self$button_press_decorator, ...)
                                       },
                                       add_handler_button_release=function(handler, action=NULL, ...) {
                                         add_handler("button-release-event", handler, action, .self$button_press_decorator, ...)
