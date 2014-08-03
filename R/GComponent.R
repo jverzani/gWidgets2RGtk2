@@ -258,7 +258,7 @@ GComponent <- setRefClass("GComponent",
                                                       key <- rawToChar(sel$getText())
                                                       h$dropdata <- .dnd.env[[key]]; 
                                                     }
-                                                    handler(h)
+                                                    handler(h, widget, context, x, y, sel, data.type, event.time)
 
                                                     
                                                     return(TRUE)
@@ -330,7 +330,6 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                             "call handler if Modifier type is correct"
                                             force(handler)
                                             f <- function(.self, widget, event, ...) {
-                                                print(list(event$getState(), modifier_type))
                                                 if(event$getState() == modifier_type) {
                                                     handler(.self,...)
                                                 }
