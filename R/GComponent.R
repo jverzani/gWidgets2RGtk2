@@ -207,6 +207,8 @@ GComponent <- setRefClass("GComponent",
                                      f <- function(h, widget, context, sel, tType, eTime) {
                                        #message("get drag data")
                                        val <- handler(h) # returns text
+                                       if (length(val) == 0)
+                                           val <- ""
                                        sel$setText(val, -1) 
                                      }
                                    }
@@ -258,7 +260,7 @@ GComponent <- setRefClass("GComponent",
                                                       key <- rawToChar(sel$getText())
                                                       h$dropdata <- .dnd.env[[key]]; 
                                                     }
-                                                    handler(h, widget, context, x, y, sel, data.type, event.time)
+                                                    handler(h, widget=widget, context=context, x=x, y=y, sel=sel, data.type=data.type, event.time=event.time)
 
                                                     
                                                     return(TRUE)
