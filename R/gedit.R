@@ -77,8 +77,8 @@ GEdit <- setRefClass("GEdit",
 #                                })
                                 
 #                                handler_id <<- add_handler_changed(handler, action)
-                                ## change handler on focus out event
-                                add_handler_blur(function(...) invoke_change_handler())
+                                ## XXX now optionalchange handler on focus out event
+                                ## add_handler_blur(function(...) invoke_change_handler())
                                 
                                 callSuper(toolkit)
                               },
