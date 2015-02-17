@@ -6,7 +6,6 @@ NULL
 ##' @inheritParams gWidgets2::gprogressbar
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
-##' @seealso The documentation for this is found at \code{\link{gprogressbar}}.
 ##' @method .gprogressbar guiWidgetsToolkitRGtk2
 ##' @S3method .gprogressbar guiWidgetsToolkitRGtk2
 .gprogressbar.guiWidgetsToolkitRGtk2 <- function(toolkit, value, container, ...) {

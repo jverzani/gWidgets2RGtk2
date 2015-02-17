@@ -35,7 +35,7 @@ GGraphics <- setRefClass("GGraphics",
                              
                              
                              widget <<- gtkDrawingAreaNew()
-                             asCairoDevice(widget, pointsize=ps)
+                             cairoDevice::asCairoDevice(widget, pointsize=ps)
                              widget$AddEvents(GdkEventMask["all-events-mask"])
                              
                              initFields(block=widget)
@@ -57,7 +57,7 @@ GGraphics <- setRefClass("GGraphics",
                              "Add events to widget to customize behaviours"
                              gSignalConnect(widget, signal="map-event", f = function(w, e, ...) {
                                if(is.null(widget$GetData(".devnum"))) {
-                                 asCairoDevice(widget, pointsize=ps) # turn into cairo device
+                                 cairoDevice::asCairoDevice(widget, pointsize=ps) # turn into cairo device
                                  device_number <<- widget$GetData(".devnum")
                                }
                                return(TRUE)             # don't propogate

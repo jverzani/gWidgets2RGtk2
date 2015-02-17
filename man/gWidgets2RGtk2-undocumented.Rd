@@ -506,7 +506,5 @@ return stock id from object
 }
 \seealso{
 The documentation for this is found at \code{\link{gbutton}}.
-
-The documentation for this is found at \code{\link{gprogressbar}}.
 }
 
