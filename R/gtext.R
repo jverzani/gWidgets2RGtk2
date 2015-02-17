@@ -206,7 +206,7 @@ GText <- setRefClass("GText",
                          add_handler_keystroke(handler, action=action, ...)
                        },
                        add_handler_selection_changed=function(handler, action=NULL, ...) {
-                         message("No good signal for initiating this. Needs hacking XXX")
+                           ## connect to buffer's `mark_set` and grab the selection bounds
                        }
                        ))
 
