@@ -18,9 +18,9 @@ NULL
 }
 
 
-##' The GEdit class adds some methods beyond the spec: \code{set_error}, \code{clear_error}, \code{validate_value}
-##'
-##' @param ... passed to constructor
+## The GEdit class adds some methods beyond the spec: \code{set_error}, \code{clear_error}, \code{validate_value}
+##
+## @param ... passed to constructor
 GEdit <- setRefClass("GEdit",
                             contains="GWidget",
                             fields=list(

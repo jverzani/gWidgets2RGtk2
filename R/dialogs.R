@@ -117,9 +117,9 @@ GDialog <- setRefClass("GDialog",
   dlg$run()
 }
 
-##' subclass for message dialog
-##'
-##' @param ... passed to constructor
+## subclass for message dialog
+##
+## @param ... passed to constructor
 GMessage <- setRefClass("GMessage", contains="GDialog")
 
 

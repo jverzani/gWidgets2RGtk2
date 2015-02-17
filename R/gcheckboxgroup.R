@@ -1,11 +1,13 @@
 ##' @include GWidget.R
 NULL
 
+## @usage  \method{.gcheckboxgroup}{guiWidgetsToolkitRGtk2}(toolkit=NULL, items, checked = FALSE, horizontal = FALSE, use.table = FALSE, handler = NULL, action = NULL, container = NULL, ...)
+
+
 ##' Toolkit constructor
 ##'
 ##' @inheritParams gWidgets2::gcheckboxgroup
 ##' @export
-##' @usage  \method{.gcheckboxgroup}{guiWidgetsToolkitRGtk2}(toolkit=NULL, items, checked = FALSE, horizontal = FALSE, use.table = FALSE, handler = NULL, action = NULL, container = NULL, ...)
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gcheckboxgroup guiWidgetsToolkitRGtk2
 ##' @S3method .gcheckboxgroup guiWidgetsToolkitRGtk2

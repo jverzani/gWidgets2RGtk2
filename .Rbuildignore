@@ -1,4 +1,5 @@
-.git
 ^\.Rproj\.user$
-gWidgets2RGtk2.Rproj
-TODO.txt
+^\.git$
+^\.gitignore$
+^TODO\.txt$
+^gWidgets2RGtk2\.Rproj$
