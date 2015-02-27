@@ -1,12 +1,12 @@
 Package: gWidgets2RGtk2
 Type: Package
-Title: Implementation of gWidgets2 for RGtk2 package
+Title: Implementation of gWidgets2 for the RGtk2 Package
 Version: 1.0-3
 Date: 2011-09-18
 Author: John Verzani
 Maintainer: John Verzani <jverzani@gmail.com>
 URL: https://github.com/jverzani/gWidgets2RGtk2
-Description: Implements gWidgets2 API for RGtk2
+Description: Implements the gWidgets2 API for RGtk2.
 License: GPL-3
 Depends:
     methods,
