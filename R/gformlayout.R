@@ -145,6 +145,7 @@ GFormLayout <- setRefClass("GFormLayout",
                                set_rgtk2_font(labels[[label_value]], value)
                              },
                              set_label_tooltip=function(label_value, value) {
+                                 "Set tooltip for a label specified by its name."
                                  label <- get_labels()[[label_value]]
                                  label$setTooltipText(value)
                              }
