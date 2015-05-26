@@ -40,8 +40,8 @@ GGraphics <- setRefClass("GGraphics",
                              
                              initFields(block=widget)
                              
-#                             if(!is.null(width) & !is.null(height))
-#                               set_size(c(width=width, height=height))
+                             if(!is.null(width) & !is.null(height))
+                               set_size(c(width=width, height=height))
 
                              add_widget_events()
                              add_rubber_band()
