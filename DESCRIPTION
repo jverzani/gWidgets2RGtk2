@@ -5,7 +5,7 @@ Version: 1.0-4
 Author: John Verzani
 Maintainer: John Verzani <jverzani@gmail.com>
 URL: https://github.com/jverzani/gWidgets2RGtk2
-Description: Implements the gWidgets2 API for RGtk2.
+Description: Implements the 'gWidgets2' API for 'RGtk2.'
 License: GPL-3
 Depends:
     methods,
