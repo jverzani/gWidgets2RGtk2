@@ -3,7 +3,6 @@ NULL
 
 ##' S3 method for gtimer
 ##'
-##' @inheritParams gWidgets2::gtimer
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gtimer guiWidgetsToolkitRGtk2

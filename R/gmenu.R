@@ -3,7 +3,6 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gmenu
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gmenu guiWidgetsToolkitRGtk2

@@ -3,7 +3,6 @@ NULL
 
 ##' Toolkit label constructor
 ##'
-##' @inheritParams gWidgets2::glabel
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .glabel guiWidgetsToolkitRGtk2

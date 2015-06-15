@@ -4,7 +4,6 @@ NULL
 ##' Toolkit XXX constructor
 ##'
 ##' @param digits digits
-##' @inheritParams gWidgets2::gslider
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gspinbutton guiWidgetsToolkitRGtk2

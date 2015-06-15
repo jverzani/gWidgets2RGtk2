@@ -7,7 +7,6 @@ make_tag_table <- memoise(gtkTextTagTableNew)
 
 ##' toolkit implementation
 ##'
-##' @inheritParams gWidgets2::gtext
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gtext guiWidgetsToolkitRGtk2

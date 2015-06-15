@@ -5,7 +5,6 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gformlayout
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gformlayout guiWidgetsToolkitRGtk2

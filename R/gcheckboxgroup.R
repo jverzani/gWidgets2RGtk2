@@ -6,7 +6,6 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gcheckboxgroup
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gcheckboxgroup guiWidgetsToolkitRGtk2

@@ -3,7 +3,6 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gcombobox
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gcombobox guiWidgetsToolkitRGtk2

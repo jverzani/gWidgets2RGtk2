@@ -4,7 +4,6 @@ NULL
 ##' add stock icons
 ##'
 ##' @export
-##' @inheritParams gWidgets2::addStockIcons
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .addStockIcons guiWidgetsToolkitRGtk2
 ##' @S3method .addStockIcons guiWidgetsToolkitRGtk2

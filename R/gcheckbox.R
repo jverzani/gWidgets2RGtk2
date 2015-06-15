@@ -3,7 +3,6 @@ NULL
 
 ##' Toolkit XXX constructor
 ##'
-##' @inheritParams gWidgets2::gcheckbox
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gcheckbox guiWidgetsToolkitRGtk2

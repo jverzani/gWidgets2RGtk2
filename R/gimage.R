@@ -3,7 +3,6 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gimage
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gimage guiWidgetsToolkitRGtk2

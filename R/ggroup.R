@@ -3,7 +3,6 @@ NULL
 
 ##' toolkit constructor for ggroup
 ##'
-##' @inheritParams gWidgets2::ggroup
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .ggroup guiWidgetsToolkitRGtk2

@@ -3,7 +3,6 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gtable
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gtable guiWidgetsToolkitRGtk2

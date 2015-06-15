@@ -5,7 +5,6 @@ NULL
 
 ##' Toolkit gedit constructor
 ##'
-##' @param initial.msg initial.msg
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gedit guiWidgetsToolkitRGtk2

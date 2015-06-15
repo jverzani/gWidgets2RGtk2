@@ -3,7 +3,6 @@ NULL
 
 ##' method for stopping getWidget
 ##'
-##' @inheritParams gWidgets2::getWidget
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method getWidget RGtkObject
@@ -12,7 +11,6 @@ getWidget.RGtkObject <- function(obj) obj
 
 ##' S3 method for stopping getBlock
 ##'
-##' @inheritParams gWidgets2::getWidget
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method getBlock RGtkObject
