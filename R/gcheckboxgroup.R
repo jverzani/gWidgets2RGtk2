@@ -101,7 +101,12 @@ GCheckboxGroup <- setRefClass("GCheckboxGroup",
                               },
                               get_length = function() {
                                 length(widgets)
-                              }
+                            },
+                                set_font=function(value) {
+                                    sapply(widgets, function(bg) {
+                                        set_rgtk2_font(bg$child, value)
+                                    })
+                                }
                               ))
 
 
