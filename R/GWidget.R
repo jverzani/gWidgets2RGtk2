@@ -25,10 +25,18 @@ GWidgetWithItems <- setRefClass("GWidgetWithItems",
                                   widgets="list"
                                   ),
                                 methods=list(
-                                  connect_to_toolkit_signal=function(signal,f, emitter) {
-                                    ## override, done when adding items
-                                  }
-                                ))
+                                    connect_to_toolkit_signal=function(signal,f, emitter) {
+                                        ## override, done when adding items
+                                    },
+                                    get_enabled=function() {
+                                        widgets[[1]]["sensitive"]
+                                    },			      
+                                    set_enabled=function(value) {
+                                        sapply(widgets, function(widget) {
+                                                   widget$setSensitive(value)
+                                               })
+                                    }
+                                    ))
 
 
 getWidget.GWidgetWithItems <- function(obj) getWidget(obj$block)

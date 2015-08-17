@@ -3,7 +3,6 @@ NULL
 
 ##' Toolkit implementation
 ##'
-##' @inheritParams gWidgets2::gfile
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gfile guiWidgetsToolkitRGtk2

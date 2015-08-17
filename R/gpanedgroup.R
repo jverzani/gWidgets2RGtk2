@@ -3,7 +3,6 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gpanedgroup
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gpanedgroup guiWidgetsToolkitRGtk2

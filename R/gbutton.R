@@ -3,7 +3,7 @@ NULL
 
 
 ##' toolkit constructor
-##' @inheritParams gWidgets2::gbutton
+##'
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @seealso The documentation for this is found at \code{\link{gbutton}}.

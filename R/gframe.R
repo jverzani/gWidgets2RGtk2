@@ -3,7 +3,6 @@ NULL
 
 ##' gframe constructor
 ##'
-##' @inheritParams gWidgets2::gframe
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gframe guiWidgetsToolkitRGtk2

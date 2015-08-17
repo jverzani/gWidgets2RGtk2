@@ -12,7 +12,6 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gdf
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gdf guiWidgetsToolkitRGtk2

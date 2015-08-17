@@ -99,8 +99,6 @@ GDialog <- setRefClass("GDialog",
 
 ##' toolkit implementation for gmessage
 ##'
-##' @inheritParams gWidgets2::ginput
-##' @return NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gmessage guiWidgetsToolkitRGtk2
@@ -126,7 +124,6 @@ GMessage <- setRefClass("GMessage", contains="GDialog")
 
 ##' toolkit implementation for gconfirm
 ##'
-##' @inheritParams gWidgets2::ginput
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gconfirm guiWidgetsToolkitRGtk2
@@ -156,7 +153,6 @@ GConfirm <- setRefClass("GConfirm",
 
 ##' toolkit implmentation of ginput
 ##'
-##' @inheritParams gWidgets2::ginput
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .ginput guiWidgetsToolkitRGtk2
@@ -201,7 +197,6 @@ GInput <- setRefClass("GInput",
 
 ##' toolkit implementation
 ##'
-##' @inheritParams gWidgets2::gbasicdialog
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gbasicdialog guiWidgetsToolkitRGtk2
@@ -341,8 +336,6 @@ GBasicDialog <- setRefClass("GBasicDialog",
 
 ##' toolkit implementation of galert
 ##'
-##' @param delay delay
-##' @inheritParams gWidgets2::gaction
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .galert guiWidgetsToolkitRGtk2

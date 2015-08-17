@@ -3,7 +3,6 @@ NULL
 
 ##' Toolkit  constructor
 ##'
-##' @inheritParams gWidgets2::gradio
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gradio guiWidgetsToolkitRGtk2

@@ -3,7 +3,6 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gnotebook
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gstackwidget guiWidgetsToolkitRGtk2

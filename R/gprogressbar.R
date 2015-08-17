@@ -3,7 +3,6 @@ NULL
 
 ##' Toolkit  constructor
 ##'
-##' @inheritParams gWidgets2::gprogressbar
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gprogressbar guiWidgetsToolkitRGtk2

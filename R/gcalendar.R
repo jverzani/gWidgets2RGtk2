@@ -3,7 +3,6 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gcalendar
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gcalendar guiWidgetsToolkitRGtk2

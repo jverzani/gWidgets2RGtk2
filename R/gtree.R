@@ -6,7 +6,6 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gtree
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gtree guiWidgetsToolkitRGtk2

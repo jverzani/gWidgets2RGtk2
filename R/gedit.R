@@ -5,7 +5,6 @@ NULL
 
 ##' Toolkit gedit constructor
 ##'
-##' @param initial.msg initial.msg
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gedit guiWidgetsToolkitRGtk2
@@ -79,7 +78,7 @@ GEdit <- setRefClass("GEdit",
 #                                handler_id <<- add_handler_changed(handler, action)
                                 ## XXX now optionalchange handler on focus out event
                                 ## add_handler_blur(function(...) invoke_change_handler())
-                                
+                                handler_id <<- add_handler_changed(handler, action)                                
                                 callSuper(toolkit)
                               },
                               set_value=function(value, index=TRUE, drop=TRUE, ...) {

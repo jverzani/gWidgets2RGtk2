@@ -3,7 +3,6 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gcombobox
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gcombobox guiWidgetsToolkitRGtk2
@@ -65,7 +64,9 @@ GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
                                     items,
                                     selected = 1, # use 0 for blank
                                     coerce.with = NULL,
-                                    handler, action, container, ...) {
+                                    handler, action, container,
+                                      ellipsize=c("middle", "none","start", "end"),
+                                      ...) {
 
                                     if(ncol(items) >=2)
                                       items[[2]] <- sapply(items[[2]], getStockIconByName)
@@ -74,7 +75,7 @@ GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
                                     ## drop down list, not combo
                                     widget <<- gtkComboBoxNewWithModel(store)
                                     cellrenderer <- gtkCellRendererTextNew()
-                                    cellrenderer['ellipsize'] <- PangoEllipsizeMode[3]
+                                    cellrenderer['ellipsize'] <- PangoEllipsizeMode[match.arg(ellipsize)]
                                     widget$PackStart(cellrenderer, expand=TRUE)
                                     
                                     widget$AddAttribute(cellrenderer,"text", 0)

@@ -3,7 +3,6 @@ NULL
 
 ##' toolkit constructor for gwindow
 ##'
-##' @inheritParams gWidgets2::gwindow
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gwindow guiWidgetsToolkitRGtk2
