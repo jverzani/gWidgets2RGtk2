@@ -217,7 +217,7 @@ GDfBase <- setRefClass("GDfBase",
 
                          ## if any row is all NA, then we set the class to numeric
                          for (nm in names(items)) {
-                           if(all(is.na(items[nm]))) {
+                           if(all(is.na(items[,nm]))) {
                              items[nm] <- rep(NA_real_, nrow(items))
                            }
                          }
