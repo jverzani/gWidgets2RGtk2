@@ -64,7 +64,7 @@ GTimer <- setRefClass("GTimer",
                           }
                           started <<- TRUE
                         },
-                        stop_timer = function() {
+                          stop_timer = function() {
                           "stop the timer"
                           gSourceRemove(ID)
                           started <<- FALSE

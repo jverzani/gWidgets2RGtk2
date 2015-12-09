@@ -372,14 +372,28 @@ GBasicDialog <- setRefClass("GBasicDialog",
               if(!is.null(parent))
                 w$setTransientFor(parent)
 
+
               f <- function(...) {
                 timer$stop_timer()
                 if(!is(w, "<invalid>"))
                   w$destroy()
                 FALSE
               }
-              gSignalConnect(evb, "motion-notify-event", f=f)
+#              gSignalConnect(evb, "motion-notify-event", f=f)
 
+              motion_notify_cb <- function(...) {
+                  if(timer$started)
+                      timer$stop_timer()
+                  FALSE
+              }
+              gSignalConnect(evb, "motion-notify-event", f=motion_notify_cb)
+              leave_notify_cb <- function(...) {
+                  timer$set_interval(2*1000)
+                  timer$start_timer()
+                  FALSE
+              }
+              gSignalConnect(evb, "leave-notify-event", f=leave_notify_cb)
+              
               w$show()
 
               timer <- gtimer(delay*1000, FUN=f, one.shot=TRUE, toolkit=toolkit)
