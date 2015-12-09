@@ -81,7 +81,7 @@ GGroupBase <- setRefClass("GGroupBase",
                             box$setSizeRequest(value, -1L)
                           else
                             box$setSizeRequest(-1L, value)
-                          widget$PackStart(gtkHBoxNew(),FALSE, FALSE,0)
+                          widget$PackStart(box,FALSE, FALSE,0)
                         },
                         ## [ for returning children
                         get_items = function(i, j, ..., drop=TRUE) {
