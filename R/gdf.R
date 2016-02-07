@@ -40,6 +40,14 @@ ensure_type.integer <- function(x, value) as.integer(value)
 ensure_type.logical <- function(x, value) as.logical(value)
 
 
+my_logical <- function(x) {
+    y <- as.character(x)
+    y[is.na(y)] <- "NA"
+    y <- factor(y)
+    class(y) <- c("mylogical", "factor")
+    y
+}
+
 ##' make a view column for the given type of variable
 ##'
 ##' @param x variable
@@ -221,6 +229,12 @@ GDfBase <- setRefClass("GDfBase",
                              items[nm] <- rep(NA_real_, nrow(items))
                            }
                          }
+
+                         ## turn logical into factor -- must turn back
+                         inds <- which(sapply(items, function(x) is(x, "logical")))
+                         for (i in inds) 
+                             items[[i]] <- my_logical(items[[i]])
+
                          
                          mod_items <- cbind(`_visible`=rep(TRUE, nrow(items)),
                                             `_deleted`=rep(FALSE, nrow(items)),
@@ -273,6 +287,11 @@ GDfBase <- setRefClass("GDfBase",
                          out <- model[not_deleted(),cols, drop=FALSE]
                          names(out) <- get_names()
                          rownames(out) <- make.unique(get_rownames())
+                         ## convert mylogical to logical
+                         inds <- which(sapply(out, function(x) is(x, "mylogical")))
+                         for (i in inds) 
+                             out[[i]] <- as.logical(out[[i]])
+                         
                          out
                        },
                          ## DND
