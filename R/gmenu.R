@@ -6,7 +6,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gmenu guiWidgetsToolkitRGtk2
-##' @S3method .gmenu guiWidgetsToolkitRGtk2
+## @export .gmenu guiWidgetsToolkitRGtk2
 .gmenu.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                            menu.list=list(),
                                            popup=FALSE,

@@ -7,7 +7,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gspinbutton guiWidgetsToolkitRGtk2
-##' @S3method .gspinbutton guiWidgetsToolkitRGtk2
+## @export .gspinbutton guiWidgetsToolkitRGtk2
 .gspinbutton.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                  from = 0, to = 10, by = 1, value = from, digits = 0,
                                                  handler = NULL,action = NULL, container = NULL, ... ) {

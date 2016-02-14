@@ -10,7 +10,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .ggraphics guiWidgetsToolkitRGtk2
-##' @S3method .ggraphics guiWidgetsToolkitRGtk2
+## @export .ggraphics guiWidgetsToolkitRGtk2
 .ggraphics.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                width = dpi*6, height = dpi*6, dpi = 75, ps = 12,    
                                                handler = NULL,action = NULL, container = NULL, ... ) {

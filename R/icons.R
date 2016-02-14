@@ -6,7 +6,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .addStockIcons guiWidgetsToolkitRGtk2
-##' @S3method .addStockIcons guiWidgetsToolkitRGtk2
+## @export .addStockIcons guiWidgetsToolkitRGtk2
 .addStockIcons.guiWidgetsToolkitRGtk2 <- function(toolkit, iconNames, iconFiles,... ) {
   .GWidgetsRGtk2Icons$add_to_gtk_stock_icons(iconNames, iconFiles)
 }
@@ -16,7 +16,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .getStockIcons guiWidgetsToolkitRGtk2
-##' @S3method .getStockIcons guiWidgetsToolkitRGtk2
+## @export .getStockIcons guiWidgetsToolkitRGtk2
 .getStockIcons.guiWidgetsToolkitRGtk2 <- function(toolkit, ...) {
   lst <- gtkStockListIds()
   sapply(unlist(lst), identity, simplify=FALSE)
@@ -29,7 +29,7 @@ NULL
 ##' @usage \method{.getStockIconByName}{guiWidgetsToolkitRGtk2}(toolkit,name, ...)
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .getStockIconByName guiWidgetsToolkitRGtk2
-##' @S3method .getStockIconByName guiWidgetsToolkitRGtk2
+## @export .getStockIconByName guiWidgetsToolkitRGtk2
 .getStockIconByName.guiWidgetsToolkitRGtk2 <- function(toolkit, name, ...) {
   icons <- getStockIcons(toolkit)
 
@@ -123,7 +123,7 @@ load_gwidget_icons <- function() {
 ##' @usage \method{.stockIconFromObject}{guiWidgetsToolkitRGtk2}(toolkit,obj, ...)
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .stockIconFromObject guiWidgetsToolkitRGtk2
-##' @S3method .stockIconFromObject guiWidgetsToolkitRGtk2
+## @export .stockIconFromObject guiWidgetsToolkitRGtk2
 .stockIconFromObject.guiWidgetsToolkitRGtk2 <- function(toolkit, obj, ...) {
   icon_for_object <- function(x) UseMethod("icon_for_object")
   icon_for_object.default <- function(x) "gw-symbol_dot"

@@ -6,7 +6,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gwindow guiWidgetsToolkitRGtk2
-##' @S3method .gwindow guiWidgetsToolkitRGtk2
+## @export .gwindow guiWidgetsToolkitRGtk2
 .gwindow.guiWidgetsToolkitRGtk2 <- function(toolkit, title, visible=visible, name, width, height, parent, handler, action,  ...) {
   GWindow$new(toolkit, title, visible=visible, name, width, height, parent, handler, action,  ...)
 }

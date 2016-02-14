@@ -6,7 +6,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gcheckbox guiWidgetsToolkitRGtk2
-##' @S3method .gcheckbox guiWidgetsToolkitRGtk2
+## @export .gcheckbox guiWidgetsToolkitRGtk2
 .gcheckbox.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                               text, checked = FALSE, use.togglebutton=FALSE, handler = NULL, action = NULL,
                                               container = NULL, ... ) {

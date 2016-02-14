@@ -8,7 +8,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gformlayout guiWidgetsToolkitRGtk2
-##' @S3method .gformlayout guiWidgetsToolkitRGtk2
+## @export .gformlayout guiWidgetsToolkitRGtk2
 .gformlayout.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                              align="left",
                                              spacing=5,

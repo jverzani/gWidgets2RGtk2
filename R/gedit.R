@@ -8,7 +8,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gedit guiWidgetsToolkitRGtk2
-##' @S3method .gedit guiWidgetsToolkitRGtk2
+## @export .gedit guiWidgetsToolkitRGtk2
 .gedit.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                            text = "", width = 25, coerce.with = NULL, initial.msg=initial.msg,
                     handler = NULL,action = NULL, container = NULL, ... ) {

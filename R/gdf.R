@@ -15,7 +15,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gdf guiWidgetsToolkitRGtk2
-##' @S3method .gdf guiWidgetsToolkitRGtk2
+## @export .gdf guiWidgetsToolkitRGtk2
 .gdf.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                          items = NULL,
                     handler = NULL,action = NULL, container = NULL, ... ) {
@@ -34,7 +34,7 @@ NULL
 ensure_type <- function(x, value) UseMethod("ensure_type")
 ensure_type.default <- function(x, value) value
 ensure_type.character <- function(x, value) as.character(value)
-ensure_type.factor <- function(x, value) {x[length(x) + 1] <- value; tail(x, n=1)}
+ensure_type.factor <- function(x, value) {x[length(x) + 1] <- value; utils::tail(x, n=1)}
 ensure_type.numeric <- function(x, value) as.numeric(value)
 ensure_type.integer <- function(x, value) as.integer(value)
 ensure_type.logical <- function(x, value) as.logical(value)

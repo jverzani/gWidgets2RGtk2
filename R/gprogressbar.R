@@ -6,7 +6,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gprogressbar guiWidgetsToolkitRGtk2
-##' @S3method .gprogressbar guiWidgetsToolkitRGtk2
+## @export .gprogressbar guiWidgetsToolkitRGtk2
 .gprogressbar.guiWidgetsToolkitRGtk2 <- function(toolkit, value, container, ...) {
   GProgressBar$new(toolkit, value, container, ...)
 }

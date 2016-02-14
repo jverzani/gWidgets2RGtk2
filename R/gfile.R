@@ -6,7 +6,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gfile guiWidgetsToolkitRGtk2
-##' @S3method .gfile guiWidgetsToolkitRGtk2
+## @export .gfile guiWidgetsToolkitRGtk2
 .gfile.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                           text = "",
                                           type = c("open","save","selectdir"),
@@ -106,7 +106,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gfilebrowse guiWidgetsToolkitRGtk2
-##' @S3method .gfilebrowse guiWidgetsToolkitRGtk2
+## @export .gfilebrowse guiWidgetsToolkitRGtk2
 .gfilebrowse.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                  text = "",
                                                  type = c("open","save","selectdir"),

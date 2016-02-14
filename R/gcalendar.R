@@ -6,7 +6,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gcalendar guiWidgetsToolkitRGtk2
-##' @S3method .gcalendar guiWidgetsToolkitRGtk2
+## @export .gcalendar guiWidgetsToolkitRGtk2
 .gcalendar.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                text="",
                                                format="%Y-%m-%d",

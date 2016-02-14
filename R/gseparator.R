@@ -6,7 +6,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gseparator guiWidgetsToolkitRGtk2
-##' @S3method .gseparator guiWidgetsToolkitRGtk2
+## @export .gseparator guiWidgetsToolkitRGtk2
 .gseparator.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                          horizontal = TRUE,
                    container = NULL, ... ) {

@@ -6,7 +6,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gtable guiWidgetsToolkitRGtk2
-##' @S3method .gtable guiWidgetsToolkitRGtk2
+## @export .gtable guiWidgetsToolkitRGtk2
 .gtable.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                          items,
                                          multiple = FALSE,

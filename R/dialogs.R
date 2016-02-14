@@ -102,7 +102,7 @@ GDialog <- setRefClass("GDialog",
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gmessage guiWidgetsToolkitRGtk2
-##' @S3method .gmessage guiWidgetsToolkitRGtk2
+## @export .gmessage guiWidgetsToolkitRGtk2
 .gmessage.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                              msg,
                                              title = "message",
@@ -127,7 +127,7 @@ GMessage <- setRefClass("GMessage", contains="GDialog")
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gconfirm guiWidgetsToolkitRGtk2
-##' @S3method .gconfirm guiWidgetsToolkitRGtk2
+## @export .gconfirm guiWidgetsToolkitRGtk2
 .gconfirm.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                               msg,
                                               title = "Confirm",
@@ -156,7 +156,7 @@ GConfirm <- setRefClass("GConfirm",
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .ginput guiWidgetsToolkitRGtk2
-##' @S3method .ginput guiWidgetsToolkitRGtk2
+## @export .ginput guiWidgetsToolkitRGtk2
 .ginput.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                            msg,
                                            text="",
@@ -200,7 +200,7 @@ GInput <- setRefClass("GInput",
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gbasicdialog guiWidgetsToolkitRGtk2
-##' @S3method .gbasicdialog guiWidgetsToolkitRGtk2
+## @export .gbasicdialog guiWidgetsToolkitRGtk2
 .gbasicdialog.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                                  title = "Dialog",
                                                  parent=NULL,
@@ -339,7 +339,7 @@ GBasicDialog <- setRefClass("GBasicDialog",
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .galert guiWidgetsToolkitRGtk2
-##' @S3method .galert guiWidgetsToolkitRGtk2
+## @export .galert guiWidgetsToolkitRGtk2
 .galert.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                             msg,
                                             title = "message",

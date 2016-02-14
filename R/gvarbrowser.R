@@ -6,7 +6,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gvarbrowser guiWidgetsToolkitRGtk2
-##' @S3method .gvarbrowser guiWidgetsToolkitRGtk2
+## @export .gvarbrowser guiWidgetsToolkitRGtk2
 .gvarbrowser.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                  handler = NULL,action = "summary", container = NULL, ... ) {
   GVarBrowser$new(toolkit,

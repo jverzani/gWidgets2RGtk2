@@ -6,7 +6,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gaction guiWidgetsToolkitRGtk2
-##' @S3method .gaction guiWidgetsToolkitRGtk2
+## @export .gaction guiWidgetsToolkitRGtk2
 .gaction.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                              label, tooltip=NULL, icon = NULL, key.accel = NULL,
                                              handler = NULL,action = NULL, parent = NULL, ... ) {

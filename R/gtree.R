@@ -9,7 +9,7 @@ NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gtree guiWidgetsToolkitRGtk2
-##' @S3method .gtree guiWidgetsToolkitRGtk2
+## @export .gtree guiWidgetsToolkitRGtk2
 .gtree.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                            offspring = NULL, offspring.data = NULL,
                                            chosen.col = 1, offspring.col=2, icon.col=NULL, tooltip.col=NULL,
@@ -134,7 +134,7 @@ GTreeBase <- setRefClass("GTreeBase",
                            walk_back_from_path(us_path)
                          })
                          if(!is.null(drop) && drop)
-                           out <- lapply(out, tail, n=1)
+                           out <- lapply(out, utils::tail, n=1)
                          if(length(out) == 1)
                            out <- out[[1]]
                          out
