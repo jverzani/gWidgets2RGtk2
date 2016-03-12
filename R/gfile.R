@@ -81,6 +81,8 @@ NULL
     if(!is.null(initial.filename))
       filechooser$SetFilename(initial.filename)
     filechooser$setCurrentFolder(initial.dir)
+  } else if(type == "selectdir") {
+      filechooser$setCurrentFolder(initial.dir)
   }
   
   ## this makes it modal
