@@ -48,7 +48,7 @@ GAction <- setRefClass("GAction",
                            "Hack to add in accelerator button binding"
                            ## accel buttons
                            if(!is.null(accel_key) && !is.null(parent)) {
-                             toplevel <- getBlock(parent)$toplevel
+                             toplevel <- getTopLevel(parent)$widget #getBlock(parent)$toplevel
                              ## mask Shift-1, Control-4 alt-8
                              ## key sprintf("GDK_%s",key)
                              ## flag GtkAccelFlags -- 1
@@ -65,8 +65,8 @@ GAction <- setRefClass("GAction",
                              a <- gtkAccelGroup()
                              toplevel$addAccelGroup(a)
                              a$connect(get(key), modifier, "visible", function(...) {
-                               h <- list(action=action)
-                               handler(h, ...)
+#                               h <- list(action=parent$action)#action=action)
+                               handler(...)
                                TRUE
                              })
                            }
