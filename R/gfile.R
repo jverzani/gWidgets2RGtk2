@@ -67,21 +67,23 @@ NULL
       filechooser$AddFilter(filefilter)
     }
   }
+  
+  ## this works *exactly* the same as the previous ifelseifelseifelse
+  #switch(type,
+  #       "open" = ,
+  #       "save" = {
+  #         if(!is.null(initial.filename))
+  #           filechooser$SetFilename(initial.filename)
+  #         filechooser$setCurrentFolder(initial.dir)
+  #       },
+  #       "selectdir" = {
+  #         filechooser$setCurrentFolder(initial.dir)
+  #       })
 
-  ## boy this could be tidied up, but is it correct?
-  if(type == "open") {
-    if(!is.null(initial.filename))
-      filechooser$SetFilename(initial.filename)
-    filechooser$setCurrentFolder(initial.dir)
-  } else if(type == "open") {
-    if(!is.null(initial.filename))
-      filechooser$SetFilename(initial.filename)
-    filechooser$setCurrentFolder(initial.dir)
-  } else if(type == "save") {
-    if(!is.null(initial.filename))
-      filechooser$SetFilename(initial.filename)
-    filechooser$setCurrentFolder(initial.dir)
-  }
+  ## but I think this does the same thing??
+  if (type %in% c("open", "save") && !is.null(initial.filename))
+    filechooser$SetFilename(initial.filename)
+  filechooser$setCurrentFolder(initial.dir)
   
   ## this makes it modal
   response <- filechooser$Run()
