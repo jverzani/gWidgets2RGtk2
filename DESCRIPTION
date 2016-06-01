@@ -1,7 +1,7 @@
 Package: gWidgets2RGtk2
 Type: Package
 Title: Implementation of gWidgets2 for the RGtk2 Package
-Version: 1.0-4
+Version: 1.0-5
 Author: John Verzani
 Maintainer: John Verzani <jverzani@gmail.com>
 URL: https://github.com/jverzani/gWidgets2RGtk2
@@ -11,7 +11,7 @@ Depends:
     methods,
     memoise,
     RGtk2,
-    gWidgets2
+    gWidgets2(>= 1.0.7)
 Suggests:
     testthat,
     cairoDevice

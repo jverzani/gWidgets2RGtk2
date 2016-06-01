@@ -48,6 +48,13 @@ my_logical <- function(x) {
     y
 }
 
+my_date <- function(x) {
+    y <- format(x)
+    y[is.na(y)] <- "NA"
+    class(y) <- c("mydate", "character")
+    y
+}
+
 ##' make a view column for the given type of variable
 ##'
 ##' @param x variable
@@ -171,13 +178,12 @@ make_editable_cell_renderer.Date <- function(x, self, model_idx, view_col) {
   view_col$packStart(cr, TRUE)
   view_col$addAttribute(cr, "text", model_idx - 1L)
   view_col$setCellDataFunc(cr, function(vc, cr, model, iter, ...) {
-    ## set cell value by formatting
-    col <- self$get_column_index(cr$getData("view_col"))
-    row <- as.numeric(model$getPath(iter)$toString()) + 1L
-    val <- self$get_cell(row, col)
-    cr["text"] <- format(val)
-    
-  })
+       ## set cell value by formatting
+       col <- self$get_column_index(cr$getData("view_col"))
+       row <- as.numeric(model$getPath(iter)$toString()) + 1L
+       val <- self$get_cell(row, col)
+       cr["text"] <- format(val)
+   })
   ## make editable
   id <- gSignalConnect(cr,
                        signal="edited",
@@ -235,6 +241,11 @@ GDfBase <- setRefClass("GDfBase",
                          for (i in inds) 
                              items[[i]] <- my_logical(items[[i]])
 
+                         ## turn date into character -- must turn back
+                         inds <- which(sapply(items, function(x) is(x, "Date")))
+                         for (i in inds) 
+                             items[[i]] <- my_date(items[[i]])
+                         
                          
                          mod_items <- cbind(`_visible`=rep(TRUE, nrow(items)),
                                             `_deleted`=rep(FALSE, nrow(items)),
@@ -284,13 +295,20 @@ GDfBase <- setRefClass("GDfBase",
                          "Get data frame from columns. Skips deleted rows, but returns non-visible ones"
                          columns <- widget$getColumns()[-1] # drop rownames
                          cols <- sapply(columns, function(vc) vc$getData("n"))
-                         out <- model[not_deleted(),cols, drop=FALSE]
-                         names(out) <- get_names()
-                         rownames(out) <- make.unique(get_rownames())
-                         ## convert mylogical to logical
+                         out <- model[]
+                         ## must convert character to Date before subsetting.
                          inds <- which(sapply(out, function(x) is(x, "mylogical")))
                          for (i in inds) 
                              out[[i]] <- as.logical(out[[i]])
+                         ## convert mydate to  date
+                         inds <- which(sapply(out, function(x) is(x, "mydate")))
+                         for (i in inds) 
+                             out[[i]] <- as.Date(out[[i]])
+                         
+                         
+                         out <- out[not_deleted(),cols, drop=FALSE]
+                         names(out) <- get_names()
+                         rownames(out) <- make.unique(get_rownames())
                          
                          out
                        },
