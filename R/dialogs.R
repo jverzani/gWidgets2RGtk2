@@ -283,11 +283,13 @@ GBasicDialog <- setRefClass("GBasicDialog",
                           sapply(dlg$getChildren()[[1]]$getChildren(), gtkWidgetHide)
                         }
                         dlg$setTransientFor(.parent)
-                        
                         dlg$SetTitle(title)
                         dlg$setDefaultResponse(GtkResponseType["ok"])
                         dlg$getVbox()$PackStart(widget)
                         dlg$grabFocus()
+                        dlg$present()
+                        dlg$setKeepAbove(TRUE)
+                        
                         
                                 
                         initFields(block=dlg,
