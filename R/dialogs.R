@@ -289,7 +289,7 @@ GBasicDialog <- setRefClass("GBasicDialog",
                         dlg$grabFocus()
                         dlg$present()
                         dlg$setKeepAbove(TRUE)
-                        
+                        dlg$GetWindow()$Raise()
                         
                                 
                         initFields(block=dlg,
@@ -329,8 +329,10 @@ GBasicDialog <- setRefClass("GBasicDialog",
                         } else {
                           ret <- FALSE
                         }
-                        
-                        block$Destroy()
+
+                        if (!is(block, "<invalid>")) {
+                          block$Destroy()
+                        }
                         return(invisible(ret))
                       }
                       ))
