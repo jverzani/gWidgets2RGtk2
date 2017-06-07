@@ -94,13 +94,13 @@ GEdit <- setRefClass("GEdit",
                               },
                               set_init_txt=function() {
                                 "set initial text, gray out"
-                                widget$modifyText(GtkStateType[1], "gray")
+                                widget$modifyText(GtkStateType["normal"], "gray")
                                 widget$setText(init_msg)
                                 init_msg_flag <<- TRUE
                               },
                               clear_init_txt=function() {
                                 "clear out init text, set back to black"
-                                widget$modifyText(GtkStateType[1], NULL) # should restore setting
+                                widget$modifyText(GtkStateType["normal"], NULL) # should restore setting
                                 if(init_msg_flag)
                                   widget$setText("")
                                 init_msg_flag <<- FALSE

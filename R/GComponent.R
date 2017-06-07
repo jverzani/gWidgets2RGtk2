@@ -102,9 +102,9 @@ GComponent <- setRefClass("GComponent",
                                             "size"  = font_desc$setSize(val * PANGO_SCALE),
                                             "scale" = font_desc$setAbsoluteSize(10 * PangoScale[val] * PANGO_SCALE),
                                             "family" = font_desc$setFamily(val),
-                                            "color" = obj$modifyFg(GtkStateType[1], val),
-                                            "foreground" = obj$modifyFg(GtkStateType[1], val),
-                                            "background" = obj$modifyBg(GtkStateType[1], val),
+                                            "color" = obj$modifyFg(GtkStateType["normal"], val),
+                                            "foreground" = obj$modifyFg(GtkStateType["normal"], val),
+                                            "background" = obj$modifyBg(GtkStateType["normal"], val),
                                             )
                                    }
                                    obj$modifyFont(font_desc)
