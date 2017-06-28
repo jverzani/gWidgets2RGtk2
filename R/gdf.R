@@ -666,7 +666,7 @@ GDfBase <- setRefClass("GDfBase",
                          
                          
                          sapply(widget$getColumns()[-1], function(view.col) {
-                           add_popup_to_view_col(view.col)
+                           add_popup_to_view_col(view.col, menu_fun)
                          })
                        },
                        add_popup_to_view_col=function(view.col, menu_fun) {
