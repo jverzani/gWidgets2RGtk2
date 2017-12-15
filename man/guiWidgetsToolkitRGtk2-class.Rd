@@ -7,4 +7,3 @@
 \description{
 toolkit class for RGtk2
 }
-

@@ -45,7 +45,7 @@ GButton <- setRefClass("GButton",
                                   ##
                                   icon <- gtkaction['stock-id']
                                   if(!is.null(icon)) {
-                                    image <- gtkaction$createIcon(GtkIconSize[4]) # button size
+                                    image <- gtkaction$createIcon(GtkIconSize["large-toolbar"]) # button size
                                     widget$setImage(image)
                                     widget$image$show()
                                   }

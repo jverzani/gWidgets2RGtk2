@@ -17,4 +17,3 @@ coerced new value
 \description{
 S3 generic to ensure we don't change data type when assigning into column
 }
-

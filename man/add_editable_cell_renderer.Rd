@@ -21,4 +21,3 @@ a gtkTreeViewColumn with data "n", and "id" to block editable id
 \description{
 make a view column for the given type of variable
 }
-
