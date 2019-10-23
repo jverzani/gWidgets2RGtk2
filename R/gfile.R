@@ -23,13 +23,13 @@ NULL
                    "selectdir"="select-folder",
                    "createdir"="create-folder"
                    )
-            
+
   actiontype <- GtkFileChooserAction[avail_types[type]]
   button_with_id = list(
     "ok"= c("gtk-ok",GtkResponseType["ok"]),
     "cancel" = c("gtk-cancel",GtkResponseType["cancel"])
     )
-            
+
   which_buttons <- switch(type,
                           "save"=c("ok","cancel"),
                           "open"=c("ok","cancel"),
@@ -38,10 +38,10 @@ NULL
 
   filechooser <- gtkFileChooserDialogNew(title=text, action=actiontype)
   filechooser$setSelectMultiple(multi)
-            
-  for(i in which_buttons) 
+
+  for(i in which_buttons)
     filechooser$AddButton(button_with_id[[i]][1],button_with_id[[i]][2])
-            
+
   ## Add filter
   if(length(filter) && type %in% c("open","save")) {
     if(is.character(filter)) {
@@ -50,9 +50,9 @@ NULL
         list(patterns=paste("*.", filter[nm], sep=""))
       }, simplify=FALSE)
     }
-    
-  
-    
+
+
+
     for(i in names(filter)) {
       filefilter <- gtkFileFilterNew()
       filefilter$SetName(i)
@@ -67,7 +67,7 @@ NULL
       filechooser$AddFilter(filefilter)
     }
   }
-  
+
   ## this works *exactly* the same as the previous ifelseifelseifelse
   #switch(type,
   #       "open" = ,
@@ -82,9 +82,9 @@ NULL
 
   ## but I think this does the same thing??
   if (type %in% c("open", "save") && !is.null(initial.filename))
-    filechooser$SetFilename(initial.filename)
+    filechooser$setCurrentName(basename(initial.filename))
   filechooser$setCurrentFolder(initial.dir)
-  
+
   ## this makes it modal
   response <- filechooser$Run()
   file <- unlist(filechooser$GetFilenames())
@@ -101,7 +101,7 @@ NULL
     return(character(0))
   }
 }
-                                          
+
 
 ##' Toolkit constructor
 ##'
@@ -146,7 +146,7 @@ GFileBrowse <- setRefClass("GFileBrowse",
                                 action=NULL,
                                 container = NULL,
                                 ... ) {
-                                
+
                                 block <<- gtkHBox()
                                 widget <<- gtkEntry()
                                 initial.text <<- text
@@ -187,4 +187,3 @@ GFileBrowse <- setRefClass("GFileBrowse",
                                 add_handler(change_signal, handler, action=action, ...)
                               }
                               ))
-
