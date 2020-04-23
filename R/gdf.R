@@ -295,7 +295,7 @@ GDfBase <- setRefClass("GDfBase",
                          "Get data frame from columns. Skips deleted rows, but returns non-visible ones"
                          columns <- widget$getColumns()[-1] # drop rownames
                          cols <- sapply(columns, function(vc) vc$getData("n"))
-                         out <- model[]
+                         out <- as.data.frame(model)
                          ## must convert character to Date before subsetting.
                          inds <- which(sapply(out, function(x) is(x, "mylogical")))
                          for (i in inds) 
